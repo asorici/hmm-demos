@@ -22,129 +22,141 @@ end
 pi = rand(1, N);
 pi = pi / sum(pi);
 
-E = ones(M, R, N) / M;
+E = ones(M, N, R) / M;
 
-% ---- compute alfa-s and beta-s for all the observation sequences ----
-%{
-alfas = cell(1, P);
-betas = cell(1, P);
-xis = cell(1, P);
-gamas = cell(1, P);
-obs = cell(1, P);
-pis = cell(1, P);
-%}
+% --------------------------------------
 
-prev_val = 0;
+epsi = 1e-10;
+LL = [];
+lik = 0;
 ct = 1;
 
-T
-E
-pi
-
-pause;
+L = zeros(1, P);
+for p=1:P
+    L(1, p) = size(OL{1, p}, 1);
+end
+Lmax = max(L);
 
 while ct <= maxiter
     % ----------------------------------------------------------------
     % estimate xi and gama from all observations using the precomputed
     % forward and backward variables
     
-    obs_transition = 0;
     obs = 0;
     
+    gamma_all_init = zeros(1, N);
+    gamma_all_sum = zeros(1, N);
+    gamma_all_k_sum = zeros(M, N, R);
+    scale_all = zeros(1, Lmax);
+    xi_all = zeros(N, N);
+    
     for p = 1:P
-        L = size(OL{1, p}, 1);
+        [alfa, beta, scale] = hmm_forward_backward(OL{1, p}, T, E, pi);
         
-        %alfas = hmm_forward(OL{1, p}, T, E, pi);
-        %betas = hmm_backward(OL{1, p}, T, E, pi);
-        [alfas, betas] = hmm_forward_backward(OL{1, p}, T, E, pi);
+        gamma = zeros(L(p), N);
+        gamma_k_sum = zeros(M, N, R);
         
-        xis = zeros(N, N);
-        gamas = zeros(1, N);
-        pis = zeros(1, N);
-        emissions = zeros(M, R, N);
-        
-        %disp(alfas)
-        %disp(betas)
+        %disp(alfa)
+        %disp(beta)
         %pause;
         
-        for t = 1:L-1
+        % ---- compute gamma variable
+        gamma = (alfa .* beta) + epsi;
+        for t = 1:L(p)
+            gamma(t, :) = gamma(t, :) / sum(gamma(t, :));
+        end
+        gammasum = sum(gamma);
+        
+        % ---- compute gammak - add gammas where the observed index k appears
+        for r = 1 : R
+            for t = 1 : L(p)
+                %m = find([1:M] == OL{1, p}(t, r));
+                m = OL{1, p}(t, r);
+                
+                %for i = 1 : N
+                %    gamma_k_sum(m, r, i) = gamma_k_sum(m, r, i) + gamma(t, i);
+                %end
+                gamma_k_sum(m, :, r) = gamma_k_sum(m, :, r) + gamma(t, :);
+            end
+        end
+        
+        % ---- compute xi-s
+        for t = 1 : L(p) - 1
             xi_t = zeros(N, N);
             obs_t = 0;
             
             for i = 1:N
                 for j = 1:N
                     idx_symbols = OL{1, p}(t + 1, :);
-                    em_j = E(:, :, j);
-                    idx = sub2ind(size(em_j), idx_symbols, 1:R);
+                    %em_j = E(:, :, j);
+                    %idx = sub2ind(size(em_j), idx_symbols, 1:R);
                     
-                    xi_t(i, j) = alfas(t, i) * T(i, j) * prod(em_j(idx)) * betas(t + 1, j);
+                    prod_r = 1;
+                    for r = 1 : R
+                        prod_r = prod_r * E(idx_symbols(1, r), j, r);
+                    end
+                    
+                    %xi_t(i, j) = alfa(t, i) * T(i, j) * prod(em_j(idx)) * beta(t + 1, j);
+                    xi_t(i, j) = alfa(t, i) * T(i, j) * prod_r * beta(t + 1, j);
                     obs_t = obs_t + xi_t(i, j);
                 end
             end
             
             xi_t = xi_t / obs_t;
-            gama_t = sum(xi_t, 2)';
             
             %disp(t);
             %disp(xi_t);
-            %disp(gama_t);
             %pause;
             
-            for i = 1 : N
-                for r = 1 : R
-                    sr = OL{1, p}(t, r);
-                    emissions(sr, r, i) = emissions(sr, r, i) + gama_t(i);
-                end
-            end
-            
-            xis = xis + xi_t;
-            obs_transition = obs_transition + obs_t;
-            obs = obs + obs_t;
-            
-            %gamas{1, p} = gamas{1, p} + gama_t;
-            gamas = gamas + gama_t;
-            
-            if t == 1
-                for i = 1 : N
-                    pis(i) = pis(i) + gama_t(i);
-                end
-            end
+            xi_all = xi_all + xi_t;
         end
         
+        gamma_all_init = gamma_all_init + gamma(1, :);
+        gamma_all_sum = gamma_all_sum + gammasum;
+        gamma_all_k_sum = gamma_all_k_sum + gamma_k_sum;
         
-        % take into account the L-th state as well, as it has not been
-        % covered in the transitions
-        gama_L = zeros(1, N);
-        normalizer = alfas(L, :) * betas(L, :)';
-        obs = obs + normalizer;
-        
-        for i = 1 : N
-            gama_L(i) = alfas(L, i) * betas(L, i) / normalizer;
-            for r = 1 : R
-                sr = OL{1, p}(L, r);
-                emissions(sr, r, i) = emissions(sr, r, i) + gama_L(i);
-            end
+        for t = 1 : L(p)
+            scale_all(1, t) = scale_all(1, t) + log(scale(1, t));
         end
+        
     end
     
     % -------------- compute new parameter estimates ---------------
-    pi = pis / P;
-    T = xis / obs_transition;
-    E = emissions / obs;
+    pi = gamma_all_init / sum(gamma_all_init);
     
-    disp(T);
-    disp(E);
-    disp(pi);
-    disp(obs);
-    pause;
+    for i = 1 : N
+        T(i, :) = xi_all(i, :) / sum(xi_all(i, :));
+    end
     
-    if ct >= 3 && abs(obs - prev_val) <= mindiff
+    for r = 1 : R
+        for i = 1 : N
+            E(:, i, r) = gamma_all_k_sum(:, i, r) / gamma_all_sum(1, i);
+        end
+    end
+    
+    %disp(T);
+    %disp(E);
+    %disp(pi);
+    %disp(obs);
+    %pause;
+    
+    prev_lik = lik;
+    lik = sum(scale_all);
+    LL = [LL lik];
+    fprintf('\ncycle %i log likelihood = %f ',ct, lik); 
+    
+    if ct <= 2
+        likbase = lik
+    elseif (lik<(prev_lik - 1e-6))     
+        fprintf('vionum_binstion');
+    elseif ((lik-likbase) < (1 + mindiff) * (prev_lik - likbase) || ~isfinite(lik))
+        fprintf('\nend\n');    
         break;
     end
     
-    prev_val = obs;
+    %if ct >= 3 && abs(obs - prev_val) <= mindiff
+    %    break;
+    %end
+    
     ct = ct + 1;
 end
-
-disp('Best likelihood: ');
-disp(prev_val);

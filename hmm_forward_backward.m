@@ -1,4 +1,4 @@
-function [alfa, beta] = hmm_forward_backward(O, T, E, pi)
+function [alfa, beta, scale] = hmm_forward_backward(O, T, E, pi)
 
 % the function computes the forward variable alfa and backward variable beta 
 % given multidimensional
@@ -11,68 +11,87 @@ function [alfa, beta] = hmm_forward_backward(O, T, E, pi)
 % dimension
 %
 % T is an N x N matrix, where N is the number of states
-% E is an M x R x N matrix, where R is the number of dimensions, M is the
+% E is an M x N x R matrix, where R is the number of dimensions, M is the
 %   number of discrete symbols and N is the number of states
 % pi is an array of N elements 
 %
-% the output is the matrix L x N alfa matrix
+% the output are the L x N alfa and beta matrices, as well as the scale
+% vector
 
 
 % initialization
 L = size(O, 1);
 N = size(T, 1);
 M = size(E, 1);
-R = size(E, 2);
+R = size(E, 3);
 
 alfa = zeros(L, N);
 beta = ones(L, N);
 scale = zeros(1, L);
 
+%{
 for i=1:N
     idx_symbols = O(1, :);
     em_i = E(:, :, i);
     idx = sub2ind(size(em_i), idx_symbols, 1:R);
     alfa(1, i) = pi(i) * prod(em_i(idx));
 end
+%}
 
-scale(1, 1) = 1.0 / sum(alfa(1, :));
-alfa(1, :) = alfa(1, :) * scale(1, 1);
+for i=1:N
+    idx_symbols = O(1, :);
+    prod_r = 1;
+    for r = 1 : R
+        prod_r = prod_r * E(idx_symbols(1, r), i, r);
+    end
+    alfa(1, i) = pi(i) * prod_r;
+end
+
+scale(1, 1) = sum(alfa(1, :));
+alfa(1, :) = alfa(1, :) / scale(1, 1);
 
 % recurssion
 for l = 2:L
     %lb = L + 1 - l;
     for j = 1:N
         sa = alfa(l-1, :) * T(:, j);
-        %sb = T(j, :) * beta(lb + 1, :)';
         
         idx_symbols_alfa = O(l, :);
-        %idx_symbols_beta = O(lb + 1, :);
-        em_j = E(:, :, j);
+        %em_j = E(:, :, j);
+        %idx_alfa = sub2ind(size(em_j), idx_symbols_alfa, 1:R);
         
-        idx_alfa = sub2ind(size(em_j), idx_symbols_alfa, 1:R);
-        %idx_beta = sub2ind(size(em_j), idx_symbols_beta, 1:R);
+        prod_r = 1;
+        for r = 1 : R
+            prod_r = prod_r * E(idx_symbols_alfa(1, r), j, r);
+        end
         
-        alfa(l, j) = sa * prod(em_j(idx_alfa));
-        %beta(lb, j) = sb * prod(em_j(idx_beta));
+        %alfa(l, j) = sa * prod(em_j(idx_alfa));
+        alfa(l, j) = sa * prod_r;
     end
     
-    scale(1, l) = 1.0 / sum(alfa(l, :));
-    alfa(l, :) = alfa(l, :) * scale(1, l);
+    scale(1, l) = sum(alfa(l, :));
+    alfa(l, :) = alfa(l, :) / scale(1, l);
 end
 
 
 % ----- backward -----
-beta(L, :) = beta(L, :) * scale(1, L);
+beta(L, :) = beta(L, :) / scale(1, L);
 
 for l = L-1:-1:1
     for i = 1:N
         s = T(i, :) * beta(l + 1, :)';
-        
         idx_symbols = O(l + 1, :);
-        em_i = E(:, :, i);
-        idx = sub2ind(size(em_i), idx_symbols, 1:R);
         
-        beta(l, i) = s * prod(em_i(idx));
+        %em_i = E(:, :, i);
+        %idx = sub2ind(size(em_i), idx_symbols, 1:R);
+        prod_r = 1;
+        for r = 1 : R
+            prod_r = prod_r * E(idx_symbols(1, r), i, r);
+        end
+        
+        %beta(l, i) = s * prod(em_i(idx));
+        beta(l, i) = s * prod_r;
     end
-    beta(l, :) = beta(l, :) * scale(1, l);
+    
+    beta(l, :) = beta(l, :) / scale(1, l);
 end
