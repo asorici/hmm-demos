@@ -1,0 +1,23 @@
+###################
+## General
+
+1. Module
+   i. Preprocesare a datelor (normalizare, clusterizare, ...)
+  ii. Antrenare (construirea modelului Markov ascuns)
+      a. calcularea variabilelor alpha, beta
+      b. algoritmul BW (cu probabilități de emisie
+      	 discrete / continue <Gaussian multidimensional> )
+ iii. Predicție (probleme clasice)
+      a. Probabilitatea unei secvențe observate
+      b. Cea mai probabilă secvență de stări ascunse
+      c. Cea mai probabilă stare următoare / finală
+
+###################
+## per Programming Language
+
+2. MATLAB
+
+   - fișier .m pentru toate de mai sus
+
+3. Python
+   - OOP
