@@ -79,6 +79,7 @@ beta(L, :) = beta(L, :) / scale(1, L);
 
 for l = L-1:-1:1
     for i = 1:N
+        %{
         s = T(i, :) * beta(l + 1, :)';
         idx_symbols = O(l + 1, :);
         
@@ -91,6 +92,19 @@ for l = L-1:-1:1
         
         %beta(l, i) = s * prod(em_i(idx));
         beta(l, i) = s * prod_r;
+        %}
+        beta(l, i) = 0;
+        for j = 1 : N
+            s_elem = T(i, j) * beta(l + 1, j);
+            
+            prod_r = 1;
+            for r = 1 : R
+                prod_r = prod_r * E(idx_symbols(1, r), j, r);
+            end
+            
+            s_elem = s_elem * prod_r;
+            beta(l, i) = beta(l, i) + s_elem;
+        end
     end
     
     beta(l, :) = beta(l, :) / scale(1, l);
