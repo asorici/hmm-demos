@@ -1,0 +1,1 @@
+function [Pi, A, B] = baum_welch(O)
