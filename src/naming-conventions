@@ -1,0 +1,22 @@
+N	  - the number of states in the HMM
+Si = S(i) - state i (1 <= i <= N)
+Qt = Q(t) - state at time t
+M	  - the number of observation values (in the discrete case) per state
+Vi = V(i) - output value i (1 <= i <= M)
+Ot = O(t) - observed value at time t
+T	  - lenght of the observed sequence(s) (1xL matrix)
+A	  - the state transition probability distribution (NxN matrix)
+	    Aij = A(i,j) = P( Q(t+1)=Sj | Q(t)=Si ), 1<=i,j<=N
+B	  - the observation values probability distribution in each state (NxM)
+	    Bjk = B(j,k) = P( O(t)=Vk | Q(t)=Sj ), 1<=j<=N, 1<=k<=M
+Pi	  - the initial state distribution (1xN matrix)
+	    Pi(i) = P(Q1=Si), 1<=i<=N
+Lambda	  - Lambda = (Pi, A, B)
+Alpha	  - Forward variables (TxN matrix)
+	    Alpha(t,i) = P(O1, O2, O3, ..., Ot,Q(t)=Si |Lambda), 1<=t<=T,1<=i<=N
+Beta	  - Backward variables (TxN matrix)
+	    Beta(t,j) = P(O(t+1),O(t+2), ..., O(T) |Qt=Sj,Lambda)
+Gamma	  - TxN matrix
+	    Gamma(t,i) = P(Qt=Si | O, Lambda)
+Xi	  - (T-1)xN matrix
+	    Xi(t,i) = P(Q(t)=Si,Q(t+1)=Sj | O, Lambda)
