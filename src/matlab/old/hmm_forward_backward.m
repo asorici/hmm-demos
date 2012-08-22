@@ -78,6 +78,7 @@ end
 beta(L, :) = beta(L, :) / scale(1, L);
 
 for l = L-1:-1:1
+    idx_symbols = O(l + 1, :);
     for i = 1:N
         %{
         s = T(i, :) * beta(l + 1, :)';

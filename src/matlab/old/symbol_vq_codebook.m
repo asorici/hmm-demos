@@ -37,21 +37,6 @@ for s=1:size(symbol_strings, 1)
         while high_t <= end_t
             % get values in window
             idx = find(resampled_training_values(:, 3) >= low_t & resampled_training_values(:, 3) < high_t);
-            %idx = [];
-            %for k=1:size(resampled_training_values, 1)
-            %    if resampled_training_values(k, 3) >= low_t && resampled_training_values(k, 3) < high_t
-            %        idx = [idx; k];
-            %    end
-            %end
-
-            % here be stupid patching of unknown bug
-            %if size(idx, 1) > 16
-            %    idx = idx(1:16);
-            %else
-            %    if (size(idx, 1)) < 16
-            %        idx = [idx; idx(end, 1) + 1];
-            %    end
-            %end
 
             xvals = resampled_training_values(idx, 1);
             yvals = resampled_training_values(idx, 2);

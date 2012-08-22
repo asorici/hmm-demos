@@ -2,7 +2,7 @@ function resampled_track_data = resample_track_data(track_data, interval, fixed_
 
 %track_data
 end_time = track_data(end, 3);
-t_vec = [0:interval:end_time];
+t_vec = 0:interval:end_time;
 
 x_vec = interp1(track_data(:,3), track_data(:,1), t_vec);
 y_vec = interp1(track_data(:,3), track_data(:,2), t_vec);
