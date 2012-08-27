@@ -1,29 +1,35 @@
 function [ P, alpha, beta, scale ] = forward_backward( O, Pi, A, B )
-%FORWARD_BACKWARD computes the probability ... 
-%   Input args:
-%   O - the observed sequence
-%   Pi - initial state probabilities
-
-
-%   N - the number of states
-%   M - the number of possible values for each observed variable
-%   T - the length of the observed sequence
-%   R - the dimensionality of the observed sequence
-
-%   Pi is an 1 x N matrix
-%   A is an N x N matrix
-%   B is an N x M matrix if R = 1 and an N x M x R matrix if R > 1
-%   O is an R X T matrix
-
-%   alpha is an T x N
-%   beta is an T X N
+% FORWARD_BACKWARD computes the forward and backward variables for an
+% observation sequence and a given HMM (Pi, A, B). The values of Alpha and
+% Beta are scaled in order to avoid exceeding the precision range.
+%
+% Input args:
+% O :   an R x T matrix containing the observation sequence, where R is the dimensionality of the observed variable
+% Pi :  an 1 x N matrix containing the initial state distribution
+%       Pi(j) = P(Q(1)=Sj) for 1 =< j =< N
+% A :   an N x N matrix for the state transition probability distribution
+%       A(i,j) = P(Q(t+1)=Sj | Q(t) = Si)
+% B :   an N x M matrix if R = 1 or an N x M x R if R > 1 for the observation values probability distribution
+%       in each state
+%       B(j,k) = P(O(t)=V(k) | Q(t) = Sj) if R = 1
+%       B(j, k, r) = P(O(r, t) = V(k, r) | Q(t) = Sj) if R > 1
+%
+% Output args
+% P :       the probability of the observation sequence, given the HMM
+% Alpha :   a T x N matrix containing the forward variables
+%           Alpha(t,i) = P(O(1),O(2),...,O(t),Q(t)=Si | Lambda)
+% Beta :    a T x N matrix containing the backward variables
+%           for each time instance 1 <= t <= T and each state 1 <= i <= N
+%           Beta(t,i) = P(O(t+1),O(t+2),...O(T) | Q(t)=Si,Lambda)
+% Scale :   an 1 x T matrix containing the scaling coefficients
+%           Scale(t) = 1 / (Alpha(t,1) +... Alpha(t,N))
 
 %{  
     The function distinguishes programmatically between the uni-dimensional
     and multi-dimensional independent observation sequences
 %}
 
-%   initialization
+%%   Initialization
 N = size(Pi, 2);
 M = size(B, 2);
 T = size(O, 2);

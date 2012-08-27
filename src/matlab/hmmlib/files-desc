@@ -1,0 +1,25 @@
+I. The Forward-Backward algorithm
+
+forward_backward_disc.m      
+        - Forward backward algorithm for discrete observations (complete)
+
+forward-backward-cont.m
+        - Forward-backward algorithm for continuous observations (complete)
+
+test-forward-backward-disc-1.m
+test-forward-backward-disc-1.m
+        - Test scripts for the forward-backard algorithm in the discrete
+            case
+
+test-forward-backward-cont-1.m
+test-forward-backward-cont-2.m
+        - Test scripts for the forward-backward algorithm in the continuous
+            case
+
+forward-backward-disc-stub.m
+forward-backward-cont-stub.m
+        - Stub files for the Forward-Backward algorithm
+
+II. The Viterbi algorithm
+
+III. The Baum-Welch algorithm
