@@ -1,5 +1,5 @@
 function symbol_vq_codebook(symbol, nr_clusters, resample_interval, ...
-                            window_size, window_step)
+                            hamming_window_size, hamming_window_step)
 %%  generates the codebook vectors for a given gesture type
 %   Inputs:
 %       gesture - a string naming the gesture
@@ -7,9 +7,9 @@ function symbol_vq_codebook(symbol, nr_clusters, resample_interval, ...
 %       resample_interval - this argument defines the resampling 
 %                           time interval to be used on the raw track
 %                           sequences
-%       window_size - defines the window size in seconds for the FFT window
-%       window_step - defines the size in seconds of the FFT window shift
-%                     parameter
+%       hamming_window_size - defines the window size in seconds for the FFT window
+%       hamming_window_step - defines the size in seconds of the FFT window shift
+%                             parameter
 %   
 %   This function assumes the existance of the file with the name
 %   <gesture>.mat containing several instances of gesture sequences of
@@ -33,16 +33,14 @@ training_track_values = raw_track_values(1:len_td);
 
 %% Processing
 for i=1:len_td
-    v1 = training_track_values{i}(1, 3);
-    training_track_values{i}(:,3) = training_track_values{i}(:, 3) - v1;
     %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 0);
     %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 2 * size(training_track_values{i}, 1));
     %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 128);
 
     [x_fft_vectors, y_fft_vectors] = ...
         symbol_preprocess_fft(training_track_values{i}, ...
-                              resample_interval, window_size, ...
-                              window_step);
+                              resample_interval, hamming_window_size, ...
+                              hamming_window_step);
     
     x_vectors = [x_vectors; x_fft_vectors];
     y_vectors = [y_vectors; y_fft_vectors];

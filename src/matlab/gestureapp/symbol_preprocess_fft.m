@@ -1,5 +1,5 @@
 function [x_fft_vectors, y_fft_vectors] = symbol_preprocess_fft(track_data, ...
-                    resample_interval, window_size, window_step)
+                    resample_interval, hamming_window_size, hamming_window_step)
 %%  process a raw track of the mouse movement sequence by generating
 %   a FFT representation of the sequence to be used as feature vector
 %
@@ -9,14 +9,14 @@ function [x_fft_vectors, y_fft_vectors] = symbol_preprocess_fft(track_data, ...
 %       resample_interval - this argument defines the resampling 
 %                           time interval to be used on the raw track
 %                           sequence
-%       window_size - defines the window size in seconds 
-%                     for the FFT window
-%       window_step - defines the size in seconds of the 
-%                     FFT window shift parameter
+%       hamming_window_size - defines the window size in seconds 
+%                             for the FFT window
+%       hamming_window_step - defines the size in seconds of the 
+%                             FFT window shift parameter
 
 
 %% processing
-NFFT = floor(window_size / resample_interval);
+NFFT = floor(hamming_window_size / resample_interval);
 
 % resample the raw track data at even resample_interval delays using 
 % linear interpolation
@@ -25,13 +25,13 @@ track_data(:,3) = track_data(:, 3) - v1;
 
 resampled_track_data = resample_track_data(track_data, resample_interval, 0);
 low_t = 0;
-high_t = window_size;
+high_t = hamming_window_size;
 end_t = resampled_track_data(end, 3);
 
 %x_vectors = [];
 %y_vectors = [];
 
-data_lines = 1 + floor( (end_t - high_t) / window_step );
+data_lines = 1 + floor( (end_t - high_t) / hamming_window_step );
 x_fft_vectors = zeros(data_lines, NFFT);
 y_fft_vectors = zeros(data_lines, NFFT);
 
@@ -54,6 +54,6 @@ for i = 1 : data_lines
     y_fft_vectors(i, :) = abs(yvals_fft);
 
     % move window
-    low_t = low_t + window_step;
-    high_t = high_t + window_step;
+    low_t = low_t + hamming_window_step;
+    high_t = high_t + hamming_window_step;
 end

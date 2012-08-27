@@ -41,7 +41,7 @@ A_3D = zeros(L,TMax,N,N);
 B_3D = zeros(L,TMax,N,N);
 Alpha_3D = zeros(L,TMax,N,N);
 Beta_3D = zeros(L,TMax,N,N);
-
+V = 1 : M;
 
 %% Initial random values for the HMM parameters
 
@@ -93,8 +93,6 @@ end
 % Xi = Alpha_3D .* A_3D .* B_3D .* Beta_3D / P(l); % not correct
 % Gamma = Alpha .* Beta / P(l); % not correct in this form
 
-A_ = A
-B_ = B
 
 %% Maximization (Reestimation)
 

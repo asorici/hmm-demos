@@ -2,10 +2,10 @@
 % momentan merge cu copy-paste la celula /actual computation/
 
 %% init random variables
-L = ceil(rand()*30);
-M = 1 + ceil(rand()*20); % eroare fiindcă dispare o dimensiune a matricelor
-N = 1 + ceil(rand()*15); % eroare fiindcă dispare o dimensiune a matricelor
-T = ones(1,L) + ceil(rand(1,L)*40);
+%L = ceil(rand()*30);
+%M = 1 + ceil(rand()*32); % eroare fiindcă dispare o dimensiune a matricelor
+%N = 1 + ceil(rand()*6); % eroare fiindcă dispare o dimensiune a matricelor
+%T = ones(1,L) + ceil(rand(1,L)*20);
 
 L = 3
 M = 4
@@ -21,6 +21,7 @@ err = 0.000000001;
 V = 1:M;
 %O = ones(L, TMax) * (M+1);
 O = zeros(L, TMax);
+
 for l=1:L
     O(l,1:T(l)) = randi(M,1,T(l));
 end
@@ -78,22 +79,25 @@ for l=1:L
 end
 
 % Add dimension to multiply element by element
+%{
 Alpha_3D_ = repmat(Alpha,[1 1 1 N]);
 
 A_3D_ = permute(repmat(A,[1 1 L TMax]), [3 4 1 2]);
 
 for l=1:L
-    B_3D_(l,1:(TMax-1),:,:) = ...
-        permute(repmat(B(:,O(l,2:TMax)),[1 1 1 N]), [3 2 4 1]);
+    B_3D_(l,1:(TMax-1),:,:) = permute(repmat(B(:,O(l,2:TMax)),[1 1 1 N]), [3 2 4 1]);
 end
 
 Beta_3D_(:,1:(TMax-1),:,:) = permute(repmat(Beta(:,2:TMax,:), [1 1 1 N]), [1 2 4 3]);
-
+%}
     
 % Compute Gamma and Xi
 % Xi = Alpha_3D .* A_3D .* B_3D .* Beta_3D / P(l); % not correct
 % Gamma = Alpha .* Beta / P(l); % not correct in this form
 
+
+A_ = A
+B_ = B
 
 %% Maximization (Reestimation)
 
@@ -103,6 +107,7 @@ mask2 = mask;
 mask = repmat(mask, [1 1 N]);
 
 % Reestimate Lambda
+%{
 A = shiftdim(sum(sum( ...
     Alpha_3D_ .* A_3D_ .* B_3D_ .* Beta_3D_ ... %.* repmat(mask2,[1 1 N N]) ...
     , 1),2),2) ...
@@ -110,6 +115,15 @@ A = shiftdim(sum(sum( ...
     repmat(Alpha .* Beta .* mask .* ...
     repmat(Scale,[1 1 N]),[1 1 1 N]) ...
     ,1),2),2);
+%}
+A = shiftdim(sum(sum( ...
+    Alpha_3D .* A_3D .* B_3D .* Beta_3D ... %.* repmat(mask2,[1 1 N N]) ...
+    , 1),2),2) ...
+    ./ shiftdim(sum(sum( ...
+    repmat(Alpha .* Beta .* mask .* ...
+    repmat(Scale,[1 1 N]),[1 1 1 N]) ...
+    ,1),2),2);
+
 
 B = shiftdim(sum(sum( ...
     (permute(repmat(repmat(O,[1 1 M]) == ...
@@ -126,6 +140,8 @@ correctB = 1;
 correctA1 = 1;
 correctA2 = 1;
 
+Z = zeros(N, N);
+
 for i=1:N
     for j=1:N
         Z1 = 0;
@@ -134,6 +150,7 @@ for i=1:N
             for t=1:(T(l)-1)
                 Z1 = Z1 + Alpha(l,t,i) * A_(i,j) * B_(j,O(l,t+1)) * Beta(l,t+1,j);
                 Z2 = Z2 + Alpha(l,t,i) * Beta(l,t,i) * Scale(l,t);
+                Z(i, j) = Z1/Z2;
             end
         end
         if abs (A(i,j) - (Z1/Z2)) > err
@@ -143,6 +160,8 @@ for i=1:N
 
     end
 end
+
+A - Z
 
 if correctA == 1
     fprintf('\nA correct\n')

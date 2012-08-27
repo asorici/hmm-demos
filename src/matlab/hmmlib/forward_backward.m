@@ -42,8 +42,7 @@ beta = ones (T, N);
 %   check the equality in dimensions between O and B
 if size(B, 3) ~= R
     error('forward_backward:dimensionCheck', ... 
-          'The row dimension %d of O and ' + ... 
-          'the depth dimension %d of B do not agree', R, size(B, 3));
+          'The row dimension %d of O and the depth dimension %d of B do not agree', R, size(B, 3));
 end
 
 %%  The uni-dimensional case
@@ -65,59 +64,40 @@ if R == 1
     end
     %scale = ones(size(scale)) ./ scale;
     P = prod(scale);
-
+    
 else
 %%  The multi-dimensional case
-    obs_symbol_idx = O(:, 1)';
-    B_prod = ones(1, N);
     
-    % multiplication of independent observation dimension probabilities for
-    % each state
-    for r = 1 : R
-        b_idx = sub2ind(size(B), 1:N, repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
-        B_prod_line = B(b_idx);
-        B_prod = B_prod .* B_prod_line;
-    end
-    
-    alpha(1,:) = Pi .* B_prod;
-    scale(1) = sum(alpha(1, :));
-    alpha(1,:) = alpha(1, :) / scale(1);
-    
-    for t = 2:T
-        % multiplication of independent observation dimension probabilities 
-        % for each state
+    % precompute the multiplication of the multi-dimensional
+    % independent observation probabilities for each state
+    B_prod = ones(N, T);
+    for t = 1 : T
         obs_symbol_idx = O(:, t)';
-        B_prod = ones(1, N);
-        
         for r = 1 : R
             b_idx = sub2ind(size(B), 1:N, ...
                 repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
             B_prod_line = B(b_idx);
-            B_prod = B_prod .* B_prod_line;
+            B_prod(:, t) = B_prod(:, t) .* B_prod_line';
         end
-        
-        alpha(t,:) = (alpha(t-1,:) * A) .* B_prod;
+    end
+    
+    
+    alpha(1,:) = pi .* B_prod(:, 1)';
+    scale(1) = sum(alpha(1, :));
+    alpha(1,:) = alpha(1, :) / scale(1);
+
+    for t = 2:T
+        alpha(t,:) = (alpha(t-1,:) * A) .* B_prod(:, t)';
         scale(t) = sum(alpha(t, :));
         alpha(t, :) = alpha(t, :) / scale(t);
     end
 
     beta(T, :) = beta(T, :) / scale(T);
     for t = (T-1):-1:1
-        % multiplication of independent observation dimension probabilities 
-        % for each state
-        obs_symbol_idx = O(:, t + 1)';
-        B_prod = ones(1, N);
-        
-        for r = 1 : R
-            b_idx = sub2ind(size(B), 1:N, ...
-                repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
-            B_prod_line = B(b_idx);
-            B_prod = B_prod .* B_prod_line;
-        end
-        
-        beta(t,:) = A * (B_prod' .* beta(t+1,:)');
+        beta(t,:) = A * (B_prod(:,t+1) .* beta(t+1,:)');
         beta(t, :) = beta(t, :) / scale(t);
     end
+    
     %scale = ones(size(scale)) ./ scale;
     P = prod(scale);
 end
