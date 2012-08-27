@@ -1,4 +1,4 @@
-function [ P, Alpha, Beta, Scale ] = forward_backward( O, Pi, A, B )
+function [ P, Alpha, Beta, Scale ] = forward_backward_disc_stub( O, Pi, A, B )
 % FORWARD_BACKWARD computes the forward and backward variables for an
 % observation sequence and a given HMM (Pi, A, B). The values of Alpha and
 % Beta are scaled in order to avoid exceeding the precision range.
@@ -33,8 +33,9 @@ Alpha = zeros (T, N); % Alpha is a T x N matrix (see above)
 Beta = ones (T, N); % Beta is a T x N matrix (see above)
 
 %% Forward variables
+%---#1-Alpha-start
 
-Alpha(1,:) = Pi .* B(:, O(1))';
+Alpha(1,:) = Pi .* B(:, O(1))' * 2;
 Scale(1) = sum(Alpha(1, :));
 Alpha(1,:) = Alpha(1, :) / Scale(1);
 
@@ -43,15 +44,18 @@ for t = 2:T
     Scale(t) = 1 / sum(Alpha(t, :));
     Alpha(t, :) = Alpha(t, :) * Scale(t);
 end
+%---#1-Alpha-end
 
 %% Backward variables
-
+%---#2-Beta-start
 Beta(T, :) = Beta(T, :) * Scale(T);
 for t = (T-1):-1:1
     Beta(t,:) = A * (B(:,O(t+1)) .* Beta(t+1,:)');
     Beta(t, :) = Beta(t, :) * Scale(t);
 end
+%---#2-Beta-end
 
 %% The probability of the observed sequence
-
+%---#3-Probability-start
 P = 1 / prod(Scale);
+%---#3-Probability-end

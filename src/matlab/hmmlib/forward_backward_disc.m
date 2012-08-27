@@ -1,7 +1,7 @@
-function [ P, Alpha, Beta, Scale ] = forward_backward( O, Pi, A, B )
-% FORWARD_BACKWARD computes the forward and backward variables for an
-% observation sequence and a given HMM (Pi, A, B). The values of Alpha and
-% Beta are scaled in order to avoid exceeding the precision range.
+function [ P, Alpha, Beta, Scale ] = forward_backward_disc( O, Pi, A, B )
+%FORWARD_BACKWARD_DISC computes the forward and backward variables for a
+%discrete observation sequence and a given HMM (Pi, A, B). The values of
+%Alpha and Beta are scaled in order to avoid exceeding the precision range.
 %
 % Input args:
 % O :   an 1 x T matrix containing the observation sequence
@@ -35,8 +35,8 @@ Beta = ones (T, N); % Beta is a T x N matrix (see above)
 %% Forward variables
 
 Alpha(1,:) = Pi .* B(:, O(1))';
-Scale(1) = sum(Alpha(1, :));
-Alpha(1,:) = Alpha(1, :) / Scale(1);
+Scale(1) = 1 / sum(Alpha(1, :));
+Alpha(1,:) = Alpha(1, :) * Scale(1);
 
 for t = 2:T
     Alpha(t,:) = (Alpha(t-1,:) * A) .* B(:, O(t))';
