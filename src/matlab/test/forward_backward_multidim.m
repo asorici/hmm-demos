@@ -134,22 +134,57 @@ end
 %scale = ones(size(scale)) ./ scale;
 P = prod(scale2);
 
-%% testare egalitate
-scale1 - scale2
+%% precalculare B_prod
+scale3 = zeros (1, T);
+alpha3 = zeros (T, N);
+beta3 = ones (T, N);
 
-
-alpha1 - alpha2
-
-if alpha1 == alpha2
-    disp 'alpha1 EGAL alpha2'
-else
-    disp 'alpha1 DIFERIT DE alpha2'
+B_prod = ones(N, T);
+for t = 1 : T
+    obs_symbol_idx = O(:, t)';
+    for r = 1 : R
+        b_idx = sub2ind(size(B), 1:N, ...
+            repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
+        B_prod_line = B(b_idx);
+        B_prod(:, t) = B_prod(:, t) .* B_prod_line';
+    end
 end
 
+alpha3(1,:) = pi .* B_prod(:, 1)';
+scale3(1) = sum(alpha3(1, :));
+alpha3(1,:) = alpha3(1, :) / scale3(1);
 
-beta1 - beta2
-if beta1 == beta2
-    disp 'beta1 EGAL beta2'
+for t = 2:T
+    alpha3(t,:) = (alpha3(t-1,:) * A) .* B_prod(:, t)';
+    scale3(t) = sum(alpha3(t, :));
+    alpha3(t, :) = alpha3(t, :) / scale3(t);
+end
+
+beta3(T, :) = beta3(T, :) / scale3(T);
+for t = (T-1):-1:1
+    beta3(t,:) = A * (B_prod(:,t+1) .* beta3(t+1,:)');
+    beta3(t, :) = beta3(t, :) / scale3(t);
+end
+
+%% testare egalitate
+disp '------- Scale diffs -------'
+%scale1 - scale2
+scale1 - scale3
+
+disp '------- Alpha diffs -------'
+%alpha1 - alpha2
+alpha1 - alpha3
+
+if alpha1 == alpha3
+    disp 'alpha1 EGAL alpha3'
 else
-    disp 'beta1 DIFERIT DE beta2'
+    disp 'alpha1 DIFERIT DE alpha3'
+end
+
+disp '------- Beta diffs -------'
+beta1 - beta3
+if beta1 == beta3
+    disp 'beta1 EGAL beta3'
+else
+    disp 'beta1 DIFERIT DE beta3'
 end
