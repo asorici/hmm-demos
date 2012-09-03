@@ -3,15 +3,23 @@ function symbol_test_training()
 symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
 symbol_strings = char(symbols);
 
+% load FFT feature extraction parameters from file
+feature_param_file = 'feature_extraction_parameters.mat';
+load(feature_param_file, 'resample_interval', ...
+                         'hamming_window_size', ...
+                         'hamming_window_step');
 
 % ---------------------------- training ---------------------------
 disp '--------- Training HMM models ---------'
 hmms = cell(4,3);
 for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
+    model = 'bakis';
+    %model = 'ergodic';
     
-    % we try training with a bakis model
-    [Pi, A, B] = symbol_train_hmm(symbol_name, 'bakis');
+    fprintf('-------- Training for symbol %s --------\n', ...
+        strtrim(symbol_name));
+    [Pi, A, B] = symbol_train_hmm(symbol_name, model);
     
     hmms{s, 1} = Pi;
     hmms{s, 2} = A;
@@ -27,7 +35,7 @@ for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
     raw_track_filename = strcat(symbol_name, '.mat');
     codebook_filename = strcat(symbol_name, '_codebook.mat');
-    hmm_data_filename = strcat(symbol_name, '_hmm.mat');
+    hmm_data_filename = strcat(symbol_name, '_hmm_', model, '.mat');
     
     load(raw_track_filename, 'raw_track_values');
     load(codebook_filename, 'x_codebook', 'y_codebook');
@@ -50,7 +58,9 @@ for s=1:size(symbol_strings, 1)
     for j = 1 : len_td
         track_data = training_track_values{j};
         O = symbol_get_feature_sequence(track_data, ...
-                x_codebook, y_codebook, 0.02, 0.16, 0.08);
+                x_codebook, y_codebook, ...
+                resample_interval, ...
+                hamming_window_size, hamming_window_step);
         
         [Prob, Alpha, Beta, Scale] = forward_backward(O, Pi, A, B);
         
@@ -60,8 +70,9 @@ for s=1:size(symbol_strings, 1)
             lik = lik + alfa(end, i);
         end
         %}
-        lik = log(Prob);
-
+        %lik = log(Prob);
+        
+        lik = Prob;
         if lik < minlik
             minlik = lik;
         end
@@ -86,17 +97,21 @@ for s=1:size(symbol_strings, 1)
     for j = 1 : len_test
         track_data = testing_track_values{j};
         O = symbol_get_feature_sequence(track_data, ...
-                x_codebook, y_codebook, 0.02, 0.16, 0.08);
+                x_codebook, y_codebook, ...
+                resample_interval, ...
+                hamming_window_size, hamming_window_step);
+        
         [Prob, Alpha, Beta, Scale] = forward_backward(O, Pi, A, B);
         
-        tLL(j,1) = log(Prob);
+        %tLL(j,1) = log(Prob);
+        tLL(j,1) = Prob;
         if tLL(j,1) >= symbol_rec_threshold
             recs = recs + 1;
             fprintf('Log likelihood: %f >= %f (threshold) -- FOUND %s GESTURE!\n', ...,
-                lik, symbol_rec_threshold, strtrim(symbol_name));
+                tLL(j, 1), symbol_rec_threshold, strtrim(symbol_name));
         else
             fprintf('Log likelihood: %f < %f (threshold) -- NO %s GESTURE.\n',..., 
-                lik, symbol_rec_threshold, strtrim(symbol_name));
+                tLL(j, 1), symbol_rec_threshold, strtrim(symbol_name));
         end
     end
 

@@ -54,21 +54,23 @@ A = A ./ repmat(sum(A,2),1,N);
 B = rand(N,M);
 B = B ./ repmat(sum(B,2),1,M);
 
-Pold = -1;
+LogP_old = 0;
 
-P = zeros(1,L);
+LogP = zeros(1,L);
 Scale = zeros(L, TMax);
 
 % Compute initial P (and forward and backward variables)
 for l=1:L
-    [P(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
+    [LogP(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
         forward_backward(O(l,1:T(l)), Pi, A, B);
 end
 
 %% EM Loop
-while abs(Pold - prod(P)) >= 0.000001
+%while abs(Pold - prod(P)) >= 0.000001
+while abs(LogP_old - sum(LogP)) >= 0.000001
     
-    Pold = prod(P);
+    %Pold = prod(P);
+    LogP_old = sum(LogP);
     
     %% Expectation
       
@@ -121,7 +123,7 @@ B = shiftdim(sum(sum( ...
     
     % Recompute P and forward & backward variables
     for l=1:L
-        [P(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
+        [LogP(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
             forward_backward(O(l,1:T(l)), Pi, A, B);
     end
 end

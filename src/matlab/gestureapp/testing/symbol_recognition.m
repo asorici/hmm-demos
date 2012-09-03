@@ -22,7 +22,7 @@ function varargout = symbol_recognition(varargin)
 
 % Edit the above text to modify the response to help symbol_recognition
 
-% Last Modified by GUIDE v2.5 27-Aug-2012 23:11:43
+% Last Modified by GUIDE v2.5 28-Aug-2012 20:58:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -130,6 +130,14 @@ padH = gca;
 track_data = get(padH, 'userdata');
 set(padH, 'userdata', []);
 
+hmm_model_index = get(handles.hmm_model_select, 'Value');
+hmm_model_types = get(handles.hmm_model_select, 'String');
+if iscell(hmm_model_types)
+    hmm_model_choice = hmm_model_types{hmm_model_index};
+else
+    hmm_model_choice = hmm_model_types(hmm_model_index, :);
+end
+
 symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
 symbol_strings = char(symbols);
 
@@ -156,18 +164,34 @@ if size(track_data, 1) > nr_points
     
     for s=1:size(symbol_strings, 1)
         symbol_name = symbol_strings(s, :);
+        feature_param_file = 'feature_extraction_parameters.mat';
         codebook_filename = strcat(symbol_name, '_codebook.mat');
-        hmm_data_filename = strcat(symbol_name, '_hmm.mat');
+        hmm_data_filename = strcat(symbol_name, '_hmm_', ...
+                                    hmm_model_choice, '.mat');
         
-        % load the codebook vectors and the hmm parameters for the alleged symbol
+        
+        % load the feature extraction parameters, 
+        % codebook vectors and the hmm parameters 
+        % for the alleged symbol
+        load(feature_param_file, 'resample_interval', ...
+                         'hamming_window_size', ...
+                         'hamming_window_step');
         load(codebook_filename, 'x_codebook', 'y_codebook');
         load(hmm_data_filename, 'Pi', 'A', 'B');
         
         O = symbol_get_feature_sequence(sampled_track_data, ...
-                x_codebook, y_codebook, 0.02, 0.16, 0.08);
+                x_codebook, y_codebook, ...
+                resample_interval, ...
+                hamming_window_size, hamming_window_step);
         
-        [Prob, ~, ~, ~] = forward_backward(O, Pi, A, B);
-        ll(1, s) = log(Prob);
+        [Prob, Alpha, Beta, Scale] = forward_backward(O, Pi, A, B);
+        fprintf('## Values for symbol %s\n', strtrim(symbol_name));
+        Alpha
+        Beta
+        Scale
+        
+        %ll(1, s) = log(Prob);
+        ll(1, s) = Prob;
         
         if ll(1, s) > max_ll
             max_ll = ll(1, s);
@@ -177,7 +201,8 @@ if size(track_data, 1) > nr_points
     
     % load recognition threshold for best symbol so far
     candidate_symbol_name = symbol_strings(most_likely_symbol_idx, :);
-    hmm_data_filename = strcat(candidate_symbol_name, '_hmm.mat');
+    hmm_data_filename = strcat(candidate_symbol_name, '_hmm_', ...
+                                    hmm_model_choice, '.mat');
     load(hmm_data_filename, 'symbol_rec_threshold');
     
     
@@ -212,6 +237,7 @@ set(handles.text_likelihood_data, 'String', '');
 set(handles.text_detected_symbol, 'String', '');
 
 
+
 function text_likelihood_data_Callback(hObject, eventdata, handles)
 % hObject    handle to text_likelihood_data (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -228,6 +254,29 @@ function text_likelihood_data_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in hmm_model_select.
+function hmm_model_select_Callback(hObject, eventdata, handles)
+% hObject    handle to hmm_model_select (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns hmm_model_select contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from hmm_model_select
+
+
+% --- Executes during object creation, after setting all properties.
+function hmm_model_select_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to hmm_model_select (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

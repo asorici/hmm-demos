@@ -33,9 +33,11 @@ OL = cell(1, len_td);   % stores the indexes of the codebook elements
 R = 2;                  % there are two dimensions: x and y
 TMax = 0;
 
-resample_interval = 0.02;
-hamming_window_size = 0.16;
-hamming_window_step = 0.08;
+% load FFT feature extraction parameters from file
+feature_param_file = 'feature_extraction_parameters.mat';
+load(feature_param_file, 'resample_interval', ...
+                         'hamming_window_size', ...
+                         'hamming_window_step');
 
 for l = 1 : len_td
     ol = symbol_get_feature_sequence(training_track_values{l}, ...

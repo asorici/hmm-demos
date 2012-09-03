@@ -17,7 +17,7 @@ function symbol_vq_codebook(symbol, nr_clusters, resample_interval, ...
 
 
 %%  Initialization
-symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
+
 
 % define the name of the codebook output file
 codebook_filename = strcat(symbol, '_codebook.mat');

@@ -76,25 +76,34 @@ else
 end
 
 %% initial computation
-Pold = -1;
+LogP_old = 0;
 
-P = zeros(1,L);
-Scale = zeros(L, TMax);
+LogP = zeros(1,L);
+%Scale = zeros(L, TMax);
+Scale = ones(L, TMax);
 
 % Compute initial P (and forward and backward variables)
 for l=1:L
-    [P(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
+    [LogP(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
         forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
 end
 
 %% EM Loop
-while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
+%while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
+while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
     
-    Pold = prod(P);
+    %Pold = prod(P);
+    LogP_old = sum(LogP) / L;
+    
+    % display some progress
+    fprintf('Iteration: %d, Log Likelihood: %0.5f\n', ...
+                iter_ct, LogP_old);
     
     % Precompute B_prod like in the forward_backward case
-    B_prod = ones(L, N, TMax);
+    %B_prod = ones(L, N, TMax);
+    B_prod = zeros(L, N, TMax);
     for l = 1 : L
+        B_prod(l, :, 1:T(l)) = ones(N, T(l));
         for t = 1 : T(l)
             obs_symbol_idx = O(l, :, t)';
             for r = 1 : R
@@ -118,7 +127,7 @@ while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
             permute(repmat(A,[1 1 1 (T(l)-1)]), [3 4 1 2]);
 
         B_3D(l,1:(T(l)-1),:,:) = ...
-            permute(repmat(B_prod(l, :, 2:T(l)),[1 1 1 N]), [3 2 4 1]);
+            permute(repmat(shiftdim(B_prod(l, :, 2:T(l))),[1 1 1 N]), [3 2 4 1]);
             %permute(repmat(B(:,O(l,2:T(l))),[1 1 1 N]), [3 2 4 1]);
             
         Beta_3D(l,1:(T(l)-1),:,:) = ...
@@ -132,10 +141,17 @@ while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
     %% Maximization (Reestimation)
 
     mask = zeros(L, TMax);
-    mask(1:L, 1:TMax-1) = (O(1:L,2:TMax) > 0);
+    % the following works because we know that O cannot have 
+    % zero values in one dimension and non-zero values in an other
+    %mask(1:L, 1:TMax-1) = ...
+    %    (shiftdim(permute((O(1:L, 1, 2:TMax) > 0), [2 1 3])));
+    for l = 1:L
+        mask(l, 1:(T(l) - 1)) = ones(1, (T(l) - 1));
+    end
     mask = repmat(mask, [1 1 N]);
 
     % Reestimate Lambda
+    %{
     A = shiftdim(sum(sum( ...
         Alpha_3D .* A_3D .* B_3D .* Beta_3D ...
         , 1),2),2) ...
@@ -143,25 +159,45 @@ while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
         repmat(Alpha .* Beta .* mask .* ...
         repmat(Scale,[1 1 N]),[1 1 1 N]) ...
         ,1),2),2);
-
+    %}
+    A_aux = shiftdim(sum(sum( ...
+        Alpha_3D .* A_3D .* B_3D .* Beta_3D ... 
+        , 1),2),2); 
+    % A_aux is now N x N
+    A = A_aux ./ repmat(sum(A_aux, 2), [1 N]);
+    
     % reestimate emission probabilities for each dimension of the
     % observed variables
+    % also use laplacian smoothing with a factor of 1.0e-4
     for r = 1 : R
         O_r = shiftdim(permute(O(:, r, :), [1 3 2]));
-        B(:,:,r) = shiftdim(sum(sum( ...
+        B(:,:,r) = (shiftdim(sum(sum( ...
             (permute(repmat(repmat(O_r,[1 1 M]) == ...
             permute(repmat(V,[L 1 TMax]), [1 3 2]),[1 1 1 N]), [1 2 4 3])) .* ...
-            repmat(Alpha .* Beta .* repmat(Scale,[1 1 N]),[1 1 1 M]) ...
-            ,1),2),2) ./ ...    
-            shiftdim(sum(sum( ...
-            repmat(Alpha .* Beta .* repmat(Scale,[1 1 N]),[1 1 1 M]) ...
-            ,1),2),2);
+            repmat(Alpha .* Beta ./ repmat(Scale,[1 1 N]),[1 1 1 M]) ...
+            ,1),2),2) + ones(N, M) * 1.0e-4) ./ ...    
+            (shiftdim(sum(sum( ...
+            repmat(Alpha .* Beta ./ repmat(Scale,[1 1 N]),[1 1 1 M]) ...
+            ,1),2),2) + ones(N, M) * 1.0e-4 * M);
     end
+    
+    if strcmp(model, 'ergodic')
+        % we have to reestimate the 
+        % initial state probabilities as well
+        Pi = zeros(1, N);
+        for l = 1:L
+            AlphaL = shiftdim(Alpha(l, :, :));
+            BetaL = shiftdim(Beta(l, :, :));
+            Pi = Pi + AlphaL(1, :) .* BetaL(1, :) ./ Scale(l, 1) ./ ... 
+                sum(AlphaL(1, :) .* BetaL(1, :) ./ Scale(l, 1));
+        end
 
+        Pi = Pi ./ L;
+    end
     
     % Recompute P and forward & backward variables
     for l=1:L
-        [P(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
+        [LogP(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
             forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
     end
     

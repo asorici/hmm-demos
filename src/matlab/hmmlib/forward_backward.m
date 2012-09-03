@@ -48,22 +48,30 @@ end
 %%  The uni-dimensional case
 if R == 1
     alpha(1,:) = Pi .* B(:, O(1))';
-    scale(1) = sum(alpha(1, :));
-    alpha(1,:) = alpha(1, :) / scale(1);
+    %scale(1) = sum(alpha(1, :));
+    %alpha(1,:) = alpha(1, :) / scale(1);
+    scale(1) = 1 ./ sum(alpha(1, :));
+    alpha(1,:) = alpha(1, :) * scale(1);
 
     for t = 2:T
         alpha(t,:) = (alpha(t-1,:) * A) .* B(:, O(t))';
-        scale(t) = sum(alpha(t, :));
-        alpha(t, :) = alpha(t, :) / scale(t);
+        %scale(t) = sum(alpha(t, :));
+        %alpha(t, :) = alpha(t, :) / scale(t);
+        scale(t) = 1 ./ sum(alpha(t, :));
+        alpha(t, :) = alpha(t, :) * scale(t);
     end
 
-    beta(T, :) = beta(T, :) / scale(T);
+    %beta(T, :) = beta(T, :) / scale(T);
+    beta(T, :) = beta(T, :) * scale(T);
     for t = (T-1):-1:1
         beta(t,:) = A * (B(:,O(t+1)) .* beta(t+1,:)');
-        beta(t, :) = beta(t, :) / scale(t);
+        %beta(t, :) = beta(t, :) / scale(t);
+        beta(t, :) = beta(t, :) * scale(t);
     end
     %scale = ones(size(scale)) ./ scale;
-    P = prod(scale);
+    %P = prod(scale);
+    %P = sum(log(scale));
+    P = -sum(log(scale));
     
 else
 %%  The multi-dimensional case
@@ -83,21 +91,29 @@ else
     
     
     alpha(1,:) = pi .* B_prod(:, 1)';
-    scale(1) = sum(alpha(1, :));
-    alpha(1,:) = alpha(1, :) / scale(1);
+    %scale(1) = sum(alpha(1, :));
+    %alpha(1,:) = alpha(1, :) / scale(1);
+    scale(1) = 1 ./ sum(alpha(1, :));
+    alpha(1,:) = alpha(1, :) * scale(1);
 
     for t = 2:T
         alpha(t,:) = (alpha(t-1,:) * A) .* B_prod(:, t)';
-        scale(t) = sum(alpha(t, :));
-        alpha(t, :) = alpha(t, :) / scale(t);
+        %scale(t) = sum(alpha(t, :));
+        %alpha(t, :) = alpha(t, :) / scale(t);
+        scale(t) = 1 ./ sum(alpha(t, :));
+        alpha(t, :) = alpha(t, :) * scale(t);
     end
 
-    beta(T, :) = beta(T, :) / scale(T);
+    %beta(T, :) = beta(T, :) / scale(T);
+    beta(T, :) = beta(T, :) * scale(T);
     for t = (T-1):-1:1
         beta(t,:) = A * (B_prod(:,t+1) .* beta(t+1,:)');
-        beta(t, :) = beta(t, :) / scale(t);
+        %beta(t, :) = beta(t, :) / scale(t);
+        beta(t, :) = beta(t, :) * scale(t);
     end
     
     %scale = ones(size(scale)) ./ scale;
-    P = prod(scale);
+    %P = prod(scale);
+    %P = sum(log(scale));
+    P = -sum(log(scale));
 end
