@@ -17,15 +17,19 @@ function [Pi, A, B] = symbol_train_hmm(symbol, transition_model)
 %% Initialization
 % build filenames
 symbol_track_file = strcat(symbol, '.mat');
-symbol_codebook_file = strcat(symbol, '_codebook.mat');
+symbol_codebook_file = 'symbol_feature_codebook.mat';
 
 % load raw_track and codebook variables
 load(symbol_track_file, 'raw_track_values');
 load(symbol_codebook_file, 'x_codebook', 'y_codebook');
 
-% 3/4 training data
-len_td = floor(3 * size(raw_track_values, 2) / 4);
-training_track_values = raw_track_values(1:len_td);
+% 3/4 training data randomly chosen
+len_total = size(raw_track_values, 2);
+randomized_idx = randperm(len_total);
+
+len_td = floor(3 * len_total / 4);
+training_track_values = ...
+    raw_track_values(randomized_idx(1:len_td));
 
 % auxiliary variables
 OL = cell(1, len_td);   % stores the indexes of the codebook elements
@@ -62,7 +66,7 @@ for l = 1 : len_td
 end
 
 %% Training
-N = 6;                      % consider 6 states
+N = 8;                      % number of states to consider
 M = size(x_codebook, 1);    % M is the number of codebook vectors
 max_iter = 50;              % consider at most 50 iterations of the 
                             % learning algorithm

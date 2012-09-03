@@ -8,6 +8,10 @@ feature_param_file = 'feature_extraction_parameters.mat';
 load(feature_param_file, 'resample_interval', ...
                          'hamming_window_size', ...
                          'hamming_window_step');
+                     
+% load symbol codebook from file
+codebook_filename = 'symbol_feature_codebook.mat';
+load(codebook_filename, 'x_codebook', 'y_codebook');
 
 % ---------------------------- training ---------------------------
 disp '--------- Training HMM models ---------'
@@ -34,18 +38,19 @@ disp '--------- Test results --------'
 for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
     raw_track_filename = strcat(symbol_name, '.mat');
-    codebook_filename = strcat(symbol_name, '_codebook.mat');
     hmm_data_filename = strcat(symbol_name, '_hmm_', model, '.mat');
     
     load(raw_track_filename, 'raw_track_values');
-    load(codebook_filename, 'x_codebook', 'y_codebook');
     
-    len_tot = size(raw_track_values, 2);
-    len_td = floor(3 * len_tot / 4);
-    len_test = len_tot - len_td;
-
-    training_track_values = raw_track_values(1:len_td);
-    testing_track_values = raw_track_values((len_td + 1):len_tot);
+    len_total = size(raw_track_values, 2);
+    len_td = floor(3 * len_total / 4);
+    len_test = len_total - len_td;
+    
+    randomized_idx = randperm(len_total);
+    training_track_values = ...
+        raw_track_values(randomized_idx(1:len_td));
+    testing_track_values = ...
+        raw_track_values(randomized_idx((len_td + 1):len_total));
 
     sumlik = 0;
     minlik = Inf;

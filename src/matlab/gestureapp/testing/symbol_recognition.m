@@ -101,21 +101,19 @@ set(gcbf, 'WindowButtonMotionFcn', '');
 
 
 function motionfcn(hObject, eventdata)
-%axes_list = findall(hObject,'type','axes');
-%padH = axes_list(1,1);
-padH = gca;
+%padH = gca;
+h = guidata(hObject);
+padH = h.symbol_pad;
+mousePositionData = get(padH, 'CurrentPoint');
 
 t = clock;
-mousePositionData = get(padH,'CurrentPoint');
-current_track = get(padH, 'userdata');
 t_mark = t(4) * 3600 + t(5) * 60 + t(6);
-set(padH, 'userdata',[current_track; mousePositionData(1,1) mousePositionData(1,2) t_mark]);
-%axes(padH);
 
-%hold(hObject, 'on');
+current_track = get(padH, 'userdata');
+set(padH, 'userdata',[current_track; mousePositionData(1,1) mousePositionData(1,2) t_mark]);
+
 hold on;
 plot(mousePositionData(1,1), mousePositionData(1,2), 'r*');
-%hold(hObject, 'off');
 hold off;
 
 
@@ -126,9 +124,10 @@ function button_test_symbol_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % get stored track data and then clear the userdata value
-padH = gca;
-track_data = get(padH, 'userdata');
-set(padH, 'userdata', []);
+%padH = gca;
+padH = handles.symbol_pad;
+track_data = get(padH, 'UserData');
+set(padH, 'UserData', []);
 
 hmm_model_index = get(handles.hmm_model_select, 'Value');
 hmm_model_types = get(handles.hmm_model_select, 'String');
@@ -141,9 +140,15 @@ end
 symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
 symbol_strings = char(symbols);
 
+% load codebook feature vectors
+codebook_filename = 'symbol_feature_codebook.mat'
+load(codebook_filename, 'x_codebook', 'y_codebook');
+
 global nr_points
 if size(track_data, 1) > nr_points
     % clear symbol pad from old plots
+    
+    track_data = bbox_resize(track_data);
     
     step = double(size(track_data, 1)) / double(nr_points);
     sampled_track_data = [];
@@ -165,7 +170,6 @@ if size(track_data, 1) > nr_points
     for s=1:size(symbol_strings, 1)
         symbol_name = symbol_strings(s, :);
         feature_param_file = 'feature_extraction_parameters.mat';
-        codebook_filename = strcat(symbol_name, '_codebook.mat');
         hmm_data_filename = strcat(symbol_name, '_hmm_', ...
                                     hmm_model_choice, '.mat');
         
@@ -176,7 +180,6 @@ if size(track_data, 1) > nr_points
         load(feature_param_file, 'resample_interval', ...
                          'hamming_window_size', ...
                          'hamming_window_step');
-        load(codebook_filename, 'x_codebook', 'y_codebook');
         load(hmm_data_filename, 'Pi', 'A', 'B');
         
         O = symbol_get_feature_sequence(sampled_track_data, ...
@@ -281,3 +284,23 @@ function hmm_model_select_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% Auxiliary function to compute bounding box of the symbol
+% sequence and resize the values of the sequence accordingly
+function [track_data] = bbox_resize(track_data)
+len_seq = size(track_data, 1);
+    
+% determine bounding box of symbol sequence
+x_min = min(track_data(:, 1));
+x_max = max(track_data(:, 1));
+
+y_min = min(track_data(:, 2));
+y_max = max(track_data(:, 2));
+
+% and resize sequence to bounding box
+track_data(:, 1) = ...
+    (track_data(:, 1) - ones(len_seq, 1) * x_min) ./ (x_max - x_min);
+
+track_data(:, 2) = ...
+    (track_data(:, 2) - ones(len_seq, 1) * y_min) ./ (y_max - y_min);

@@ -251,7 +251,13 @@ function symbol_pad_start_track(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %set(hObject, 'ButtonDownFcn', @symbol_pad_stop_track);
-set(gcbf, 'WindowButtonMotionFcn', @motionfcn);
+button = get(gcbf, 'SelectionType');
+
+if strcmpi(button, 'normal')
+    set(gcbf, 'WindowButtonMotionFcn', @motionfcn);
+elseif strcmpi(button, 'alt')
+    cla;
+end
 
 
 % --- Executes on mouse press over axes background to stop tracking.

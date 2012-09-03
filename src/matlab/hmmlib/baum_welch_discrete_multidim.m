@@ -169,7 +169,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
     
     % reestimate emission probabilities for each dimension of the
     % observed variables
-    % also use laplacian smoothing with a factor of 1.0e-4
+    % also use laplacian smoothing with a factor of 1.0e-2
     for r = 1 : R
         O_r = shiftdim(permute(O(:, r, :), [1 3 2]));
         B(:,:,r) = (shiftdim(sum(sum( ...
