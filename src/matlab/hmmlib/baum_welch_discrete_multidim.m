@@ -2,26 +2,28 @@ function [Pi, A, B] = baum_welch_discrete_multidim(O, T, N, M, model, max_iter)
 % BAUM_WELCH_DISCRETE computes the Baum-Welch algorithm for discrete values
 % 
 % Inputs
-%   O :     an L x R x TMax matrix with the observed sequences
-%   T :     an 1 x L matrix with the length of each sequence in O
-%   N :     the number of states in the HMM
-%   M :     the number of discrete observation values
-%   R :     the number of dimensions for the observed values
-%   model:  the model of the transition structure for the HMM
+% O :       an L x R x TMax matrix with the observed sequences
+% T :       an 1 x L matrix with the length of each sequence in O
+% N :       the number of states in the HMM
+% M :       the number of discrete observation values
+% R :       the number of dimensions for the observed values
+% model:    the model of the transition structure for the HMM
 %           choices are from {ergodic, bakis}
+% max_iter: the maximum number of iterations for the Baum-Welch
+%           algorithm
 %
 % Outputs:
-%   Pi : an 1 x N matrix containing the initial state distribution
-%        Pi(j) = P(q[1]=Sj) for 1 =< j =< N
-%   A :  an N x N matrix for the state transition probability distribution
-%        A(i,j) = P(q[t+1]=Sj | q[t] = Si)
-%   B :  an N x M x R matrix for the observation values probability distribution
-%        in each state
-%        B(j,k,r) = P(O[r,t]=v[r,k] | q[t] = Sj)
+% Pi : an 1 x N matrix containing the initial state distribution
+%      Pi(j) = P(q[1]=Sj) for 1 =< j =< N
+% A :  an N x N matrix for the state transition probability distribution
+%      A(i,j) = P(q[t+1]=Sj | q[t] = Si)
+% B :  an N x M x R matrix for the observation values probability distribution
+%      in each state
+%      B(j,k,r) = P(O[r,t]=v[r,k] | q[t] = Sj)
 
 %% Other variables
 
-% Maximum number of iterations
+% Number of iterations
 iter_ct = 1;
 
 % Observed sequences
@@ -128,7 +130,6 @@ while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
 
         B_3D(l,1:(T(l)-1),:,:) = ...
             permute(repmat(shiftdim(B_prod(l, :, 2:T(l))),[1 1 1 N]), [3 2 4 1]);
-            %permute(repmat(B(:,O(l,2:T(l))),[1 1 1 N]), [3 2 4 1]);
             
         Beta_3D(l,1:(T(l)-1),:,:) = ...
             permute(repmat(Beta(l,2:T(l),:), [1 1 1 N]), [1 2 4 3]);
@@ -156,7 +157,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
         Alpha_3D .* A_3D .* B_3D .* Beta_3D ...
         , 1),2),2) ...
         ./ shiftdim(sum(sum( ...
-        repmat(Alpha .* Beta .* mask .* ...
+        repmat(Alpha .* Beta .* mask ./ ...
         repmat(Scale,[1 1 N]),[1 1 1 N]) ...
         ,1),2),2);
     %}
