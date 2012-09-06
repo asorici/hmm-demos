@@ -1,9 +1,9 @@
 %% Define parameters for quantization and FFT feature extraction
-symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
+symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
 resample_interval = 0.02;
-hamming_window_size = 0.32;
-hamming_window_step = 0.16;
-nr_clusters = 128;
+hamming_window_size = 0.16;
+hamming_window_step = 0.08;
+nr_clusters = 256;
 
 % store the FFT feature extraction parameters in a file
 feature_param_file = 'feature_extraction_parameters.mat';

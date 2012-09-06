@@ -1,6 +1,7 @@
-function symbol_test_training()
+function symbol_test_training(model)
+%% perform symbol recognition training for the hmm model type
 
-symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
+symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
 symbol_strings = char(symbols);
 
 % load FFT feature extraction parameters from file
@@ -13,13 +14,11 @@ load(feature_param_file, 'resample_interval', ...
 codebook_filename = 'symbol_feature_codebook.mat';
 load(codebook_filename, 'x_codebook', 'y_codebook');
 
-% ---------------------------- training ---------------------------
+%% ---------------------------- training ---------------------------
 disp '--------- Training HMM models ---------'
 hmms = cell(4,3);
 for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
-    model = 'bakis';
-    %model = 'ergodic';
     
     fprintf('-------- Training for symbol %s --------\n', ...
         strtrim(symbol_name));
@@ -31,27 +30,19 @@ for s=1:size(symbol_strings, 1)
 end
 
 disp '--------- Training Phase Over - HMM parameters learned ---------'
-disp '--------- Test results --------'
+disp '--------- Validation results --------'
 
-% ---------------------------- testing ----------------------------
+%% ---------------------------- validating ----------------------------
 
 for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
-    raw_track_filename = strcat(symbol_name, '.mat');
+    raw_track_filename = strcat(symbol_name, '_validate.mat');
     hmm_data_filename = strcat(symbol_name, '_hmm_', model, '.mat');
     
     load(raw_track_filename, 'raw_track_values');
+    len_vl = size(raw_track_values, 2);
+    validating_track_values = raw_track_values;
     
-    len_total = size(raw_track_values, 2);
-    len_td = floor(3 * len_total / 4);
-    len_test = len_total - len_td;
-    
-    randomized_idx = randperm(len_total);
-    training_track_values = ...
-        raw_track_values(randomized_idx(1:len_td));
-    testing_track_values = ...
-        raw_track_values(randomized_idx((len_td + 1):len_total));
-
     sumlik = 0;
     minlik = Inf;
 
@@ -60,8 +51,8 @@ for s=1:size(symbol_strings, 1)
     B = hmms{s, 3};
 
     % first compute recognition threshold
-    for j = 1 : len_td
-        track_data = training_track_values{j};
+    for j = 1 : len_vl
+        track_data = validating_track_values{j};
         O = symbol_get_feature_sequence(track_data, ...
                 x_codebook, y_codebook, ...
                 resample_interval, ...
@@ -82,20 +73,23 @@ for s=1:size(symbol_strings, 1)
             minlik = lik;
         end
         sumlik = sumlik + lik;
+        
+        fprintf('%s likelihood: %0.5f\n', symbol_name, lik);
     end
     
-    symbol_rec_threshold = 2.0 * sumlik / len_td;
+    symbol_rec_threshold = 2.0 * sumlik / len_vl;
     
     % SAVE HMM DATA FOR USE IN RECOGNITION
     save(hmm_data_filename, 'Pi', 'A', 'B', 'symbol_rec_threshold');
     
     
     fprintf('*************************************************\n');
-    fprintf('Testing %i sequences of symbol %s for a log likelihood greater than %f\n', ... 
-             len_test, strtrim(symbol_name), ...,
+    fprintf('Validation performed for symbol %s. Detection log likelihood threshold set at: %f\n', ... 
+             strtrim(symbol_name), ...,
              symbol_rec_threshold);
     fprintf('*************************************************\n\n');
     
+    %{
     % then perform accuracy measurements on hold out test data
     recs = 0;
     tLL = zeros(len_test, 1);
@@ -122,4 +116,5 @@ for s=1:size(symbol_strings, 1)
 
     fprintf('Recognition success rate: %f percent\n',100*recs/len_test);
     fprintf('\n');
+    %}
 end

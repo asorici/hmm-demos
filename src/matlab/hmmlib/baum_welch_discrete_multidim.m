@@ -50,6 +50,8 @@ Alpha_3D = zeros(L,TMax,N,N);
 Beta_3D = zeros(L,TMax,N,N);
 V = 1:M;
 
+ll_threshold = 0.00001;
+
 %%  Initial random values for the HMM parameters
 Pi = zeros(1, N);
 A = rand(N, N);
@@ -57,18 +59,34 @@ B = ones(N, M, R) / M;  % uniform initial output probabilities
 
 %   Switch after model type
 if strcmp(model, 'ergodic')
+    
     Pi = rand(1, N);
     Pi = Pi ./ sum(Pi);
+    
+    %Pi = ones(1, N) / N;
     A = A ./ repmat(sum(A,2),1,N);
 else
     if strcmp(model, 'bakis')
         Pi(1) = 1;
         A = zeros(N, N);
-        
+        %{
         for i = 1 : N - 2
             A(i, i:(i+2)) = rand(1, 3);
         end
         A(N - 1, (N - 1):N) = rand(1, 2);
+        %}
+        
+        for i = 1 : N - 2
+            A(i, i:(i+2)) = 1;
+        end
+        A(N - 1, (N - 1):N) = 1;
+        
+        %{
+        for i = 1 : N - 1
+            A(i, i:(i+1)) = rand(1, 2);
+        end
+        %}
+        
         A(N, N) = 1;
         A = A ./ repmat(sum(A,2),1,N);
     else
@@ -92,7 +110,7 @@ end
 
 %% EM Loop
 %while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
-while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
+while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     
     %Pold = prod(P);
     LogP_old = sum(LogP) / L;
@@ -205,3 +223,5 @@ while abs(LogP_old - (sum(LogP) / L)) >= 0.000001 && iter_ct < max_iter
     % increase iteration count
     iter_ct = iter_ct + 1;
 end
+
+LogP_old - sum(LogP) / L

@@ -87,6 +87,7 @@ button = get(gcbf, 'SelectionType');
 if strcmpi(button, 'normal')
     set(gcbf, 'WindowButtonMotionFcn', @motionfcn);
 elseif strcmpi(button, 'alt')
+    set(handles.symbol_pad, 'UserData', []);
     cla;
 end
 
@@ -109,8 +110,8 @@ mousePositionData = get(padH, 'CurrentPoint');
 t = clock;
 t_mark = t(4) * 3600 + t(5) * 60 + t(6);
 
-current_track = get(padH, 'userdata');
-set(padH, 'userdata',[current_track; mousePositionData(1,1) mousePositionData(1,2) t_mark]);
+current_track = get(padH, 'UserData');
+set(padH, 'UserData',[current_track; mousePositionData(1,1) mousePositionData(1,2) t_mark]);
 
 hold on;
 plot(mousePositionData(1,1), mousePositionData(1,2), 'r*');
@@ -137,7 +138,7 @@ else
     hmm_model_choice = hmm_model_types(hmm_model_index, :);
 end
 
-symbols = {'left_arrow' 'right_arrow' 'circle' 'square'};
+symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
 symbol_strings = char(symbols);
 
 % load codebook feature vectors
@@ -146,40 +147,27 @@ load(codebook_filename, 'x_codebook', 'y_codebook');
 
 global nr_points
 if size(track_data, 1) > nr_points
-    % clear symbol pad from old plots
-    
     track_data = bbox_resize(track_data);
-    
-    step = double(size(track_data, 1)) / double(nr_points);
-    sampled_track_data = [];
-    index = 1;
-    
-    for i = 1:nr_points
-        idx = floor(index);
-        if idx >= size(track_data, 1)
-            idx = size(track_data, 1);
-        end
-        sampled_track_data = [sampled_track_data; track_data(idx, :)];
-        index = index + step;
-    end
+    sampled_track_data = track_data;
     
     ll = zeros(1, size(symbol_strings, 1));
     most_likely_symbol_idx = 1;
     max_ll = -Inf;
     
+    % load the feature extraction parameters
+    feature_param_file = 'feature_extraction_parameters.mat';
+    load(feature_param_file, 'resample_interval', ...
+                         'hamming_window_size', ...
+                         'hamming_window_step');
+    
     for s=1:size(symbol_strings, 1)
         symbol_name = symbol_strings(s, :);
-        feature_param_file = 'feature_extraction_parameters.mat';
+        
         hmm_data_filename = strcat(symbol_name, '_hmm_', ...
                                     hmm_model_choice, '.mat');
         
-        
-        % load the feature extraction parameters, 
-        % codebook vectors and the hmm parameters 
+        % load the codebook vectors and the hmm parameters 
         % for the alleged symbol
-        load(feature_param_file, 'resample_interval', ...
-                         'hamming_window_size', ...
-                         'hamming_window_step');
         load(hmm_data_filename, 'Pi', 'A', 'B');
         
         O = symbol_get_feature_sequence(sampled_track_data, ...
@@ -236,6 +224,7 @@ function button_clear_symbol_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 cla;
+set(handles.symbol_pad, 'UserData', []);
 set(handles.text_likelihood_data, 'String', '');
 set(handles.text_detected_symbol, 'String', '');
 

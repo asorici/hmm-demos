@@ -27,16 +27,12 @@ function [x_vectors, y_vectors] = symbol_vq_vectors(symbol, resample_interval, .
 x_vectors = [];
 y_vectors = [];
 
-filename = strcat(symbol, '.mat');
+% read the training set
+filename = strcat(symbol, '_train.mat');
 load(filename, 'raw_track_values');
 
-% 3/4 training data randomly chosen
-len_total = size(raw_track_values, 2);
-randomized_idx = randperm(len_total);
-
-len_td = floor(3 * len_total / 4);
-training_track_values = ...
-    raw_track_values(randomized_idx(1:len_td));
+training_track_values = raw_track_values;
+len_td = size(training_track_values, 2);
 
 %% Processing
 for i=1:len_td

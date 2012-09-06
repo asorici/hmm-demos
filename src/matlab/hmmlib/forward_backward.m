@@ -35,6 +35,8 @@ M = size(B, 2);
 T = size(O, 2);
 R = size(O, 1);
 
+dim_threshold_coeff = 0.001;
+
 scale = zeros (1, T);
 alpha = zeros (T, N);
 beta = ones (T, N);
@@ -48,28 +50,52 @@ end
 %%  The uni-dimensional case
 if R == 1
     alpha(1,:) = Pi .* B(:, O(1))';
+    
+    %{
+    max_alpha = max(alpha(1, :)) * dim_threshold_coeff;
+    max_alpha_compare = alpha(1, :) - ones(1, N) * max_alpha;
+    max_alpha_idx = find(max_alpha_compare < 0);
+    alpha(1, max_alpha_idx) = 0;
+    %}
+    
     %scale(1) = sum(alpha(1, :));
     %alpha(1,:) = alpha(1, :) / scale(1);
     scale(1) = 1 ./ sum(alpha(1, :));
     alpha(1,:) = alpha(1, :) * scale(1);
-
+    
     for t = 2:T
         alpha(t,:) = (alpha(t-1,:) * A) .* B(:, O(t))';
+        
+        %{
+        max_alpha = max(alpha(t, :)) * dim_threshold_coeff;
+        max_alpha_compare = alpha(t, :) - ones(1, N) * max_alpha;
+        max_alpha_idx = find(max_alpha_compare < 0);
+        alpha(t, max_alpha_idx) = 0;
+        %}
+        
         %scale(t) = sum(alpha(t, :));
         %alpha(t, :) = alpha(t, :) / scale(t);
         scale(t) = 1 ./ sum(alpha(t, :));
         alpha(t, :) = alpha(t, :) * scale(t);
+        
     end
 
     %beta(T, :) = beta(T, :) / scale(T);
     beta(T, :) = beta(T, :) * scale(T);
     for t = (T-1):-1:1
         beta(t,:) = A * (B(:,O(t+1)) .* beta(t+1,:)');
+        
+        %{
+        max_beta = max(beta(t, :)) * dim_threshold_coeff;
+        max_beta_compare = beta(t, :) - ones(1, N) * max_beta;
+        max_beta_idx = find(max_beta_compare < 0);
+        beta(t, max_beta_idx) = 0;
+        %}
+        
         %beta(t, :) = beta(t, :) / scale(t);
         beta(t, :) = beta(t, :) * scale(t);
     end
-    %scale = ones(size(scale)) ./ scale;
-    %P = prod(scale);
+	
     %P = sum(log(scale));
     P = -sum(log(scale));
     
@@ -91,13 +117,29 @@ else
     
     
     alpha(1,:) = pi .* B_prod(:, 1)';
+    
+    %{
+    max_alpha = max(alpha(1, :)) * dim_threshold_coeff;
+    max_alpha_compare = alpha(1, :) - ones(1, N) * max_alpha;
+    max_alpha_idx = find(max_alpha_compare < 0);
+    alpha(1, max_alpha_idx) = 0;
+    %}
+    
     %scale(1) = sum(alpha(1, :));
     %alpha(1,:) = alpha(1, :) / scale(1);
     scale(1) = 1 ./ sum(alpha(1, :));
     alpha(1,:) = alpha(1, :) * scale(1);
-
+    
     for t = 2:T
         alpha(t,:) = (alpha(t-1,:) * A) .* B_prod(:, t)';
+        
+        %{
+        max_alpha = max(alpha(t, :)) * dim_threshold_coeff;
+        max_alpha_compare = alpha(t, :) - ones(1, N) * max_alpha;
+        max_alpha_idx = find(max_alpha_compare < 0);
+        alpha(t, max_alpha_idx) = 0;
+        %}
+        
         %scale(t) = sum(alpha(t, :));
         %alpha(t, :) = alpha(t, :) / scale(t);
         scale(t) = 1 ./ sum(alpha(t, :));
@@ -108,12 +150,18 @@ else
     beta(T, :) = beta(T, :) * scale(T);
     for t = (T-1):-1:1
         beta(t,:) = A * (B_prod(:,t+1) .* beta(t+1,:)');
+        
+        %{
+        max_beta = max(beta(t, :)) * dim_threshold_coeff;
+        max_beta_compare = beta(t, :) - ones(1, N) * max_beta;
+        max_beta_idx = find(max_beta_compare < 0);
+        beta(t, max_beta_idx) = 0;
+        %}
+        
         %beta(t, :) = beta(t, :) / scale(t);
         beta(t, :) = beta(t, :) * scale(t);
     end
     
-    %scale = ones(size(scale)) ./ scale;
-    %P = prod(scale);
     %P = sum(log(scale));
     P = -sum(log(scale));
 end
