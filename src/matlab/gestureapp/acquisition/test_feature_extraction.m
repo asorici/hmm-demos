@@ -68,13 +68,27 @@ for i = 1 : data_lines
     xvals_fft_reversed = fft(xvals_reversed, NFFT) / NFFT;
     yvals_fft_reversed = fft(yvals_reversed, NFFT) / NFFT;
     
+    y_phase = atan2(imag(yvals_fft'), real(yvals_fft'));
+    fprintf('direct y-dim fft phase vals: ');
+    disp(y_phase);
+    
+    sign(sum(sign(y_phase(1:(NFFT / 2)))))
+    
+    y_reversed_phase = atan2(imag(yvals_fft_reversed'), real(yvals_fft_reversed'));
+    fprintf('reverse y-dim fft phase vals: ');
+    disp(y_reversed_phase);
+    
+    fprintf('phase pi diff: ');
+    disp(y_phase - y_reversed_phase - ones(size(y_phase)) * 3.1416);
+    
     fprintf('direct y-dim fft amplitude vals: ');
     disp(abs(yvals_fft'));
     
     fprintf('reverse y-dim fft amplitude vals: ');
     disp(abs(yvals_fft_reversed'));
 
-    fprintf('\n');
+    fprintf('=============================================\n');
+    
     % move window
     low_t = low_t + hamming_window_step;
     high_t = high_t + hamming_window_step;

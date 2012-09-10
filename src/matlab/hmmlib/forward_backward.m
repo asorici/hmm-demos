@@ -116,7 +116,7 @@ else
     end
     
     
-    alpha(1,:) = pi .* B_prod(:, 1)';
+    alpha(1,:) = Pi .* B_prod(:, 1)';
     
     %{
     max_alpha = max(alpha(1, :)) * dim_threshold_coeff;

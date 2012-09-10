@@ -22,7 +22,7 @@ function varargout = symbol_recognition(varargin)
 
 % Edit the above text to modify the response to help symbol_recognition
 
-% Last Modified by GUIDE v2.5 28-Aug-2012 20:58:19
+% Last Modified by GUIDE v2.5 07-Sep-2012 20:42:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -293,3 +293,38 @@ track_data(:, 1) = ...
 
 track_data(:, 2) = ...
     (track_data(:, 2) - ones(len_seq, 1) * y_min) ./ (y_max - y_min);
+
+
+% --- Executes during object creation, after setting all properties.
+function button_test_symbol_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to button_test_symbol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function button_clear_symbol_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to button_clear_symbol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function text2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function text_detected_symbol_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text_detected_symbol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function text3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

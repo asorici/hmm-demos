@@ -47,12 +47,25 @@ for i = 1 : data_lines
     % compute fft in window
     xvals_fft = fft(xvals, NFFT) / NFFT;
     yvals_fft = fft(yvals, NFFT) / NFFT;
-
+    
+    %{
+    % give them a sense of direction (increasing vs decreasing)
+    % compute phases
+    x_phase = atan2(imag(xvals_fft'), real(xvals_fft'));
+    y_phase = atan2(imag(yvals_fft'), real(yvals_fft'));
+    
+    sign_xvals = sign(sum(sign(x_phase(1:(NFFT / 2)))));
+    sign_yvals = sign(sum(sign(y_phase(1:(NFFT / 2)))));
+    
+    x_fft_vectors(i, :) = abs(xvals_fft) * sign_xvals;
+    y_fft_vectors(i, :) = abs(yvals_fft) * sign_yvals;
+    %}
+    
     %x_vectors = [x_vectors; abs(xvals_fft)'];
     %y_vectors = [y_vectors; abs(yvals_fft)'];
     x_fft_vectors(i, :) = abs(xvals_fft);
     y_fft_vectors(i, :) = abs(yvals_fft);
-
+    
     % move window
     low_t = low_t + hamming_window_step;
     high_t = high_t + hamming_window_step;
