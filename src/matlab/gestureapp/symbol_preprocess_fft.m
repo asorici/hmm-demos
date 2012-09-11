@@ -20,9 +20,6 @@ NFFT = floor(hamming_window_size / resample_interval);
 
 % resample the raw track data at even resample_interval delays using 
 % linear interpolation
-v1 = track_data(1, 3);
-track_data(:,3) = track_data(:, 3) - v1;
-
 resampled_track_data = resample_track_data(track_data, resample_interval, 0);
 low_t = 0;
 high_t = hamming_window_size;

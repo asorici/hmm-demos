@@ -141,67 +141,16 @@ end
 symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
 symbol_strings = char(symbols);
 
-% load codebook feature vectors
-codebook_filename = 'symbol_feature_codebook.mat'
-load(codebook_filename, 'x_codebook', 'y_codebook');
-
 global nr_points
 if size(track_data, 1) > nr_points
     track_data = bbox_resize(track_data);
     sampled_track_data = track_data;
     
-    ll = zeros(1, size(symbol_strings, 1));
-    most_likely_symbol_idx = 1;
-    max_ll = -Inf;
+    [candidate_symbol_name, ll] = ...
+        symbol_recognize(sampled_track_data, hmm_model_choice);
     
-    % load the feature extraction parameters
-    feature_param_file = 'feature_extraction_parameters.mat';
-    load(feature_param_file, 'resample_interval', ...
-                         'hamming_window_size', ...
-                         'hamming_window_step');
-    
-    for s=1:size(symbol_strings, 1)
-        symbol_name = symbol_strings(s, :);
-        
-        hmm_data_filename = strcat(symbol_name, '_hmm_', ...
-                                    hmm_model_choice, '.mat');
-        
-        % load the codebook vectors and the hmm parameters 
-        % for the alleged symbol
-        load(hmm_data_filename, 'Pi', 'A', 'B');
-        
-        O = symbol_get_feature_sequence(sampled_track_data, ...
-                x_codebook, y_codebook, ...
-                resample_interval, ...
-                hamming_window_size, hamming_window_step);
-        
-        [Prob, Alpha, Beta, Scale] = forward_backward(O, Pi, A, B);
-        fprintf('## Values for symbol %s\n', strtrim(symbol_name));
-        Alpha
-        Beta
-        Scale
-        
-        %ll(1, s) = log(Prob);
-        ll(1, s) = Prob;
-        
-        if ll(1, s) > max_ll
-            max_ll = ll(1, s);
-            most_likely_symbol_idx = s;
-        end
-    end
-    
-    % load recognition threshold for best symbol so far
-    candidate_symbol_name = symbol_strings(most_likely_symbol_idx, :);
-    hmm_data_filename = strcat(candidate_symbol_name, '_hmm_', ...
-                                    hmm_model_choice, '.mat');
-    load(hmm_data_filename, 'symbol_rec_threshold');
-    
-    
-    if max_ll >= symbol_rec_threshold
-        set(handles.text_detected_symbol, 'String', candidate_symbol_name);
-    else
-        set(handles.text_detected_symbol, 'String', 'Unknown');
-    end
+    set(handles.text_detected_symbol, ...
+        'String', candidate_symbol_name);
     
     ll_text = [];
     for s = 1 : size(ll, 2)
@@ -294,6 +243,7 @@ track_data(:, 1) = ...
 track_data(:, 2) = ...
     (track_data(:, 2) - ones(len_seq, 1) * y_min) ./ (y_max - y_min);
 
+track_data(:, 3) = track_data(:, 3) - track_data(1, 3);
 
 % --- Executes during object creation, after setting all properties.
 function button_test_symbol_CreateFcn(hObject, eventdata, handles)

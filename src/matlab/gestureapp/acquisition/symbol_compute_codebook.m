@@ -30,7 +30,7 @@ for s=1:size(symbol_strings, 1)
     fprintf('Retrieved quantization feature vectors for symbol: %s\n', strtrim(symbol_name));
 end
 
-disp 'Computing codebooks ...';
+disp 'Computing codebook ...';
 
 % use LBG kmeans to compute codebook vectors
 [x_codebook, esq, J_x] = kmeanlbg(all_x_vectors, nr_clusters);

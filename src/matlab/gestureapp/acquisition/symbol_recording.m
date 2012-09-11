@@ -115,7 +115,6 @@ global resample_interval
 if len_track > nr_points
     cla;
     track_data = bbox_resize(track_data);
-    track_data(:, 3) = track_data(:, 3) - track_data(1, 3);
     
     sampled_track_data = ...
         resample_track_data(track_data, resample_interval, 0);
@@ -297,4 +296,4 @@ bbox_track_data(:, 1) = ...
 bbox_track_data(:, 2) = ...
     (track_data(:, 2) - ones(len_seq, 1) * y_min) ./ (y_max - y_min);
 
-bbox_track_data(:, 3) = track_data(:, 3);
+bbox_track_data(:, 3) = track_data(:, 3) - track_data(1, 3);

@@ -1,4 +1,4 @@
-function symbol_test_training(model)
+function symbol_do_training(model)
 %% perform symbol recognition training for the hmm model type
 
 symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
