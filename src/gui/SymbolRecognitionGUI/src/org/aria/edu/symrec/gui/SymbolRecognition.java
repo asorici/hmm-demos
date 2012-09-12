@@ -11,6 +11,7 @@ import java.util.Map;
 import org.aria.edu.symrec.gui.SymbolCanvas.SymbolPoint;
 
 import SymbolRecognitionTest.*;
+import SymbolTesting2.*;
 import com.mathworks.toolbox.javabuilder.*;
 import java.text.DecimalFormat;
 
@@ -364,12 +365,17 @@ public class SymbolRecognition extends javax.swing.JFrame {
             String hmmTransitionModel = (String)symbolHMMTransitionSelector.getSelectedItem();
             
             // call the matlab runtime
-            SymbolTesting symbolTester = null;
+            //SymbolTesting symbolTester = null;
+            CallbackInterface callbackInterface = null;
+            MWCharArray widgetName = null;
+            MWCharArray eventType = null;
             MWNumericArray trackData = null;
             Object[] result = null;
             
+            
             try {
-                symbolTester = new SymbolTesting();
+                //symbolTester = new SymbolTesting();
+                callbackInterface = new CallbackInterface();
                 
                 int[] dims = {currentSymbol.size(), 3};
                 trackData = MWNumericArray.newInstance(dims, MWClassID.DOUBLE, MWComplexity.REAL);
@@ -389,8 +395,14 @@ public class SymbolRecognition extends javax.swing.JFrame {
                     trackData.set(index, currentSymbol.get(i).getTime());
                 }
                 
-                result = symbolTester.symbol_recognize(2, trackData, hmmTransitionModel);
+                widgetName = new MWCharArray("symbolTestButton");
+                eventType = new MWCharArray("mouseClick");
                 
+                result = callbackInterface.gui_interfacing(4, widgetName, eventType, trackData, hmmTransitionModel);
+                System.out.println(result);
+                
+                /*
+                result = symbolTester.symbol_recognize(2, trackData, hmmTransitionModel);
                 String recognizedSymbol = result[0].toString();
                 double[] llVector = ((MWNumericArray)result[1]).getDoubleData();
                 
@@ -404,13 +416,21 @@ public class SymbolRecognition extends javax.swing.JFrame {
                                 " = " + new DecimalFormat("#.####").format(llVector[s]) + "\n";
                 }
                 symbolRecognizeObsText.setText(obsText);
+                */
+                
+                
             } catch (MWException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } finally {
                 if (trackData != null) MWArray.disposeArray(trackData);
                 if (result != null && result[1] != null) MWArray.disposeArray(result[1]);
-                if (symbolTester != null) symbolTester.dispose();
+                
+                if (widgetName != null) MWArray.disposeArray(widgetName);
+                if (eventType != null) MWArray.disposeArray(eventType);
+                
+                //if (symbolTester != null) symbolTester.dispose();
+                if (callbackInterface != null) callbackInterface.dispose();
             }
         }
     }//GEN-LAST:event_symbolTestButtonMouseClicked
