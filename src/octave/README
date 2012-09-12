@@ -1,0 +1,28 @@
+FILES
+
+./README
+ - this file
+
+./hmm
+ - files related to the hidden markov models octave library
+
+
+
+
+./hmm/.tests
+ - tests for the files in the hmm library
+
+
+
+./tester
+ - files related to the general tester used here
+
+./tester/test_code.m
+ - general tester
+
+./tester/matrices_are_equal.m
+ - tests if two matrices are equal
+
+./tester/hmm_test.m
+ - file that runs tests for the hidden markov models library
+   (wrapper over test_code)
