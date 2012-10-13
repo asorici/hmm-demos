@@ -8,16 +8,24 @@
   
   The 3 fundamental problems \cite{rabiner1989tutorial}
 
+  \begin{itemize}
+  	\item Particularization of temporal inference problems to HMMs
+  \end{itemize}
+
   \begin{block}{Evaluation Problem}
-    Given an observation sequence ....
+    Given a model and a sequence of observations, how do we compute the probability that the \alert{observed 
+    sequence} was produced by the model?
   \end{block}
   \pause
-  \begin{block}{Hidden State Sequence Problem / smoothing}
-    Given an HMM and a number of observation sequences, estimate the ...
+  \begin{block}{Best Explanation of Observations Problem}
+    Given a model and a sequence of observations how do we choose a corresponding sequence of \alert{states} which 
+    \emph{gives meaning} to the observations? How do we \emph{uncover} the hidden part of the model?
   \end{block}
   \pause
-  \begin{block}{Model Estimation Problem}
-    Given some observed sequences, estimate the parameters of a HMM.
+  \begin{block}{Model Estimation (Training) Problem}
+    Given some observed sequences, how do we adjust the \alert{parameters} of an HMM model that best tries to explain 
+    the observations? 
+    
   \end{block}
 
 \end{frame}

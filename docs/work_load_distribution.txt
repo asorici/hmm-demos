@@ -1,0 +1,51 @@
+################################# IMPORTANT !!! ###################################
+In slide-uri trebuie sa apara si bucatile de "Let's write some code + indicatii"
+
+###################################################################################
+
+
+P1. Intro [NOT us, cel putin nu imediat]
+    1. Intro to workshop ...
+
+P2. Theory of HMMs
+    2. Machine Learning Applications for HMM
+        2.1. Machine Learning                           [ALEX + TUDOR]
+            - What is machine Learning?
+
+            - Machine Learning Applications
+
+            - ...
+
+        2.2. Where do HMMs fit into Machine Learning?
+            - Machine Learning Classification           [ALEX + TUDOR]
+
+            - Sequence / Temporal Problems              [ALEX + TUDOR]
+                % de trecut prin exemple de probleme temporale +
+                % modele prin care se abordeaza in mod clasic: 
+                %   - un exemplu general pentru DBN
+                %   - object tracking (radar, missiles) pentru Kalman Filters
+                %   - mai multe exemple pentru HMM
+                
+            - Probabilistic Reasoning over Time             [ALEX]
+
+    3. Theory of HMMs
+        3.1. The 3 things you want from an HMM              [ALEX]
+
+        3.2. Mathematical Foundations for HMMs              [TUDOR]
+            % un exemplu de problema usoara (I recommend we stick to the classics :P)
+            % prin care se exemplifica cele 3 probleme de mai inainte + se introduce notatia folosita
+            % si exprimarea in termeni de probabilitati a celor 3 probleme
+
+        3.3. Notation Conventions & Framework description   [TUDOR]
+
+    4. Implementing HMMs
+        4.1. Using the Model for Estimations: the Forward-Backward algorithm    [TUDOR]
+        4.2. Uncovering Hidden states: Viterbi algorithm                        [TUDOR]
+        4.3. Learning from Observations: Baum-Welch algorithm                   [ALEX]
+
+    5. A Case for HMMs in Symbol Recognition                [ALEX]
+
+    6. Types of HMMs                                        [ALEX + TUDOR]
+
+    7. Discussions and Recap                                [ALEX + TUDOR]
+
