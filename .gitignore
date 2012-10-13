@@ -7,3 +7,12 @@
 *~
 \#*#
 .#*
+*.nav
+*.log
+*.aux
+*.bbl
+*.blg
+*.nav
+*.snm
+*.toc
+*.out
