@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-project>
-  <configuration target="target.java.package" target-name="Java Package" name="SymbolTesting2" location="/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui" file="/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui/SymbolTesting2.prj" build-checksum="2027969804">
+  <configuration target="target.java.package" target-name="Java Package" name="SymbolTesting2" location="/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui" file="/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui/SymbolTesting2.prj" build-checksum="1502847599">
     <param.project.name>/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui/SymbolTesting2.prj</param.project.name>
     <param.target.type>Java Package</param.target.type>
     <param.appname>SymbolTesting2</param.appname>
@@ -33,6 +33,7 @@
       <entity.package name="">
         <entity.class name="CallbackInterface">
           <file>/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/matlab/gestureapp/gui_interfacing/gui_interfacing.m</file>
+          <file>/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/matlab/gestureapp/gui_interfacing/test_fun.m</file>
         </entity.class>
       </entity.package>
     </fileset.classes>

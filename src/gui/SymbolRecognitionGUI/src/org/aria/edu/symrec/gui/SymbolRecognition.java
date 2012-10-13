@@ -365,7 +365,7 @@ public class SymbolRecognition extends javax.swing.JFrame {
             String hmmTransitionModel = (String)symbolHMMTransitionSelector.getSelectedItem();
             
             // call the matlab runtime
-            //SymbolTesting symbolTester = null;
+            SymbolTesting symbolTester = null;
             CallbackInterface callbackInterface = null;
             MWCharArray widgetName = null;
             MWCharArray eventType = null;
@@ -374,8 +374,8 @@ public class SymbolRecognition extends javax.swing.JFrame {
             
             
             try {
-                //symbolTester = new SymbolTesting();
-                callbackInterface = new CallbackInterface();
+                symbolTester = new SymbolTesting();
+                //callbackInterface = new CallbackInterface();
                 
                 int[] dims = {currentSymbol.size(), 3};
                 trackData = MWNumericArray.newInstance(dims, MWClassID.DOUBLE, MWComplexity.REAL);
@@ -395,13 +395,14 @@ public class SymbolRecognition extends javax.swing.JFrame {
                     trackData.set(index, currentSymbol.get(i).getTime());
                 }
                 
-                widgetName = new MWCharArray("symbolTestButton");
-                eventType = new MWCharArray("mouseClick");
+                //widgetName = new MWCharArray("symbolTestButton");
+                //eventType = new MWCharArray("mouseClick");
                 
-                result = callbackInterface.gui_interfacing(4, widgetName, eventType, trackData, hmmTransitionModel);
-                System.out.println(result);
+                //result = callbackInterface.gui_interfacing(4, widgetName, eventType, trackData, hmmTransitionModel);
+                //result = callbackInterface.test_fun(1, widgetName);
+                //System.out.println(result);
                 
-                /*
+                
                 result = symbolTester.symbol_recognize(2, trackData, hmmTransitionModel);
                 String recognizedSymbol = result[0].toString();
                 double[] llVector = ((MWNumericArray)result[1]).getDoubleData();
@@ -416,7 +417,7 @@ public class SymbolRecognition extends javax.swing.JFrame {
                                 " = " + new DecimalFormat("#.####").format(llVector[s]) + "\n";
                 }
                 symbolRecognizeObsText.setText(obsText);
-                */
+                
                 
                 
             } catch (MWException e) {

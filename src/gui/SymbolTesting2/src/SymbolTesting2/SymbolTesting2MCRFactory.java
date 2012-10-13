@@ -1,13 +1,13 @@
 /*
  * MATLAB Compiler: 4.16 (R2011b)
- * Date: Wed Sep 12 20:51:19 2012
+ * Date: Wed Sep 12 21:05:02 2012
  * Arguments: "-B" "macro_default" "-W" "java:SymbolTesting2,CallbackInterface" "-T" 
  * "link:lib" "-d" 
  * "/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/gui/SymbolTesting2/src" 
  * "-w" "enable:specified_file_mismatch" "-w" "enable:repeated_file" "-w" 
  * "enable:switch_ignored" "-w" "enable:missing_lib_sentinel" "-w" "enable:demo_license" 
  * "-v" 
- * "class{CallbackInterface:/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/matlab/gestureapp/gui_interfacing/gui_interfacing.m}" 
+ * "class{CallbackInterface:/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/matlab/gestureapp/gui_interfacing/gui_interfacing.m,/home/alex/Desktop/AI-MAS/ARIA/education/workshops/w1/hmm-gesture-recognition/hmm-demos/src/matlab/gestureapp/gui_interfacing/test_fun.m}" 
  */
 
 package SymbolTesting2;
@@ -23,7 +23,7 @@ public class SymbolTesting2MCRFactory
    
     
     /** Component's uuid */
-    private static final String sComponentId = "SymbolTestin_AAA9FD9AF9C378AEE00A60F222D04084";
+    private static final String sComponentId = "SymbolTestin_06D94B4051553E540D8FBD60054A68B4";
     
     /** Component name */
     private static final String sComponentName = "SymbolTesting2";
