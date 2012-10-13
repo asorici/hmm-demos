@@ -1,0 +1,39 @@
+
+%% Pentru a pune contents si frame cu titlu pe part
+\makeatletter 
+\AtBeginPart{%
+\addtocontents{toc}{\protect\beamer@partintoc{\the\c@part}{\beamer@partnameshort}{\the\c@page}
+  }%
+  \begin{frame}
+    \center{ 
+      \Large{
+        \beamer@partname 
+      }
+    }
+  \end{frame}
+  \begin{frame}[plain]{Outline}
+    \tableofcontents[currentpart]
+  \end{frame}
+}
+
+
+%% number, shortname, page.
+\providecommand\beamer@partintoc[3]{%
+  \ifnum\c@tocdepth=-1\relax
+  % requesting onlyparts.
+  \center{
+  \makebox[20em]{PART #1.} \makebox[20em]{\Large{\textbf{#2}}}
+}
+  \par
+  \fi } 
+
+\define@key{beamertoc}{onlyparts}[]{%
+  \c@tocdepth=-1\relax } \makeatother%
+
+
+%% pentru a pune inainte de fiecare sectiune
+\AtBeginSubsection[] {
+  \begin{frame}[plain]{Outline}
+    \tableofcontents[currentsection,currentsubsection,hideallsections]
+  \end{frame}
+}
