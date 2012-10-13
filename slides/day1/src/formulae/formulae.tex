@@ -1,0 +1,194 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage[utf8x]{inputenc}
+
+
+\title{Formule de folosit in slide-uri}
+
+\begin{document}
+
+\maketitle
+
+\section{De început}
+\label{sec:start}
+
+
+\begin{itemize}
+\item Markov assumption
+  \begin{equation}
+    \label{eq:markovassump}
+    \begin{split}
+      P(q_t = s_j \vert q_{t-1}=s_i, q_{t-2}=s_k, \ldots ) = P(q_t =
+      S_j \vert q_{t-1} = s_i) \\ \quad 1 \le i,j \le N
+    \end{split}
+  \end{equation}
+\item Time independence
+  \begin{equation}
+    \label{eq:timeindep}
+    a_{i,j}=P(q_t = s_j \vert q_{t-1} = s_i)
+  \end{equation}
+  \begin{equation}
+    \label{eq:aispositive}
+    a_{i,j} \ge 0
+  \end{equation}
+  \begin{equation}
+    \label{eq:sumaij}
+    \displaystyle\sum_{j=1}^{N}a_{i,j}=1, \quad 1 \le i \le N
+  \end{equation}
+\end{itemize}
+
+\section{Parametrii modelului}
+\label{sec:params}
+
+\begin{itemize}
+\item structure
+  \begin{equation}
+    \label{eq:lambda}
+    \lambda = (A, B, \Pi)
+  \end{equation}
+\item pi
+  \begin{equation}
+    \label{eq:pi}
+    \Pi = \lbrace \pi_i \rbrace,\quad 1 \le i \le N
+  \end{equation}
+  \begin{equation}
+    \label{eq:pii}
+    \pi_i = P(q_1 = s_i)
+  \end{equation}
+\item $A = \lbrace a_{i,j} \rbrace, \quad 1 \le i, j \le N$
+  \begin{equation}
+    \label{eq:transition}
+    a_{i,j}=P(q_{t+1}=s_j \vert q_t = s_i),\quad 1 \le i, j \le N
+  \end{equation}
+\item $B = \lbrace b_{j,k} \rbrace, \substack{\quad 1 \le j \le N \\ 1
+    \le l \le M}$
+  \begin{equation}
+    \label{eq:transition}
+    b_{j,k}=b_{j}(v_k)=P(o_t = v_k \vert q_t = s_j),\quad 1 \le j \le N, 1 \le k, \le M
+  \end{equation}
+\item observațiile $O$
+  \begin{equation}
+    \label{eq:obs}
+    O = [ o_1 o_2 \cdots o_T ]
+  \end{equation}
+\item variabilele de stare $Q$
+  \begin{equation}
+    \label{eq:states}
+    Q = [ q_1 q_2 \cdots q_T ]
+  \end{equation}
+\item stările $s_1, s_2, \ldots, s_N$
+
+\end{itemize}
+
+\section{Niște probabilități}
+\label{sec:probs}
+
+\begin{itemize}
+\item Probabilitatea unei secvențe observate, dat fiind $\lambda$
+  \begin{equation}
+    \label{eq:probobs}
+    P(O \vert Q, \lambda)= \displaystyle\prod_{t=1}^{T}P(o_t \vert q_t, \lambda)
+  \end{equation}
+
+\end{itemize}
+
+\section{Forward-Backward}
+\label{sec:fb}
+
+\subsection{Forward variables}
+\label{sec:forward}
+\begin{itemize}
+\item alpha definition
+  \begin{equation}
+    \label{eq:alpha}
+    \alpha_{t,i}=P(o_1,o_2,\ldots,o_t, q_t = S_i \vert \lambda)
+  \end{equation}
+\item alpha initialization
+  \begin{equation}
+    \label{eq:alpha_init}
+    \alpha_{1,i}=\pi_ib_i(o_1), \quad 1 \le i \le N
+  \end{equation}
+\item alpha induction
+  \begin{equation}
+    \label{eq:alpha_induct}
+    \alpha_{t+1,j}=\Big[ \displaystyle\sum_{i=1}^{N}\alpha_{t,j}a_{i,j}\Big] b_{j}(o_{t+1}), \quad \substack{1 \le t \le T-1, \\ 1 \le j \le N}
+  \end{equation}
+\item alpha termination
+  \begin{equation}
+    \label{eq:alpha_term}
+    P(O|\lambda) = \displaystyle\sum_{i=1}^{N}\alpha_{T,i}
+  \end{equation}
+\end{itemize}
+\subsection{Backward variables}
+\label{sec:back}
+
+\begin{itemize}
+\item beta (backward variable)
+  \begin{equation}
+    \label{eq:beta}
+    \beta_{t,i}=P(o_{t+1} o_{t+2} \cdots o_{T} \vert q_t = S_i, \lambda)
+  \end{equation}
+\item beta initialization
+  \begin{equation}
+    \label{eq:beta_init}
+    \beta_{T,i}=1,\quad 1 \le i \le N
+  \end{equation}
+\item beta induction
+  \begin{equation}
+    \label{eq:beta_ind}
+    \beta_{t,i}=\displaystyle\sum_{j=1}^{N}a_{i,j}b_j(o_{t+1})\beta_{t+1,j},
+    \quad t = T-1, T-2, \ldots , 1, 1 \le i \le N
+  \end{equation}
+\end{itemize}
+
+\section{Viterbi}
+\label{sec:viterbi}
+
+\begin{itemize}
+\item Gamma
+  \begin{equation}
+    \label{eq:gamma_def}
+    \gamma_{t,i}=P(q_t = s_i \vert O, \lambda)
+  \end{equation}
+  \begin{equation}
+    \label{eq:gamma_formula}
+    \gamma_{t,i}=\frac{\alpha_{t,i}\beta_{t,i}}{P(O\vert \lambda)} =
+    \frac{\alpha_{t,i}\beta_{t,i}}{\displaystyle\sum_{k=1}^{N}\alpha_{t,k}\beta_{t,k}}
+  \end{equation}
+\item delta
+  \begin{equation}
+    \label{eq:delta}
+    \delta_{t+1,j}=[\displaystyle \max_{i} \delta_{t,i} \cdot a_{ij}] \cdot b_j(o_{t+1})
+  \end{equation}
+
+\end{itemize}
+
+\section{Bau-Bau-Baum-Welch}
+\label{sec:baum}
+
+\begin{itemize}
+\item ksi definition
+  \begin{equation}
+    \label{eq:ksi_def}
+    \xi_{t,i,j} = P(q_t=s_i,q_{t+1}=s_j \vert O, \lambda)
+  \end{equation}
+\item ksi computation
+  \begin{equation}
+    \label{eq:ksi_comp}
+    \begin{split}
+      \xi+{t,i,j} & = \frac{\alpha_{t,i}\cdot a_{i,j} \cdot
+        b_j(o_{t+1}) \cdot \beta_{t+1,j}}
+      {P(O \vert \lambda)} \\
+      & = \frac{\alpha_{t,i}\cdot a_{i,j} \cdot b_j(o_{t+1}) \cdot
+        \beta_{t+1,j}}{
+        \displaystyle\sum_{k=1}^{N}\displaystyle\sum_{l=1}^{N}
+        \alpha_{t,k}\cdot a_{k,l} \cdot b_l(o_{t+1}) \cdot
+        \beta_{t+1,l}}
+    \end{split}
+  \end{equation}
+
+
+\end{itemize}
+
+
+\end{document}
