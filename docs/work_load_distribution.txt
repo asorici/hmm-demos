@@ -21,11 +21,36 @@ P2. Theory of HMMs
 
             - Sequence / Temporal Problems              [ALEX + TUDOR]
                 % de trecut prin exemple de probleme temporale +
+                    - object tracking
+                        - video/audio based speaker detection
+                        - Surface to Air Missile (hitting the target)
+                        - robotics
+                        - GPS
+                        - Ship or Rocket navigation (Appollo 11 used some sort of filtering to make sure it didn’t miss the Moon!)
+                    - gesture recognition
+                        - personalized signature recognition
+                        - video sign language recognition
+                    - speech recognition
+                        - Siri
+                    - recognizing office activities (behavioral modeling)
+                        - e.g. speaking on the phone, speaking face to face, working at desk etc
+                    - Bioinformatics
+                        - protein sequencing
+                        - Modeling gene regulatory network
+                    - Economics
+                        - time series (e.g. stock prices), econometrics (estimate a country's economic indicators across time)
                 % modele prin care se abordeaza in mod clasic: 
-                %   - un exemplu general pentru DBN
-                %   - object tracking (radar, missiles) pentru Kalman Filters
+                    - DBN
+                        - robotics - vision, localization
+                        - activity recognition
+                    - Kalman Filters
+                        - GPS
+                        - Ship or rocket navigation
+                        - computer vision tracking
                 %   - mai multe exemple pentru HMM
-                
+                        - gesture recognition, handwriting recognition
+                        - speech recognition
+                        - bioinformatics
             - Probabilistic Reasoning over Time             [ALEX]
 
     3. Theory of HMMs
