@@ -61,25 +61,59 @@
   % HMM as a special case of DBN
 \end{frame}
 
-\begin{frame}
-  \frametitle{Sequence / Temporal problems (III)}
-  Some tools of the trade:
-  
-  \begin{itemize}
-  	\item DBN
-  	\item Kalman Filters
-  	\item HMMs
-  \end{itemize}
-  %Koller and Frideman au scris in \cite{KollerFriedman09}
-  % temporal sequences
-  % DBN for ts
-  % HMM as a special case of DBN
-\end{frame}
-
 
 % descrierea a ceea ce inseamna Probabilistic Reasoning over Time (capitol 15.2 AI a modern approach)
 % 	- states and observations
+\begin{frame}[t]
+  \frametitle{Probabilistic Reasoning over Time - Models}
+	Consider some of the previously presented problems ...
+	\vspace*{0.5em}
+	\pause	
+	
+	How do we model such dynamic situations? 
+	\vspace*{1em}
+	\pause	
+	
+	\textbf{States and Observations}
+	\begin{itemize}
+		\item The process of change is viewed as a series of \alert{time slices (snapshots)}
+		\item Each time slice contains a set of random variables
+    	\begin{itemize}
+	    	\item $\mathbf{O}_t$ - set of all \alert{\emph{observable}} evidence variables at time \emph{t}
+			\item $\mathbf{Q}_t$ - set of all \alert{\emph{unobservable / hidden}} state variables at time \emph{t}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
 %	- stationary process, Markov assumption, Sensor model
+\begin{frame}[t]
+  \frametitle{Probabilistic Reasoning over Time - Assumptions}
+	Consider some of the previously presented problems ...
+	\vspace*{0.5em}
+	\pause	
+	
+	What \alert{assumptions} (if any) do we make?
+	\pause	
+	
+	\begin{block}{Stationary Process}
+		The process of change is governed by laws \alert{that do not themselves change over time}.\\
+		\alert{Implication:} we need to specify conditional distributions only for the variables within a \emph{representative} timeslice.
+	\end{block}
+	
+	\pause	
+	
+	\begin{block}{Markov Assumption}
+		The current state in a process of change depends only on a \alert{finite history} of previous states.
+		\\
+		\alert{Implication:} there is a \alert{bounded} number of ``parents'' for the variables in each time 
+		slice.\\
+		$\mathbf{P}(\mathbf{Q}_t \vert \mathbf{Q}_{1:t-1}) = \mathbf{P}(\mathbf{Q}_t \vert \mathbf{Q}_{t-1})$
+		\hspace*{1em}
+		$\mathbf{P}(\mathbf{O}_t \vert \mathbf{Q}_{1:t}, \mathbf{Q}_{1:t-1}) = \mathbf{P}(\mathbf{O}_t \vert \mathbf{Q}_t)$
+	\end{block}
+  
+\end{frame}
+
 %	- inference in temporal models
 %		- filtering
 %		- prediction
@@ -87,23 +121,136 @@
 %		- most likely explanation
 %		- model learning
 \begin{frame}
-  \frametitle{Probabilistic Reasoning over Time}
-  %% poza cu trei stari
+  \frametitle{Probabilistic Reasoning over Time - Inference}
+	What are the basic inference tasks that must be solved?
+	\pause	
+	
+	\begin{block}{Filtering (monitoring)}
+		The task of computing the \alert{belief state} - the posterior distribution over the 
+		\alert{current state}, given all evidence to date.\\
+		$\mathbf{P}(\mathbf{Q}_t \vert \mathbf{o}_{1:t})$
+	\end{block}
+	\pause
+	
+	\begin{block}{Evaluation (likelihood)}
+		The task of computing the \alert{likelihood} of the evidence up to present.\\
+		$\mathbf{P}(\mathbf{o}_{1:t})$
+	\end{block}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probabilistic Reasoning over Time - Inference}
+	\begin{block}{Prediction}
+		The task of computing the posterior distribution over the \alert{future state}, 
+		given all evidence to date.\\
+		$\mathbf{P}(\mathbf{Q}_{t+k} \vert \mathbf{o}_{1:t})$, for some $k > 0$
+	\end{block}
+	\pause
+	
+	\begin{block}{Smoothing (hindsight)}
+		The task of computing the posterior distribution over a \alert{past state}, 
+		given all evidence to the present.\\
+		$\mathbf{P}(\mathbf{Q}_k \vert \mathbf{o}_{1:t})$, for some $1 \le k < t$\\
+		Provides a better estimate of the state than was available at the time.
+	\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probabilistic Reasoning over Time - Inference}
+	\begin{block}{Most likely explanation}
+		Given a \emph{sequence of observations}, find the \alert{sequence of states} that is 
+		\alert{most likely} to have generated those observations.
+		$argmax_{q_{1:t}}$ $\mathbf{P}(\mathbf{q}_{t+k} \vert \mathbf{o}_{1:t})$, for some $k > 0$
+	\end{block}
+	\pause
+	
+	\begin{block}{Learning}
+		Given a set of \emph{observation sequences}, find a method to learn the \alert{transition} 
+		(e.g. $P(q_{t+1} = s_j \vert q_t = s_i)$, $1 \le i,j < N$) and \alert{sensor} ($P(o_t \vert q_t)$) 
+		\alert{models} from the observations.
+	\end{block}
+\end{frame}
+
+\begin{frame}[t]
+    \frametitle{Probabilistic Reasoning over Time - Known Methods}
+    
+  	\begin{block}{Dynamic Bayesian Networks (DBN)}
+  		A DBN is Bayesian network that represents a temporal probability model.
+  	\end{block}
+  	
+  	\begin{figure}
+  		\centering
+  		
+		\begin{subfigure}[b]{0.18\textwidth}
+			\centering
+  			\includegraphics[width=\textwidth]{dbn-vehicle/zero.pdf}
+  			\caption{\tiny{the 2-time-slice Bayesian Network}}
+  			\label{fig:2TBN}
+  		\end{subfigure}
+  		\begin{subfigure}[b]{0.33\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{dbn-vehicle/transition.pdf}
+  			\caption{\tiny{the time 0 network}}
+  			\label{fig:zeroDBN}
+  		\end{subfigure}
+  		\begin{subfigure}[b]{0.39\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{dbn-vehicle/unrolled.pdf} 
+  			\caption{\tiny{unrolled DBN over 3 time slices}}
+  			\label{fig:unrolledDBN}
+  		\end{subfigure}
+  		\caption{\tiny{A highly simplified DBN for monitoring a vehicle \parencite{KollerFriedman09}}}
+  		\label{fig:DBN}
+  	\end{figure}
+  	
+  	Applied in problems like: object tracking, human activity recognition, protein sequencing etc.
+\end{frame}
+
+
+\begin{frame}[t]
+    \frametitle{Probabilistic Reasoning over Time - Known Methods}
   
-  %% formule :)
+  \begin{block}{Kalman Filters (Linear Dynamical Systems)}
+  	A temporal model of one or more real-valued variables that \alert{evolve linearly} over time, with some 
+  	\alert{Gaussian noise}.
+  \end{block}
+  
+  \begin{columns}[T]
+  	\column{0.4\textwidth}
+  	\begin{figure}
+  		\centering
+  		\includegraphics[height=0.35\textheight]{images/kalman_filter_simple.pdf}
+  		\caption{\tiny{BN structure for a linear dynamical system with position $X_t$, 
+  		velocity $\dot{X}_t$, and position measurement $Z_t$}}
+  	\end{figure}
+	  
+  	\column{0.6\textwidth}
+  	\begin{itemize}
+  	\item \footnotesize{can be viewed as DBNs where all variables are continuous and all dependencies are 
+  		linear gaussian}
+  	\item \footnotesize{wide application in \textbf{object tracking}}
+  \end{itemize}
+  \end{columns}
   
 \end{frame}
 
-%% exemplu de hmm, fura alex exemplul cu sad si happy
-
-%% Aplicatii ale HMM-urilor
-%% TODO
-\begin{frame}
-  \frametitle{Applications for HMMs}
-  \begin{itemize}[<+->]
-  \item Robot localization
-  \item DNA sequence analysis
-  \item Hand-Writing Recognition
-  \item Speech Recognition (newxt on baywatch)
+\begin{frame}[t]
+    \frametitle{Probabilistic Reasoning over Time - Known Methods}
+  
+  \begin{block}{Hidden Markov Models (HMM)}
+  	An HMM is a temporal probabilistic model in which the state of the process is described by 
+  	\alert{a single discrete} random variable. The possible values of the variable are the possible states of the world.
+  \end{block}
+  
+  \vspace*{1em}
+  
+  Used successfully in applications like:
+  \begin{itemize}
+  	\item Handwriting Recognition
+  	\item Gesture Recognition
+  	\item Speech Recognition
+  	\item Part-of-Speech Tagging
+  	\item DNA Sequencing
   \end{itemize}
 \end{frame}
+
