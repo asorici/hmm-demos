@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:latexdraw="http://latexdraw.sourceforge.net/namespaces/latexdraw"
+    version="1.1" baseProfile="full">
+    <defs/>
+    <g>
+        <g latexdraw:type="ellipse" id="id137">
+            <ellipse cx="260.0" cy="135.0" rx="59.0" ry="24.0"
+                latexdraw:borderPos="outer" stroke-width="2.0"
+                stroke="black" fill="none"/>
+        </g>
+        <g latexdraw:type="text" id="id139" font-family="Dialog"
+            fill="black" font-size="18" latexdraw:x="223.0">
+            <text x="223.0" y="140.0"><![CDATA[s$_1$:Happy]]></text>
+        </g>
+        <g latexdraw:type="ellipse" id="id142">
+            <ellipse cx="450.0" cy="135.0" rx="59.0" ry="24.0"
+                latexdraw:borderPos="outer" stroke-width="2.0"
+                stroke="black" fill="none"/>
+        </g>
+        <g latexdraw:type="text" id="id144" font-family="Dialog"
+            fill="black" font-size="18" latexdraw:x="423.0">
+            <text x="423.0" y="140.0"><![CDATA[s$_2$:Sad]]></text>
+        </g>
+        <g latexdraw:type="ellipse" id="id147">
+            <ellipse cx="646.0" cy="135.0" rx="59.0" ry="24.0"
+                latexdraw:borderPos="outer" stroke-width="2.0"
+                stroke="black" fill="none"/>
+        </g>
+        <g latexdraw:type="text" id="id149" font-family="Dialog"
+            fill="black" font-size="18" latexdraw:x="609.0">
+            <text x="609.0" y="140.0"><![CDATA[s$_3$:Angry]]></text>
+        </g>
+    </g>
+    <metadata>
+        <latexdraw:metadata>
+            <latexdraw:displayBorders>false</latexdraw:displayBorders>
+            <latexdraw:autoAdjust>true</latexdraw:autoAdjust>
+            <latexdraw:ppc>50</latexdraw:ppc>
+            <latexdraw:zoom>1.0</latexdraw:zoom>
+            <latexdraw:unit>cm</latexdraw:unit>
+            <latexdraw:classicGrid>false</latexdraw:classicGrid>
+            <latexdraw:gridGap>7</latexdraw:gridGap>
+            <latexdraw:code>0</latexdraw:code>
+            <latexdraw:displayGrid>true</latexdraw:displayGrid>
+            <latexdraw:magneticGrid>true</latexdraw:magneticGrid>
+            <latexdraw:autoUpdate>true</latexdraw:autoUpdate>
+            <latexdraw:version>2.0.8</latexdraw:version>
+            <latexdraw:size>
+                <latexdraw:width>1602</latexdraw:width>
+                <latexdraw:height>874</latexdraw:height>
+            </latexdraw:size>
+            <latexdraw:position>
+                <latexdraw:x>-1</latexdraw:x>
+                <latexdraw:y>27</latexdraw:y>
+            </latexdraw:position>
+            <latexdraw:dividerPosition>0.7990012484394506</latexdraw:dividerPosition>
+            <latexdraw:displayCodePanel>true</latexdraw:displayCodePanel>
+            <latexdraw:displayXScale>true</latexdraw:displayXScale>
+            <latexdraw:displayYScale>true</latexdraw:displayYScale>
+            <latexdraw:delimitorOpacity>130</latexdraw:delimitorOpacity>
+        </latexdraw:metadata>
+    </metadata>
+</svg>
