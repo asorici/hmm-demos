@@ -136,8 +136,7 @@
       i \le N
     \end{align}
   \end{columns}
-  \vspace{.5em}
-  \pause
+  \vspace{.5em} \pause
   \begin{columns}
     \column{0.3\textwidth}
     \begin{itemize}
@@ -160,22 +159,85 @@
 
 \begin{frame}
   \frametitle{Computing $P(O | \lambda)$}
-  \begin{equation}
-    \label{eq:scaled-probability}
-    P(O \vert \lambda) = \frac{1}{C_T}
-  \end{equation}
+  \begin{itemize}
+  \item Introducing scale factors prevents exceeding the double
+    precision
+  \item The $P(O \vert \lambda)$ is related to the scaling factors:
+    \begin{equation}
+      \label{eq:scaled-probability}
+      P(O \vert \lambda) = \frac{1}{C_T} = \displaystyle\prod_{t=1}{T}c_t
+    \end{equation}
+  \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{The forward-backward algorithm} \vspace*{-1em}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \begin{algorithm}[H]
+      \scriptsize
+      \caption{Compute $\alpha$ variables}
+      \label{alg1}
+      \algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+      \begin{algorithmic}[2]
+        \FOR{$i=1$ to $N$} \STATE $\ddot{\alpha}_{1,i} \leftarrow
+        \pi_i \cdot b_i(o_1)$
+        \ENDFOR
+        \STATE $c_1 \leftarrow (\displaystyle\sum_{i=1}^{N}
+        \ddot{\alpha}_{1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
+        $\hat{\alpha}_{1,i} \leftarrow c_1 \cdot \ddot{\alpha}_{1,i}$
+        \ENDFOR
+        \FOR{$t=1$ to $T-1$} \FOR{$i=1$ to $N$} \STATE
+        $\ddot{\alpha}_{t+1,i} \leftarrow \Big[
+        \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
+        b_{j}(o_{t+1})$
+        \ENDFOR
+        \STATE $c_{t+1} \leftarrow (\displaystyle\sum_{i=1}^{N}
+        \ddot{\alpha}_{t+1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
+        $\hat{\alpha}_{t+1,i} \leftarrow c_{t+1} \cdot
+        \ddot{\alpha}_{t+1,i}$
+        \ENDFOR
+        \ENDFOR
+      
+      \end{algorithmic}
+    \end{algorithm}
+    \column{0.5\textwidth}
+    \begin{algorithm}[H]
+      \scriptsize
+      \caption{Compute $P(O \vert \lambda)$}
+      \label{alg2}
+      \algsetup{linenosize=\tiny} \algsetup{indent=2em}
+      \begin{algorithmic}[2]
+        \STATE $P \leftarrow \displaystyle\prod_{t=1}^{T}c_t$
+      \end{algorithmic}
+    \end{algorithm}
+    \vspace*{1em}
+    \begin{algorithm}[H]
+      \scriptsize
+      \caption{Compute $\beta$ variables}
+      \label{alg3}
+      \algsetup{linenosize=\tiny} \algsetup{indent=2em}
+      \algsetup{linenosize=\tiny}
+      \begin{algorithmic}[2]
+        \FOR{$i=1$ to $N$} \STATE $\hat{\beta}_{T,i} \leftarrow \cdot
+        c_T$
+        \ENDFOR
+        \FOR{$t=(T-1)$ to $1$} \FOR{$i=1$ to $N$} \STATE
+        $\hat{\beta}_{t,i} \leftarrow \displaystyle\sum_{j=1}^{N}
+        a_{i,j} b_{j}(o_{t+1}) \hat{\beta}_{t+1,j} \cdot c_t$
+        \ENDFOR
+        \ENDFOR
+      \end{algorithmic}
+    \end{algorithm}
+  \end{columns}
+\end{frame}
 
 \begin{frame}
   \frametitle{Let's write some code}
   \begin{itemize}
   \item You will implement now the forward-backward algorithm in
     Octave
-  \item Write code to compute:
-    \begin{itemize}
-    \item the
-    \end{itemize}
 
   \end{itemize}
+
 \end{frame}
