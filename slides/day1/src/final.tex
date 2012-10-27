@@ -1,30 +1,5 @@
 \part{Demo \& Discussions}
 
-\section{A Case for HMMs in Symbol Recognition}
-\label{sec:sr}
-
-
-\section{Types of HMMs}
-\label{sec:types}
-
-
-\section{Discussions and Recap}
-\label{sec:final}
-
-\begin{frame}
-  \frametitle{Summary}
-  \begin{itemize}
-  \item HMM are useful for temporal sequence problems
-    \pause
-  \item there are 3 fundamental problems for HMMs:
-    \begin{itemize}
-    \item<3-> given an HMM, estimating the probability of an observed sequence
-      \visible<6->{\structure{Forward-Backward Algorithm}}
-    \item<4-> given observed data, estimating the parameters of an HMM
-      \only<7->{\structure{Baum-Welch Algorithm}}
-    \item<5-> uncovering the hidden states
-      \visible<8->{\structure{Viterbi Algorithm}}
-    \end{itemize}
-
-  \end{itemize}
-\end{frame}
+\input{symbol-recognition-demo.tex}
+\input{types-of-hmms.tex}
+\input{discussion-recap.tex}

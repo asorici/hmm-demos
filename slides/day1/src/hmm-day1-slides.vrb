@@ -1,0 +1,27 @@
+\frametitle {Baum-Welch algorithm (V)}
+The routine for the general case:
+\vspace*{1em}
+\lstset{columns=fullflexible,
+basicstyle=\footnotesize,
+numbers=left,
+stepnumber=1,
+numbersep=5pt,
+title=Baum-Welch Iterative Update,
+frame=single,
+xleftmargin=1em,
+captionpos=b}
+
+\begin{lstlisting}[mathescape]
+    Initialize uniform $\pi_i$ for $1 \le i \le N$
+    Initialize random (stochastic) $a_{i,j}$
+    Initialize uniform $b_{j,k}$ for $1 \le k \le M$
+
+    Repeat until convergence
+        E step:
+            compute auxiliary variables $\xi_t(i,j)$ and $\gamma_t(i)$
+            using current $\pi_i$, $a_{i,j}$ and $b_{j,k}$
+
+        M step:
+            compute updated parameter models $\bar{\pi_i}$, $\bar{a_{i,j}}$, $\bar{b_{j,k}}$
+\end{lstlisting}
+
