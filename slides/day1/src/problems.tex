@@ -36,7 +36,6 @@
 \label{sec:math}
 
 
-
 \begin{frame}
   \frametitle{An example problem: Emotional states}
   \begin{columns}[T]
@@ -159,42 +158,126 @@
       $\mathbf{T}$ - length of observation sequence \\ \vspace*{1em}
       $O = [ o_1 o_2 \cdots o_T ]$ }
 
-    
   \end{columns}
 \end{frame}
 
+\begin{frame}[T]
+  \frametitle{Restating the three fundamental HMM Problems}
+  
+  \begin{block}{Evaluation Problem}
+    Given a model \visible<2->{\alert{$\lambda=(A,B,\Pi)$}} and a
+    sequence of observations \visible<3->{\alert{$O = [ o_1 o_2 \cdots
+        o_T ]$}}, how do we compute the probability
+    \visible<4->{\alert{$P(O \vert \lambda)$}} that the
+    observed sequence was produced by the model? \\
+  \end{block}
+  \visible<5->{
+  
+    \begin{itemize}
+    \item Enumerate every possible state sequence:
+
+      \begin{equation}
+        \begin{split}
+          P(O \vert \lambda) = \displaystyle\sum_{\text{all}\;Q} P(O
+          \vert Q, \lambda) \cdot P(Q \vert \lambda)
+        \end{split}
+        \label{eq1}
+      \end{equation}
+    \end{itemize}
+    
+  }
+\end{frame}
 
 \begin{frame}
   \frametitle{Restating the three fundamental HMM Problems}
-  \begin{block}{Evaluation Problem}
-    Given a model and a sequence of observations, how do we compute
-    the probability that the \alert{observed sequence} was produced by
-    the model?
-  \end{block}
-  \pause
+  \begin{equation}
+    \begin{split}
+      P(O \vert \lambda) = \displaystyle\sum_{\text{all}\;Q} P(O \vert
+      Q, \lambda) \cdot P(Q \vert \lambda)
+    \end{split}
+    \tag{\ref{eq1}}
+  \end{equation}
+  \pause \vspace*{.em}
   \begin{equation}
     P(O \vert Q, \lambda) = \displaystyle\prod_{t=1}^{T} P(o_t \vert
     q_t, \lambda)= \displaystyle\prod_{t=1}^{T} b_{q_t}(o_t) =
     b_{q_1}(o_1) \cdot \ldots \cdot b_{q_T}(o_T)
     \label{eq:pql}
   \end{equation}\pause
+  \vspace*{.em}
   \begin{equation}
     P(Q | \lambda) = \pi_{q_1}\displaystyle\prod_{t=2}^{T}
     a_{q_{t-1},q_t} = \pi_{q_1} \cdot a_{q_1,q_2} \cdot a_{q_2,q_3} \cdot \ldots \cdot
     a_{q_{T-1},q_T}\label{eq:pql2}
   \end{equation}\pause
+  \vspace*{.em}
   \begin{equation}
     \begin{split}
       P(O \vert \lambda) = \displaystyle\sum_{all\;Q} P(O, Q \vert
       \lambda) & = \displaystyle\sum_{all\;Q} P(O,\vert Q, \lambda)
       \cdot P(Q, \lambda) \\
-      & = \displaystyle\sum_{all\;Q} \Big( \pi_{q_1} \cdot
+      & = \displaystyle\sum_{\text{all}\;Q} \Big( \pi_{q_1} \cdot
       b_{q_1}(o_1) \cdot \displaystyle\prod_{t=2}^{T} b_{q_t}(o_t)
       a_{q_{t-1},q_t} \Big)
     \end{split}
-    \label{eq:pql3}
+    \tag{\ref{eq1}}
   \end{equation}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Restating the three fundamental HMM Problems}
+  \begin{block}{Best Explanation of Observations Problem}
+    Given a model \visible<2->{\alert{$\lambda=(A,B,\Pi)$}} and a
+    sequence of observations \visible<3->{\alert{$O = [ o_1 o_2 \cdots
+        o_T ]$}} how do we choose a corresponding sequence of
+    \alert{states} \visible<4->{\alert{$Q = [ q_1 q_2 \cdots q_T ]$}}
+    which \emph{gives meaning} to the observations?  How do we
+    \emph{uncover} the hidden part of the model?
+  \end{block}
+  \visible<5->{
+    \begin{itemize}
+    \item There is no single answer.
+    \item The sequence of individually most likely states:
+      \begin{equation}
+        \label{eq:inidi}
+        Q_{\text{best}} = [\hat{q}_1\; \hat{q}_2\; \ldots \hat{q}_T], 
+        \quad \hat{q}_t = \underset{s_i}{argmax}\; P(q_t = s_i \vert O, \lambda)
+      \end{equation}
+      
+    \visible<6->{\item The best path
+      \begin{equation}
+        Q_{\text{best}} = \underset{Q}{\operatorname{argmax}}\;
+        P(Q \vert O, \lambda)
+        = \underset{Q}{\operatorname{argmax}}\; P(Q, O \vert \lambda)
+        \label{eq:best-explanation}
+      \end{equation}}
+    \end{itemize}
+  }
+\end{frame}
+
+
+
+
+\begin{frame}
+  \frametitle{Restating the three fundamental HMM Problems}
+  \begin{block}{Model Estimation (Training) Problem}
+    Given some observed sequences \visible<2->{\alert{$\mathcal{O} =
+        [O_1 O_2 \cdots O_L]$}}, how do we adjust the
+    \alert{parameters} \visible<3->{\alert{$\lambda=(A,B,\Pi)$}} of an
+    HMM model that best tries to explain the observations?
+  \end{block}
+  \visible<4->{
+    \begin{itemize}
+    \item The above question can be asked formally:
+      \begin{equation}
+        \lambda_{\text{best}} = \underset{\lambda}{\operatorname{argmax}}\;
+        P(\mathcal{O} \vert \lambda)
+        \label{eq:best-explanation}
+      \end{equation}
+    \end{itemize}
+  }
+\end{frame}
+
 
 
 \subsection{Notation Conventions \& Framework Description}
