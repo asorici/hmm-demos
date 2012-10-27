@@ -122,26 +122,39 @@
 
 \begin{frame}
   \frametitle{Computing scaled values}
-  \begin{itemize}
-  \item \emph{Scaled} intialization:
-    \begin{align}
+  \begin{columns}
+    \column{0.3\textwidth}
+    \begin{itemize}
+    \item \emph{Scaled} intialization:
+    \end{itemize}
+
+    \column{0.7\textwidth}
+    \begin{align}[r]
       \ddot{\alpha}_{1,i} = \alpha_{1,i},\quad 1 \le i \le N \\
       c_1 = \frac{1}{\displaystyle\sum_{i=1}^{N} \ddot{\alpha}_{1,i}} \\
       \hat{\alpha}_{1,i} = c_1 \cdot \ddot{\alpha}_{1,i}, \quad 1 \le
       i \le N
     \end{align}
-    \pause
-    \vspace*{-.5em}
-  \item \emph{Scaled} induction step:
-    \begin{align}
+  \end{columns}
+  \vspace{.5em}
+  \pause
+  \begin{columns}
+    \column{0.3\textwidth}
+    \begin{itemize}
+    \item \emph{Scaled} induction step:
+    \end{itemize}
+
+    \column{0.7\textwidth}
+    \begin{align}[r]
       \ddot{\alpha}_{t+1,i} = \Big[
       \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
       b_{j}(o_{t+1}) \\
-      c_{t+1} = \frac{1}{\displaystyle\sum_{i=1}^{N} \ddot{\alpha}_{t+1,i}} \\
+      c_{t+1} = \dfrac{1}{\displaystyle\sum_{i=1}^{N} \ddot{\alpha}_{t+1,i}} \\
       \hat{\alpha}_{t+1,i} = c_{t+1} \cdot \ddot{\alpha}_{t+1,i},
       \quad 1 \le i \le N
     \end{align}
-  \end{itemize}
+
+  \end{columns}
 
 \end{frame}
 
