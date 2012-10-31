@@ -5,68 +5,93 @@
 
 %% Markov models, Dynamic Bayesian Networks
 \begin{frame}
-  \frametitle{Sequence / Temporal problems (I)}
-  \includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1.pdf}
+  \frametitle{Probleme cu Secvențe Temporale (I)}
+  \only<1>{\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1.pdf}}
+  \only<2>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_2.pdf}
+  	\footnote{Sursa imaginii: Navstar}
+  }
+  \only<3>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_3.pdf}
+  	\footnote{Sursa imaginii: http://www.hapblog.com/2012/01/iran-navy-tests-surface-to-air-missile.html}
+  }
+  \only<4>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_4.pdf}
+  	\footnote{Sursa imaginii: http://www.redmondpie.com/}
+  }
+  \only<5>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_5.pdf}
+  	\footnote{Sursa imaginii: http://desura.com}
+  }
+  \only<6>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_6.pdf}
+  	\footnote{Sursa imaginii:  http://www.softpro.de}
+  }
+  
 \end{frame}
 
 \begin{frame}
-  \frametitle{Sequence / Temporal problems (II)}
-  \includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2.pdf}
-  %Koller and Frideman au scris in \cite{KollerFriedman09}
-  % temporal sequences
-  % DBN for ts
-  % HMM as a special case of DBN
+  \frametitle{Probleme cu Secvențe Temporale (II)}
+  \only<1>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2.pdf}
+  }
+  \only<2>{
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2_2.pdf}
+  	\footnote{Sursa imaginii:  http://www.econ.ucsb.edu/~doug/}
+  }
 \end{frame}
 
 
 % descrierea a ceea ce inseamna Probabilistic Reasoning over Time (capitol 15.2 AI a modern approach)
 % 	- states and observations
 \begin{frame}[t]
-  \frametitle{Probabilistic Reasoning over Time - Models}
-	Consider some of the previously presented problems ...
+  \frametitle{Raționament Probabilistic Temporal - Modele}
+	
+	Să ne gândim la unele din problemele anterioare ...	
 	\vspace*{0.5em}
 	\pause	
 	
-	How do we model such dynamic situations? 
-	\vspace*{1em}
+	Cum modelăm astfel de situații dinamice? 
+	\vspace*{0.5em}
 	\pause	
 	
-	\textbf{States and Observations}
+	\textbf{Stări și Observații}
 	\begin{itemize}
-		\item The process of change is viewed as a series of \alert{time slices (snapshots)}
-		\item Each time slice contains a set of random variables
+		\item Procesul de schimbare este văzut ca o serie de \alert{snapshot-uri}
+		\item Fiecare snapshot conține un set de variabile aleatoare
     	\begin{itemize}
-	    	\item $\mathbf{O}_t$ - set of all \alert{\emph{observable}} evidence variables at time \emph{t}
-			\item $\mathbf{Q}_t$ - set of all \alert{\emph{unobservable / hidden}} state variables at time \emph{t}
+			\item $\mathbf{O}_t$ - setul tuturor variabilelor de măsurare (\alert{\emph{observabile}}) la momentul \emph{t}
+			\item $\mathbf{Q}_t$ - setul tuturor variabilelor de stare (\alert{\emph{neobservabile / ascunse}}) la momentul \emph{t}	    	
 		\end{itemize}
 	\end{itemize}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.3\textheight]{graphics/hmm-intro/dbn-vehicle/unrolled.pdf} 
+  		\caption{\tiny{Exemplu: problemă de localizare a unui vehicul \citep{KollerFriedman09}}}
+  		\label{fig:unrolled-states-observations}
+  	\end{figure}
 \end{frame}
 
 %	- stationary process, Markov assumption, Sensor model
 \begin{frame}[t]
-  \frametitle{Probabilistic Reasoning over Time - Assumptions}
-	Consider some of the previously presented problems ...
+  \frametitle{Raționament Probabilistic Temporal - Presupuneri}
+	Să ne gândim la unele din problemele anterioare ...	
 	\vspace*{0.5em}
 	\pause	
 	
-	What \alert{assumptions} (if any) do we make?
+	Ce \alert{presupuneri} (la o adică) facem?
 	\pause	
 	
-	\begin{block}{Stationary Process}
-		The process of change is governed by laws \alert{that do not themselves change over time}.\\
-		\alert{Implication:} we need to specify conditional distributions only for the variables within a \emph{representative} timeslice.
+	\begin{block}{Proces staționar}
+		Procesul de schimbare este guvernat de legi care \alert{nu se schimba in timp}.\\
+		\alert{Urmare:} trebuie sa specificăm relațiile între variabile doar pentru un snapshot \emph{reprezentativ}.	
 	\end{block}
-	
 	\pause	
 	
-	\begin{block}{Markov Assumption}
-		The current state in a process of change depends only on a \alert{finite history} of previous states.
-		\\
-		\alert{Implication:} there is a \alert{bounded} number of ``parents'' for the variables in each time 
-		slice.\\
-		$\mathbf{P}(\mathbf{Q}_t \vert \mathbf{Q}_{1:t-1}) = \mathbf{P}(\mathbf{Q}_t \vert \mathbf{Q}_{t-1})$
-		\hspace*{1em}
-		$\mathbf{P}(\mathbf{O}_t \vert \mathbf{Q}_{1:t}, \mathbf{Q}_{1:t-1}) = \mathbf{P}(\mathbf{O}_t \vert \mathbf{Q}_t)$
+	\begin{block}{Presupunerea Markov}
+		Starea curentă a unui proces de schimbare depinde doar de o \alert{istorie finită} de stări anterioare.\\
+		\alert{Urmare:} avem un număr \alert{limitat} de ``parinți'' pentru variabilele din fiecare snapshot.
 	\end{block}
   
 \end{frame}
@@ -78,98 +103,91 @@
 %		- most likely explanation
 %		- model learning
 \begin{frame}
-  \frametitle{Probabilistic Reasoning over Time - Inference}
-	What are the basic inference tasks that must be solved?
+  \frametitle{Raționament Probabilistic Temporal - Inferență}
+	Care sunt principalele inferențe ce se doresc făcute?	
 	\pause	
 	
-	\begin{block}{Filtering (monitoring)}
-		The task of computing the \alert{belief state} - the posterior distribution over the 
-		\alert{current state}, given all evidence to date.\\
-		$\mathbf{P}(\mathbf{Q}_t \vert \mathbf{o}_{1:t})$
+	\begin{block}{Filtrare (monitorizare)}
+		Sarcina de a calcula \alert{starea de fapt} - distribuția posterioară de probabilitate a 
+		\alert{stării curente}, date fiind toate observațiile de până acum.
 	\end{block}
 	\pause
 	
-	\begin{block}{Evaluation (likelihood)}
-		The task of computing the \alert{likelihood} of the evidence up to present.\\
-		$\mathbf{P}(\mathbf{o}_{1:t})$
+	\begin{block}{Evaluare}
+		Sarcina de a calcula \alert{probabilitatea (likelihood)} a observațiilor făcute până în prezent.
 	\end{block}  
 \end{frame}
 
 \begin{frame}
-  \frametitle{Probabilistic Reasoning over Time - Inference}
-	\begin{block}{Prediction}
-		The task of computing the posterior distribution over the \alert{future state}, 
-		given all evidence to date.\\
-		$\mathbf{P}(\mathbf{Q}_{t+k} \vert \mathbf{o}_{1:t})$, for some $k > 0$
+  \frametitle{Raționament Probabilistic Temporal - Inferență}
+	\begin{block}{Predicție}
+		Sarcina de a calcula distribuția posterioară de probabilitate peste o \alert{stare viitoare}, 
+		date fiind toate observațiile de până acum.
 	\end{block}
 	\pause
 	
-	\begin{block}{Smoothing (hindsight)}
-		The task of computing the posterior distribution over a \alert{past state}, 
-		given all evidence to the present.\\
-		$\mathbf{P}(\mathbf{Q}_k \vert \mathbf{o}_{1:t})$, for some $1 \le k < t$\\
-		Provides a better estimate of the state than was available at the time.
+	\begin{block}{Netezire (hindsight)}
+		Sarcina de a calcula distribuția posterioară de probabilitate peste o \alert{stare anterioară}, 
+		date fiind toate observațiile de până acum.\\
+		Furnizează o estimare mai buna asupra stării respective, decât a fost posibil la momentul respectiv.
 	\end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Probabilistic Reasoning over Time - Inference}
-	\begin{block}{Most likely explanation}
-		Given a \emph{sequence of observations}, find the \alert{sequence of states} that is 
-		\alert{most likely} to have generated those observations.
-		$argmax_{q_{1:t}}$ $\mathbf{P}(\mathbf{q}_{t+k} \vert \mathbf{o}_{1:t})$, for some $k > 0$
+  \frametitle{Raționament Probabilistic Temporal - Inferență}
+	\begin{block}{Cea mai probabilă explicație}
+		Dându-se o \emph{secvență de observații}, se cere găsirea \alert{celei mai probabile secvenței de stări}
+		care a generat acele observații.
 	\end{block}
 	\pause
 	
-	\begin{block}{Learning}
-		Given a set of \emph{observation sequences}, find a method to learn the \alert{transition} 
-		(e.g. $\mathbf{P}(\mathbf{q}_{t+1} = s_j \vert \mathbf{q}_t = s_i)$, $1 \le i,j < N$) and \alert{sensor} ($\mathbf{P}(\mathbf{o}_t \vert \mathbf{q}_t)$) 
-		\alert{models} from the observations.
+	\begin{block}{Învățare}
+		Dându-se \emph{un set de secvențe de observații}, găsește o metodă de a învăța \alert{modelele} de
+		\alert{tranziție} și \alert{senzoriale / de măsurare} pe baza acelor observații.
 	\end{block}
 \end{frame}
 
 \begin{frame}[t]
-    \frametitle{Probabilistic Reasoning over Time - Known Methods}
+    \frametitle{Raționament Probabilistic Temporal - Metode Cunoscute}
     
-  	\begin{block}{Dynamic Bayesian Networks (DBN)}
-  		A DBN is Bayesian network that represents a temporal probability model.
+  	\begin{block}{Rețele Bayesiene Dinamice (RBD)}
+  		O RBD este o rețea Bayesiană ce reprezintă un model temporal de probabilitate.
   	\end{block}
   	
   	\begin{figure}
   		\centering
-  		
-		\begin{subfigure}[b]{0.18\textwidth}
+		\begin{subfigure}[b]{0.15\textwidth}
 			\centering
   			\includegraphics[width=\textwidth]{graphics/hmm-intro/dbn-vehicle/zero.pdf}
-  			\caption{\tiny{the 2-time-slice Bayesian Network}}
+  			\caption{\tiny{Rețeaua Bayesiană în două snapshot-uri}}
   			\label{fig:2TBN}
   		\end{subfigure}
-  		\begin{subfigure}[b]{0.33\textwidth}
+  		\begin{subfigure}[b]{0.30\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{graphics/hmm-intro/dbn-vehicle/transition.pdf}
-  			\caption{\tiny{the time 0 network}}
+  			\caption{\tiny{Rețeaua la momentul 0}}
   			\label{fig:zeroDBN}
   		\end{subfigure}
-  		\begin{subfigure}[b]{0.39\textwidth}
+  		\begin{subfigure}[b]{0.35\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{graphics/hmm-intro/dbn-vehicle/unrolled.pdf} 
-  			\caption{\tiny{unrolled DBN over 3 time slices}}
+  			\caption{\tiny{RBD desfășurată pe 3 momente de timp}}
   			\label{fig:unrolledDBN}
   		\end{subfigure}
-  		\caption{\tiny{A highly simplified DBN for monitoring a vehicle \citep{KollerFriedman09}}}
+  		\caption{\tiny{RBD simplificată pentru monitorizarea unui vehicul \citep{KollerFriedman09}}}
   		\label{fig:DBN}
   	\end{figure}
   	
-  	Applied in problems like: object tracking, human activity recognition, protein sequencing etc.
-      \end{frame}
+  	\small{Aplicată în probleme precum: urmărirea obiectelor, recunoașterea activității umane, secvențierea proteinelor, etc.}
+\end{frame}
 
 
 \begin{frame}[t]
-    \frametitle{Probabilistic Reasoning over Time - Known Methods}
+    \frametitle{Raționament Probabilistic Temporal - Metode Cunoscute}
   
-  \begin{block}{Kalman Filters (Linear Dynamical Systems)}
-  	A temporal model of one or more real-valued variables that \alert{evolve linearly} over time, with some 
-  	\alert{Gaussian noise}.
+  \begin{block}{Filtre Kalman (Sistem Dinamice Lineare)}
+	Un model temporal având una sau mai multe variabile care evoluează linear în timp, la care se adaugă 
+	\alert{zgomot Gaussian}.
   \end{block}
   
   \begin{columns}[T]
@@ -177,37 +195,38 @@
   	\begin{figure}
   		\centering
   		\includegraphics[height=0.35\textheight]{graphics/hmm-intro/kalman/kalman_filter_simple.pdf}
-  		\caption{\tiny{BN structure for a linear dynamical system with position $X_t$, 
-  		velocity $\dot{X}_t$, and position measurement $Z_t$}}
+  		\caption{\tiny{Structura unei RB pentru un sistem linear dinamic cu variabile de poziție $X_t$, 
+  		viteză $\dot{X}_t$, și măsurare a poziției $Z_t$}}
   	\end{figure}
 	  
   	\column{0.6\textwidth}
   	\begin{itemize}
-  	\item \footnotesize{can be viewed as DBNs where all variables are continuous and all dependencies are 
-  		linear gaussian}
-  	\item \footnotesize{wide application in \textbf{object tracking}}
-  \end{itemize}
+  		\item \footnotesize{Poate fi văzut ca o RBD în care toate variabilele sunt continue, iar dependențele sunt 
+  		linear gaussiane.}
+  		\item \footnotesize{Aplicații multiple în \textbf{urmărirea obiectelor}}
+  	\end{itemize}
   \end{columns}
   
 \end{frame}
 
 \begin{frame}[t]
-    \frametitle{Probabilistic Reasoning over Time - Known Methods}
+    \frametitle{Raționament Probabilistic Temporal - Metode Cunoscute}
   
-  \begin{block}{Hidden Markov Models (HMM)}
-  	An HMM is a temporal probabilistic model in which the state of the process is described by 
-  	\alert{a single discrete} random variable. The possible values of the variable are the possible states of the world.
+  \begin{block}{Modele Markov Ascunse (MMA)}
+	Un MMA (HMM) este un model probabilistic temporal în care \emph{starea} procesului de schimbare este descrisă
+	de \alert{o singură variabilă aleatoare discretă}.
+	Valorile posibile ale variabilei reprezintă stările posibile ale lumii modelate.
   \end{block}
   
   \vspace*{1em}
   
-  Used successfully in applications like:
+  Utilizat cu succes in aplicații precum:
   \begin{itemize}
-  	\item Handwriting Recognition
-  	\item Gesture Recognition
-  	\item Speech Recognition
-  	\item Part-of-Speech Tagging
-  	\item DNA Sequencing
+  	\item Recunoasțerea Scrisului
+  	\item Recunoasțerea Gesturilor
+  	\item Recunoasțerea Vorbirii
+  	\item Determinarea Parților de Vorbire (Part-of-Speech Tagging)
+  	\item Secvențiere ADN
   \end{itemize}
 \end{frame}
 

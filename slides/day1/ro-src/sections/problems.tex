@@ -1,26 +1,29 @@
 \begin{frame}
-  
-  The 3 fundamental problems \citep{rabiner1989tutorial}
+  \frametitle{Cele 3 Probleme ale MMA}
+  \small{  
+  3 probleme fundamentale \citep{rabiner1989tutorial}
   \begin{itemize}
-  	\item Particularization of temporal inference problems to the HMM case
-  	\item The restricted structure of the HMM allows for elegant implementations of all the basic algorithms
+	\item Particularizarea inferenței în probleme cu secvențe temporale pe cazul MMA
+  	\item Structura restricționată a MMA permite implementări elegante ale tuturor algoritmilor de bază
   \end{itemize}
+  }
   \pause
 
-  \begin{block}{Evaluation Problem}
-    Given a model and a sequence of observations, how do we compute the probability that the \alert{observed 
-    sequence} was produced by the model?
+  \begin{block}{Problema Evaluării}
+  	Dându-se un model și o secvență de observații, cum calculăm probabilitatea ca \alert{secvența observată} sa fi
+  	fost produsă de model?
   \end{block}
   \pause
-  \begin{block}{Best Explanation of Observations Problem}
-    Given a model and a sequence of observations how do we choose a corresponding sequence of \alert{states} which 
-    \emph{gives meaning} to the observations? How do we \emph{uncover} the hidden part of the model?
+  
+  \begin{block}{Problema Interpretării (cea mai bună explicație a observațiilor)}
+  	Dându-se un model și o secvență de observații, cum alegem o \alert{secvență corespunzătoare de stări} care
+  	\emph{dau sens} observațiilor?
   \end{block}
   \pause
-  \begin{block}{Model Estimation (Training) Problem}
-    Given some observed sequences, how do we adjust the \alert{parameters} of an HMM model that best tries to explain 
-    the observations? 
-    
+  
+  \begin{block}{Problema Estimării (Antrenării) Modelului}
+	Dându-se mai multe secvențe de observații, cum putem ajusta \alert{parametrii modelului MMA} care explică cel 
+	mai bine observațiile făcute?
   \end{block}
 
 \end{frame}
