@@ -1,0 +1,124 @@
+\documentclass{beamer}
+
+\usetheme{CambridgeUS}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{tabularx}
+\usepackage[romanian]{babel}
+\usepackage{natbib}
+\usepackage{bibentry}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+
+
+
+\title[ARIA]{Modele Markov Ascunse}
+
+\subtitle{De la Teorie la Aplicații}
+
+\author[A. Sorici, T. Berariu]{Alexandru Sorici, Tudor Berariu}
+
+\institute[AI-MAS]{Asociația Română pentru Inteligență Artificială}
+
+%% TODO de pus frumos titlurile secțiunilor
+
+\input{setup/commands.tex}
+
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+  \tableofcontents[onlyparts]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[pausesections]
+\end{frame}
+
+\section{Aplicații în Învățarea Automată pentru MMA}
+\label{sec:intro-to-hmm}
+
+\subsection{Învățarea Automată}
+\label{sec:machine-learning}
+
+%% tudorel
+\input{sections/machine-learning.tex}
+
+\subsection{MMA în Învățarea Automată}
+\label{sec:hmm-in-ml}
+
+%% alejandro
+\input{sections/hmm-intro.tex}
+
+\section{Teoria MMA}
+\label{sec:theory}
+
+\subsection{Cele Trei Probleme ale MMA}
+\label{sec:three-problmes}
+
+%% alejandro
+\input{sections/problems.tex}
+
+\subsection{Fundamente Matematice}
+\label{sec:math-foundations}
+
+%% tudor
+\input{sections/mathematics.tex}
+
+\subsection*{Descrierea Platformei de Lucru}
+\label{sec:framework}
+
+%% tudor
+\input{sections/framework.tex}
+
+\section{Implementarea MMA}
+\label{sec:implementation}
+
+\subsection{Problema Evaluării: Algoritmul Forward-Backward }
+\label{sec:forward-backward}
+
+%% tudor
+\input{sections/forward-backward.tex}
+
+\subsection{Problema Interpretării: Algoritmul Viterbi}
+\label{sec:viterbi}
+
+%% tudor
+\input{sections/viterbi.tex}
+
+\subsection{Problema Estimării: Algoritmul Baum-Welch}
+\label{sec:baum-welch}
+
+%% alejandro
+\input{sections/baum-welch.tex}
+
+\section{Demo: Recunoașterea Simbolurilor}
+\label{sec:symbol-recognition}
+
+%% alejandro
+\input{sections/symbol-recognition-demo.tex}
+
+
+\section{Tipuri de MMA}
+\label{sec:hmm-types}
+
+%% tudor
+\input{sections/hmm-types.tex}
+
+\section{Discuții și Concluzii}
+\label{sec:closing}
+
+%% tudor + alex
+\input{sections/closing.tex}
+
+\end{document}
+
