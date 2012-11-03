@@ -11,13 +11,16 @@
 \usepackage{mathtools}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+%\usepackage{algorithmicx}
+%\usepackage[compatible]{algpseudocode}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{multicol}
 
 %\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
-
-
+\usepackage[nodisplayskipstretch]{setspace}
+\setstretch{0.75}
 
 \title[ARIA]{Modele Markov Ascunse}
 
@@ -31,9 +34,14 @@
 
 \input{setup/commands.tex}
 
-
 \begin{document}
 \maketitle
+
+\abovedisplayskip=8pt
+\belowdisplayskip=8pt
+\abovedisplayshortskip=2pt
+\belowdisplayshortskip=2pt
+
 
 \begin{frame}
   \tableofcontents[onlyparts]

@@ -1,27 +1,32 @@
-\frametitle {Baum-Welch algorithm (V)}
-The routine for the general case:
-\vspace*{1em}
-    %     \lstset{columns=fullflexible,
-    %      basicstyle=\footnotesize,
-    %      numbers=left,
-    %      stepnumber=1,
-    %      numbersep=5pt,
-    %      title=Baum-Welch Iterative Update,
-    %      frame=single,
-    %      xleftmargin=1em,
-    %      captionpos=b}
+\frametitle {Algoritmul Baum-Welch (VI)}
+\begin{algorithm}[H]
+\scriptsize
+\label{alg-baum-welch-2}
+       \algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+\begin{algorithmic}[1]
+\REPEAT
+\STATE \emph{continued} $ \dots $
 
-    %     \begin{lstlisting}[mathescape]
-    % Initialize uniform $\pi_i$ for $1 \le i \le N$
-    % Initialize random (stochastic) $a_{i,j}$
-    % Initialize uniform $b_{j,k}$ for $1 \le k \le M$
+%\COMMENT{M Step}
+\FOR{$i=1$ to $N$}
+\STATE $\bar{\Pi}_i \leftarrow \gamma_1(i)$
+\ENDFOR
 
-    % Repeat until convergence
-    %     E step:
-    %         compute auxiliary variables $\xi_t(i,j)$ and $\gamma_t(i)$
-    %         using current $\pi_i$, $a_{i,j}$ and $b_{j,k}$
+\FOR{$i=1$ to $N$}
+\FOR{$j=1$ to $N$}
+\STATE $\bar{a}_{i,j} \leftarrow \left. \displaystyle\sum_{t=1}^{T-1}\xi_t(i,j)
+ \middle/
+    \displaystyle\sum_{t=1}^{T-1}\gamma_t(i) \right. $
+\ENDFOR
+\ENDFOR
 
-    %     M step:
-    %         compute updated parameter models $\bar{\pi_i}$, $\bar{a_{i,j}}$, $\bar{b_{j,k}}$
-    %     \end{lstlisting}
-
+\FOR{$j=1$ to $N$}
+\FOR{$k=1$ to $M$}
+\STATE $\bar{b}_{j,k} \leftarrow \left. \displaystyle\sum_{t=1, O_t = v_k}^{T}\gamma_t(j)
+\middle/
+    \displaystyle\sum_{t=1}^{T}\gamma_t(j) \right.$
+\ENDFOR
+\ENDFOR
+       \UNTIL{$P(O \vert \bar{\lambda}) - P(O \vert \lambda) < \epsilon$}
+       \end{algorithmic}
+\end{algorithm}
