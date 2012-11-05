@@ -51,3 +51,13 @@
     \tableofcontents[currentsection,currentsubsection,hideallsections]
   \end{frame}
 }
+
+
+%% one line comment unnumbered
+\newcounter{ALC@tempcntr}% Temporary counter for storage
+\newcommand{\LCOMMENT}[1]{%
+    \setcounter{ALC@tempcntr}{\arabic{ALC@rem}}% Store old counter
+    \setcounter{ALC@rem}{1}% To avoid printing line number
+    \item \{#1\}% Display comment + does not increment list item counter
+    \setcounter{ALC@rem}{\arabic{ALC@tempcntr}}% Restore old counter
+}%

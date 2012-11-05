@@ -36,13 +36,13 @@
 \begin{frame}[t]
 	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Abordare (I)}
 	Adapted from \citep{yang1994hidden}.
-	\vspace*{1em}
+	\vspace*{0.5em}
 	
-	\only<1>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-1.pdf}}
-	\only<2>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-2.pdf}}
-	\only<3>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-3.pdf}}
+	\only<1>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-1.pdf}}
+	\only<2>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-2.pdf}}
+	\only<3>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-3.pdf}}
 	\only<4>{
-		\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-4.pdf}	
+		\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-4.pdf}	
 	}
 	
 \end{frame}
@@ -61,6 +61,31 @@
 			\item Ergodic
 		\end{itemize}
 	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Abordare (III)}
+	
+	Procedură de recunoaștere:
+	\begin{enumerate}
+		\item Construim și antrenăm câte un MMA pentru fiecare simbol în parte
+		\vspace*{0.5em}
+		\pause
+		\item Folosim un set de date (simboluri) de validare pentru a stabili \emph{praguri} de recunoaștere, i.e. 
+				dacă probabilitatea secvenței observate este prea mică pentru fiecare MMA, marcăm simbolul drept 
+				\emph{necunoscut}
+		\vspace*{0.5em}
+		\pause
+		\item Recunoaștere:
+			\begin{itemize}
+				\item Calculăm $P(O \vert \lambda_i)$ pentru fiecare MMA construit pentru simbolurile 
+				$i=1,\cdots,nr\_simboluri$
+				\item Alegem $\max(P(O \vert \lambda_i))$ ca și simbol candidat. 
+				Daca $P(O \vert \lambda_i) > prag_i$, atunci am recunoscut \emph{simbolul i}, 
+				altfel marcăm \emph{necunoscut}
+			\end{itemize}
+	\end{enumerate}
+	
 \end{frame}
 
 \begin{frame}[t]
