@@ -1,0 +1,24 @@
+
+\titlegraphic{\includegraphics[height=.25\textheight]{graphics/branding/aria-logo-small-white.png}}
+
+\newcommand{\horiline}{\vspace*{-.75em} \begin{center} \begin{tabularx}{.8\linewidth}{
+        l } \hline
+    \end{tabularx}
+  \end{center}
+  \vspace*{-.75em}
+}
+
+%% am scos butoanele din dreapta jos
+\setbeamertemplate{navigation symbols}{}
+
+\newcommand{\dummyframe}{\begin{frame} :) \end{frame}}
+
+
+%% pentru a pune inainte de fiecare sectiune
+\AtBeginSubsection[] {
+  \renewcommand\Switch{0}
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection,currentsubsection,hideallsections]
+  \end{frame}
+  \renewcommand\Switch{1}
+}

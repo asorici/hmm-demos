@@ -1,55 +1,41 @@
-%% \horiline command
-\newcommand{\horiline}{\vspace*{-.75em} \begin{center} \begin{tabularx}{.8\linewidth}{
-        l } \hline
-    \end{tabularx}
-  \end{center}
-  \vspace*{-.75em}}
+%% Autori: Alexandru Sorici, Tudor Berariu
+%% Data: Noiembrie 2012
 
-%% am scos butoanele din dreapta jos
-\setbeamertemplate{navigation symbols}{}
-
-\newcommand{\dummyframe}{\begin{frame} :) \end{frame}}
-
+\titlegraphic{
+  \includegraphics[height=.25\textheight]{graphics/branding/aria-logo-small-white.png}
+}
 %% pentru a scapa de cuvantul "Figure" din fata unei figuri definita cu \begin{figure}
 \addto\captionsromanian{\renewcommand{\figurename}{}}
 
-%% Pentru a pune contents si frame cu titlu pe part
-\makeatletter 
-\AtBeginPart{%
-\addtocontents{toc}{\protect\beamer@partintoc{\the\c@part}{\beamer@partnameshort}{\the\c@page}
-  }%
-  % \begin{frame}
-  %   \center{ 
-  %     \Large{
-  %       \beamer@partname 
-  %     }
-  %   }
-  % \end{frame}
-  \begin{frame}{Outline}
-    \tableofcontents[currentpart]
+
+%% Numele algoritmului
+\floatname{algorithm}{Algoritmul}
+
+%% comandă care trage o linie orizontală (80% din spațiu)
+\newcommand{\horiline}{
+  \vspace*{-.75em} \begin{center} \begin{tabularx}{.8\linewidth}{
+        l } \hline
+    \end{tabularx}
+  \end{center}
+  \vspace*{-.75em}
+}
+
+%% comandă pentru frame-uri goale
+\newcommand{\dummyframe}{
+  \begin{frame}
+    \frametitle{De înlocuit} 
+    :) 
   \end{frame}
 }
 
 
-%% number, shortname, page.
-\providecommand\beamer@partintoc[3]{%
-  \ifnum\c@tocdepth=-1\relax
-  % requesting onlyparts.
-  \center{
-  \makebox[20em]{PART #1.} \makebox[20em]{\Large{\textbf{#2}}}
-}
-  \par
-  \fi } 
-
-\define@key{beamertoc}{onlyparts}[]{%
-  \c@tocdepth=-1\relax } \makeatother%
-
-
-%% pentru a pune inainte de fiecare sectiune
+%% afișează cuprinsul înainte de fiecare subsecțiune
 \AtBeginSubsection[] {
+  %\renewcommand\Switch{0}
   \begin{frame}{Outline}
     \tableofcontents[currentsection,currentsubsection,hideallsections]
   \end{frame}
+  %\renewcommand\Switch{1}
 }
 
 

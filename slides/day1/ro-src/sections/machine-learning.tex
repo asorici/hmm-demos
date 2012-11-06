@@ -1,40 +1,79 @@
-%% Tudor
 \begin{frame}
-  \frametitle{What is Machine Learning?}
-  \begin{block}{Machine Learning}
-    A computer program is said to learn from experience $E$ with
-    respect to some class of tasks $T$ and performance measure $P$, if
-    its performance at tasks in $T$, as measured by $P$, improves with
-    experience $E$.
+  \frametitle{Ce este Învățarea Automată?}
+  \begin{block}{Învățarea automată}
+    Un program se spune că învață dintr-o mulțime de experiențe $E$
+    relativ la o clasă de task-uri $T$ și o măsură a performaneței $P$
+    dacă performața acestuia la execuția task-urilor $T$, măsurată de $P$,
+    se îmbunătățește în urma experiențelor $E$.
+    \citep{Mitchell:1997:ML:541177}
   \end{block}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Machine Learning Applications}
+\begin{frame}[t]
+  \frametitle{Aplicații ale Învățării Automate}
   \begin{itemize}
-  \item Computer Vision: Google Car
-  \item Machine Translation
-  \item Speech Recognition
-  \item Recommender Systems
-  \item Intelligent Advertising
+  \item \alert<1>{Self-Driving Car: Google Car}
+  \item \alert<2>{Traducere Automată: Google Translate}
+  \item \alert<3->{Sisteme de Recomandare}
+    \begin{itemize}
+    \item \alert<3>{Filme: ImDB, NetFlix}
+    \item \alert<4>{Publicitate Inteligentă: Google Ads, Facebook Ads}
+    \end{itemize}
   \end{itemize}
+  \begin{center}%
+    \only<1>{\includegraphics[width=0.5\textwidth]{graphics/ml-intro/google-car}}%
+    \only<2>{\includegraphics[width=0.9\textwidth]{graphics/ml-intro/translate}}%
+    \only<3>{\includegraphics[width=0.65\textwidth]{graphics/ml-intro/recommender}}%
+    \only<4>{\includegraphics[width=0.65\textwidth]{graphics/ml-intro/advertizing}}%
+  \end{center}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Învățarea Automată: Tipuri de probleme}
+  \begin{block}{Tipuri de probleme}
+    \begin{itemize}
+    \item Regresie
+      \begin{itemize}
+      \item predicția evoluției prețului unui bun
+      \end{itemize}%
+      \only<3->{
+      \item Clasificare
+        \begin{itemize}
+        \item clasificarea obiectelor dintr-o imagine\\
+          (imagine de la  Albert-Ludwigs-Universität, 
+          Lehrstuhl für Mustererkennung und Bildverarbeitung)
+        \end{itemize}
+      }%
+      \only<5->{%
+      \item Învățare prin Recompensă
+        \begin{itemize}
+        \item jucător inteligent pentru backgammon
+        \end{itemize}
+      }%
+    \end{itemize}
+  \end{block}%
+  \begin{center}
+    \only<1>{\includegraphics[width=.6\textwidth]{graphics/ml-intro/ml-1}}%
+    \only<2>{\includegraphics[width=.6\textwidth]{graphics/ml-intro/ml-2}}%
+    \only<3>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-2}}%
+    \only<4>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-1}}%
+    \only<5>{\includegraphics[width=.28\textwidth]{graphics/ml-intro/backgammon}}%
+  \end{center}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Machine Learning Classification}
-  Types of Machine Learning Problems
-  \begin{columns}
-    \column{0.7\textwidth}
+  \frametitle{Tipuri de învățare}
+  \begin{block}{Învățare Supervizată}
+    \alert{Învățarea supervizată} se face pe baza unor date de antrenare etichetate.
     \begin{itemize}
-    \item Regression
-    \item Classification
-    \item Reinforcement Learning
+    \item construirea unui model climatic pe baza datelor din utimii 30 de ani (regresie)
+    \item construirea unui detector de mesaje spam (clasificare)
     \end{itemize}
+  \end{block}\pause
+  \begin{block}{Învățare Nesupervizată}
+    În \alert{învățarea neupervizată} nu există date etichetate.
     \begin{itemize}
-    \item supervised learning (eg. ..)
-    \item unsupervised
+    \item detectarea profilurilor de comportament ale cumpărătorilor
     \end{itemize}
-    \column{0.3\textwidth}
-    \includegraphics[width=\textwidth]{graphics/ml-intro/ml.pdf}
-  \end{columns}
+  \end{block}
 \end{frame}
