@@ -1,93 +1,134 @@
-\subsection[Baum-Welch algorithm]{Learning from Observations:
-  Baum-Welch algorithm}
-\label{sec:bw}
-
-\begin{frame}[t]
-	\frametitle{Learning from observations - Reminder}
-	\begin{block}{Model Estimation (Training) Problem}
-    	Given some observed sequences, how do we adjust the \alert{parameters} of an HMM model that best tries 	
-    	to explain the observations?
-  	\end{block}
+\begin{frame}
+	\frametitle{Învătarea din observații - Amintire}
+	
+	\begin{block}{Problema Estimării (Antrenării) Modelului}
+		Dându-se un set de secvențe observate \visible<2->{\alert{$\mathcal{O} = [O_1 O_2 \cdots O_L]$}}, 
+		cum ajustam \alert{parameterii} \visible<3->{\alert{$\lambda=(A,B,\Pi)$}} 
+		ai unui MMA care incearcă să explice cel mai bine acele observații?
+  	\end{block}	
   	\pause
   	
   	\begin{block}{}
-  		Adjust the model parameters $\lambda = (A, B, \Pi)$ to obtain $\max_{\lambda} P(O \vert \lambda)$
-  	\end{block}
-  	\pause
-  	
-  	\begin{block}{}
-  		The observation sequence used to adjust the model parameters is called a \alert{training} sequence.\\
-  		Training problem is crucial - allows to create best models for real phenomena.
+		Secvențele de observații folosite pentru ajustarea parametrilor modelului se numesc secvențe 
+		\alert{de antrenare}.\\
+		Problema antrenării este esențiala - ea permite crearea celor mai bune modele pentru fenomene reale.
   	\end{block}
 \end{frame}
 
 
 \begin{frame}[t]
-	\frametitle{Learning from observations - Aspects of the approach}
+	\frametitle{Învătarea din observații - Abordare}
 	\pause
 		
-	\begin{block}{\alert{Problem}}
-    	There is no known way to analytically solve for the model which maximizes the probability of the
-    	observation sequence.
+	\begin{block}{\alert{Problemă}}
+		Nu se cunoaște o metodă analitică de cautare a parametrilor modelului care \emph{maximizeaza} probabilitatea
+		secvențelor observate.
   	\end{block}
   	\pause
   	
-  	\begin{block}{Solution}
-  		We can choose $\lambda = (A, B, \Pi)$ such that $\max_{\lambda} P(O \vert \lambda)$ is 
-  		\alert{locally maximized} using an \alert{iterative procedure} such as \emph{Baum-Welch}.\\
-  		The method is an instance of the \emph{EM algoritm} \citep{dempster1977maximum} for HMMs.
+  	\begin{block}{Soluție}
+  		Putem totuși găsi $\lambda = (A, B, \Pi)$, astfel încât $\max_{\lambda} P(O \vert \lambda)$ corespunde
+  		unui \alert{maxim local}, utilizând o \alert{procedură iterativă} precum \emph{algoritmul Baum-Welch}.\\
+  		Această metodă este o instanță a \emph{algoritmului EM (Expectation Maximization) \citep{dempster1977maximum}} 
+  		pentru cazul MMA.
   	\end{block}
   	
 \end{frame}
 
+\begin{frame}[fragile, t]
+	\frametitle{Algoritmul Baum-Welch (I)}
+	Procedura în descriere conceptuală:	
+	\vspace*{0.5em}
+	\footnotesize{
+	\begin{enumerate}
+		\item Avem MMA $\lambda = (A, B, \Pi)$ și o secvență observată $O$
+		\pause
+		
+		\item Calculăm folosindu-ne de parametrii $\alpha_t(i)$ și $\beta_t(i)$
+			\begin{itemize}
+				\item	$\mbox{nr. estimat de tranziții din } S_i \mbox{, pentru fiecare } 1 \le i \le N$
+				\vspace*{0.5em}
+				\item	$\mbox{nr. estimat de tranziții din } S_i \mbox{ la } S_j 
+						\mbox{, pentru fiecare } 1 \le i \le N, 1 \le j \le N$
+				\vspace*{0.5em}
+				\item 	$\mbox{nr. estimat de vizite în } S_j \mbox{ observând simbolul } v_k
+						\mbox{, pentru fiecare } 1 \le j \le N, 1 \le k \le M$
+			\end{itemize}
+		\pause
+		
+		\item Daca modelul este corect ne așteptăm ca
+			\begin{enumerate}
+				\item[(a)] $\Pi_i = \mbox{ nr. estimat de vizite în starea } 
+													S_i \mbox{ la momentul } (t=1) = \bar{\Pi_i} $
+				\vspace*{0.5em}
+				\item[(b)] $a_{i,j} = \frac{\mbox{nr. estimat de tranziții din } S_i \mbox{ la } S_j}
+											{\mbox{nr. estimat de tranziții din } S_i} = \bar{a_{i,j}} $
+				\vspace*{0.5em}
+				\item[(c)] $b_{j,k} = \frac{\mbox{nr. estimat de vizite în } S_j \mbox{ observând simbolul } v_k}
+											{\mbox{nr. estimat de vizite în } S_j} = \bar{b_{j,k}} $
+			\end{enumerate}
+		\pause
+		
+		\item Vedem că raporturile calculate din presupunerea noastră explică mai bine observația decât parametrii
+				anteriori, i.e. $P(O \vert \bar{\lambda}) > P(O \vert \lambda) $
+		\pause
+		\item Atunci repetăm procesul până ce suntem mulțumiți (convergență: 
+				$P(O \vert \bar{\lambda}) - P(O \vert \lambda) \le \epsilon$)
+	\end{enumerate}
+	}
+\end{frame}
+
 \begin{frame}[t]
-	\frametitle{Baum-Welch algorithm (I)}
+	\frametitle{Algoritmul Baum-Welch (II)}
 	\pause
-	We first define some auxiliary variables:
+	Definim întâi niște variabile auxiliare:
 	
 	\begin{block}{}    
     	$\xi_{t,i,j} = \xi_t(i,j) = P(q_t=s_i,q_{t+1}=s_j \vert O, \lambda)$\\
-    	The probability of being in state $s_i$ at time $t$ and in state $s_j$ at time $t+1$, given
-    	the model and the observation sequence.
+    	Probabilitatea de a fi în starea $s_i$ la momentul $t$ \textbf{și} în starea $s_j$ la momentul $t+1$,
+    	condiționat de parametrii modelului curent și secvența observată.
 	\end{block}
 	\pause
 	
 	\begin{block}{}    
     	$ \gamma_{t,i} = \gamma_t(i) = P(q_t = s_i \vert O, \lambda)$\\
-    	The probability of being in state $s_i$ at time $t$, given the model and the observation sequence.
+    	Probabilitatea de a fi în starea $s_i$ la momentul $t$, condiționat de parametrii modelului curent și 
+    	secvența observată.
 	\end{block}
 	\vspace*{1em}
 	\pause
 	
-	From the definitions it follows that:\\
+	Din definiții rezultă că:\\
 	$ \gamma_t(i) = \displaystyle\sum_{j=1}^{N}\xi_t(i,j)$
   	
 \end{frame}
 
 \begin{frame}[t]
-	\frametitle{Baum-Welch algorithm (II)}
+	\frametitle{Algoritmul Baum-Welch (III)}
 	\begin{columns}[T]
 	
 	\column{0.42\textwidth}
 	\begin{figure}
   		\centering
 		\includegraphics[height=0.40\textheight]{graphics/baum-welch/baum-welch-alg.pdf}
-		\caption{\tiny{Sequence of operations required for the computation of the joint event that the system 
-		is in state $S_i$ at time $t$ and state $S_j$ at time $t+1$} \citep{rabiner1989tutorial}}
+		\caption{
+		\tiny{Secvența de operații necesară pentru calculul evenimentului mixt ca sistemul se află în
+		starea $S_i$ la momentul $t$ și în starea $S_j$ la momentul $t+1$}
+		} 
 		\label{fig:baum-welch-alg}
   	\end{figure}	
 	
 	\column{0.58\textwidth}
-		\begin{equation*}		
+		\begin{equation}		
 		\alpha_{t,i}=P(o_1,o_2,\ldots,o_t, q_t = S_i \vert \lambda)
-		\end{equation*}
+		\end{equation}
 		
-		\begin{equation*}
+		\begin{equation}
 		\beta_{t,i}=P(o_{t+1} o_{t+2} \cdots o_{T} \vert q_t = S_i, \lambda)
-		\end{equation*}
+		\end{equation}
 		\footnotesize
 		
-		\begin{equation*}
+		\begin{equation}
 			\begin{split}
 		      \xi_t(i,j) & = \frac{\alpha_{t,i}\cdot a_{i,j} \cdot
 		        b_j(o_{t+1}) \cdot \beta_{t+1,j}}
@@ -98,88 +139,156 @@
 		        \alpha_{t,k}\cdot a_{k,l} \cdot b_l(o_{t+1}) \cdot
 		        \beta_{t+1,l}}
 		    \end{split}
-		\end{equation*}	
+		\end{equation}	
 		\normalsize
 	\end{columns}
 	
 \end{frame}
 
 \begin{frame}
-	\frametitle{Baum-Welch algorithm (III)}
-	How do these auxiliary variables help?
+	\frametitle{Algoritmul Baum-Welch (IV)}
+	Cum ne ajută aceste variabile auxiliare?
 	\vspace*{1em}
 	
 	\begin{block}{}
-	$\displaystyle\sum_{t=1}^{T-1}\gamma_t(i)$ = expected number of transitions from $S_i$
+	$\displaystyle\sum_{t=1}^{T-1}\gamma_t(i)$ = numărul estimat de tranziții din $S_i$
 	\end{block}
 	\vspace*{1em}
 	\begin{block}{}
-	$\displaystyle\sum_{t=1}^{T-1}\xi_t(i,j)$ = expected number of transitions from $S_i$ to $S_j$
+	$\displaystyle\sum_{t=1}^{T-1}\xi_t(i,j)$ = numărul estimat de tranziții din $S_i$ la $S_j$
 	\end{block}
 	
 \end{frame}
 
 \begin{frame}[t]
-	\frametitle{Baum-Welch algorithm (IV)}
-	\footnotesize
-	\begin{equation*}
-	\bar{\pi_i} = \mbox{ expected no. of times in state } S_i \mbox{ at time } (t=1) = \gamma_t(i)
-	\end{equation*}
+	\frametitle{Algoritmul Baum-Welch (V)}
+	\scriptsize {
+	\begin{equation}
+	\bar{\pi_i} = \mbox{ nr. estimat de vizite în starea } S_i \mbox{ la momentul } (t=1) = \gamma_1(i)
+	\end{equation}
+	\vspace*{-1em}
 	\pause	
 	
-	\begin{equation*}
+	\begin{equation}
 	\begin{split}
-	\bar{a_{i,j}} & = \frac{\mbox{expected no. of transitions from } S_i \mbox{ to } S_j}
-							{\mbox{expcted no. of transition from } S_i} \\
+	\bar{a_{i,j}} & = \frac{\mbox{nr. estimat de tranziții din } S_i \mbox{ la } S_j}
+							{\mbox{nr. estimat de tranziții din } S_i} \\
 				  & = \frac{\displaystyle\sum_{t=1}^{T-1}\xi_t(i,j)}
 				   			{\displaystyle\sum_{t=1}^{T-1}\gamma_t(i)}	
 	\end{split}
-	\end{equation*}
+	\end{equation}
+	\vspace*{-1em}
 	\pause	
 	
-	\begin{equation*}
+	\begin{equation}
 	\begin{split}
-	\bar{b_{j,k}}  & = \frac{\mbox{expected no. of times in } S_j \mbox{ observing symbol } v_k}
-							{\mbox{expcted no. of times in } S_j} \\
+	\bar{b_{j,k}}  & = \frac{\mbox{nr. estimat de vizite în } S_j \mbox{ observând simbolul } v_k}
+							{\mbox{nr. estimat de vizite în } S_j} \\
 				   & = \frac{\displaystyle\sum_{t=1, O_t = v_k}^{T}\gamma_t(j)}
 				   			{\displaystyle\sum_{t=1}^{T}\gamma_t(j)}	
 	\end{split}
-	\end{equation*}	
-	\normalsize	
+	\end{equation}	
+	}
+	
 \end{frame}
 
 \begin{frame}[fragile, t]
-	\frametitle{Baum-Welch algorithm (V)}
-	The routine for the general case:
-	\vspace*{1em}
-    %     \lstset{columns=fullflexible, 
-    %     		basicstyle=\footnotesize, 
-    %     		numbers=left, 
-    %     		stepnumber=1, 
-    %     		numbersep=5pt,
-    %     		title=Baum-Welch Iterative Update,
-    %     		frame=single,
-    %     		xleftmargin=1em,
-    %     		captionpos=b}	
-
-    %     \begin{lstlisting}[mathescape]
-    % Initialize uniform $\pi_i$ for $1 \le i \le N$
-    % Initialize random (stochastic) $a_{i,j}$
-    % Initialize uniform $b_{j,k}$ for $1 \le k \le M$
-	
-    % Repeat until convergence
-    %     E step:
-    %         compute auxiliary variables $\xi_t(i,j)$ and $\gamma_t(i)$ 
-    %         using current $\pi_i$, $a_{i,j}$ and $b_{j,k}$
-        
-    %     M step:
-    %         compute updated parameter models $\bar{\pi_i}$, $\bar{a_{i,j}}$, $\bar{b_{j,k}}$
-    %     \end{lstlisting}
-
+	\frametitle{Algoritmul Baum-Welch (VI)}	
+	\begin{algorithm}[H]
+		\scriptsize
+      	\caption{Algoritm Baum-Welch}
+      	\label{alg-baum-welch}
+      	\algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+      	\begin{algorithmic}[1]
+      		\STATE intrări: $O \leftarrow$ secvența de observații, $\epsilon \leftarrow$ prag de convergență
+      		
+      		\STATE \LCOMMENT{\emph{Initializare}}
+      		\STATE init. uniformă $\Pi$ ($\Pi_i = 1/N, 1 \le i \le N$)
+      		\STATE init. aleatoare $a_{i,j}$, a. î. $\sum_{j=1}^{N}a_{i,j} = 1, \forall{i} = \bar{1, N}$ 
+      		\STATE init. uniformă $b_{j,k}$ ($b_{j,k} = 1/M, 1 \le j \le N, 1 \le k \le M$)
+      		\STATE init $log(P(O \vert \bar{\lambda})) = 0$
+			\vspace*{0.5em}
+      		
+      		\REPEAT
+				\STATE $log(P(O \vert \lambda)) = log(P(O \vert \bar{\lambda}))$
+				
+      			\STATE \LCOMMENT{\emph{E STEP - calculeaza variantele scalate pentru $\alpha$ și $\beta$ și 
+      			probabilitatea curentă (log likelihood - $log(P(O \vert \bar{\lambda}))$) a secvenței observate}}
+				\STATE $[log(P(O \vert \bar{\lambda})), \hat{\alpha}, \hat{\beta}, Scale] 
+				= forward\_backward(O, \Pi, A, B)$
+				
+				\STATE \LCOMMENT{M STEP - recalculeaza update-uri pentru $\Pi$, $A$ și $B$}
+				\STATE $\Pi = update\_pi\_procedure(\hat{\alpha}, \hat{\beta}, Scale)$
+				\STATE $A = update\_A\_procedure(O, \hat{\alpha}, \hat{\beta}, Scale)$
+				\STATE $B = update\_B\_procedure(O, \hat{\alpha}, \hat{\beta}, Scale)$
+				
+      	 	\UNTIL{$log(P(O \vert \bar{\lambda})) - log(P(O \vert \lambda)) < \epsilon$}
+		\end{algorithmic}
+	\end{algorithm}  
 \end{frame}
 
+
+\begin{frame}[fragile, t]
+	\frametitle{Algoritmul Baum-Welch (VI)}	
+	\begin{algorithm}[H]
+		\scriptsize
+      	\caption{Algoritm Baum-Welch}
+      	\label{alg-baum-welch}
+      	\algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+      	\begin{algorithmic}[1]
+      		\STATE \emph{Function update\_pi\_procedure}($\hat{\alpha}$, $\hat{\beta}$, $Scale$)
+				\FOR{$i=1$ to $N$}
+					\STATE $\Pi_i = \frac{\alpha_1(i) \cdot \beta_1(i) / Scale(1)}
+										{\sum_{j=1}^{N}{\alpha_1(j) \cdot \beta_1(j) / Scale(1)}}$
+				\ENDFOR
+				\RETURN $\Pi$
+      		\STATE \emph{EndFunction}
+			
+			\vspace*{0.5em} 
+      		\STATE \emph{Function update\_A\_procedure}($O$, $\hat{\alpha}$, $\hat{\beta}$, $Scale$)
+				\FOR{$i=1$ to $N$}
+					\FOR{$j=1$ to $N$}
+					\STATE $a_{i,j} = \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{i,j} \cdot b_j(o_{t+1}) 
+												\cdot \hat{\beta}_{t+1,j}}}
+										{\sum_{t=1}^{T-1}\sum_{j=1}^{N}{\hat{\alpha}_{t,i}\cdot a_{i,j} 
+										\cdot b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}$
+					\ENDFOR
+				\ENDFOR
+				
+				\RETURN $a$
+      		\STATE \emph{EndFunction}
+		\end{algorithmic}
+	\end{algorithm}  
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Algoritmul Baum-Welch (VI)}	
+	\begin{algorithm}[H]
+		\scriptsize
+      	\caption{Algoritm Baum-Welch}
+      	\label{alg-baum-welch}
+      	\algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+      	\begin{algorithmic}[1]
+      		\STATE \emph{Function update\_B\_procedure}($O$, $\hat{\alpha}$, $\hat{\beta}$, $Scale$)
+				\FOR{$j=1$ to $N$}
+					\FOR{$k=1$ to $M$}
+					\STATE $b_{j,k} = \frac{\sum_{t=1,O(t)=v_k}^{T}
+											{\hat{\alpha}_t(j) \cdot \hat{\beta}_t(j) / Scale(t)}}
+										   {\sum_{t=1}^{T}
+											{\hat{\alpha}_t(j) \cdot \hat{\beta}_t(j) / Scale(t)}}$
+					\ENDFOR
+				\ENDFOR
+				
+				\RETURN $b$
+      		\STATE \emph{EndFunction}
+		\end{algorithmic}
+	\end{algorithm}  
+\end{frame}
+
+
 \begin{frame}
-	\frametitle{Baum-Welch - Let's write some code}
+	\frametitle{Baum-Welch - Să scriem niște cod}
 	\centering
 	LET'S WRITE SOME CODE :-)
 \end{frame}

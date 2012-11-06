@@ -4,6 +4,9 @@
 \titlegraphic{
   \includegraphics[height=.25\textheight]{graphics/branding/aria-logo-small-white.png}
 }
+%% pentru a scapa de cuvantul "Figure" din fata unei figuri definita cu \begin{figure}
+\addto\captionsromanian{\renewcommand{\figurename}{}}
+
 
 %% Numele algoritmului
 \floatname{algorithm}{Algoritmul}
@@ -34,3 +37,13 @@
   \end{frame}
   %\renewcommand\Switch{1}
 }
+
+
+%% one line comment unnumbered
+\newcounter{ALC@tempcntr}% Temporary counter for storage
+\newcommand{\LCOMMENT}[1]{%
+    \setcounter{ALC@tempcntr}{\arabic{ALC@rem}}% Store old counter
+    \setcounter{ALC@rem}{1}% To avoid printing line number
+    \item \{#1\}% Display comment + does not increment list item counter
+    \setcounter{ALC@rem}{\arabic{ALC@tempcntr}}% Restore old counter
+}%

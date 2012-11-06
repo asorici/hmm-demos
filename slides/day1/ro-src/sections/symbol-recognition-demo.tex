@@ -1,75 +1,99 @@
 \begin{frame}[t]
-	\frametitle{A simple symbol recognition application}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor}
 	Features:
 	\pause
-	\begin{block}{Define}
-		Define, organize and visualize a dataset of symbols defined with mouse movements.
+	\begin{block}{Definire}
+		Definire, organizare și vizualizare a unui set de date de simboluri captate prin mișcarea mouse-ului.
 	\end{block}
 	\pause
 	
-	\begin{block}{Train}
-		Train a HMM-based recognition engine on a symbol dataset.
+	\begin{block}{Antrenare}
+		Antrenarea unui motor de recunoaștere a simbolurilor prin metoda MMA.
 	\end{block}
 	\pause
 	
-	\begin{block}{Recognize}
-		Recognize new symbols and view classification metrics.
+	\begin{block}{Recunoaștere}
+		Recunoașterea unui nou simbol si vizualizarea unor metrici de clasificare.
 	\end{block}
 	\pause
 	
 	\begin{block}{}
-		Default included symbols: \textbf{\emph{left arrow, right arrow, circle, square, infinity}}
+		Simboluri default incluse: \textbf{\emph{săgeată stânga, săgeată dreapta, cerc, pătrat, infinit}}
 	\end{block}
 \end{frame}
 
 \begin{frame}[t]
-	\frametitle{A simple symbol recognition application - A View}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Vizualizare}	
 	
 	\begin{figure}
   		\centering
 		\includegraphics[height=0.70\textheight]{graphics/demo-app/infinity.png}
-		\caption{\tiny{A view of the symbol recognition application GUI}}
+		\caption{\tiny{O vizualizare cu GUI-ul aplicației de recunoaștere a simbolurilor}}
 		\label{fig:baum-welch-alg}
   	\end{figure}	
 \end{frame}
 
 \begin{frame}[t]
-	\frametitle{A simple symbol recognition application - Approach (I)}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Abordare (I)}
 	Adapted from \citep{yang1994hidden}.
-	\vspace*{1em}
+	\vspace*{0.5em}
 	
-	\only<1>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-1.pdf}}
-	\only<2>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-2.pdf}}
-	\only<3>{\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-3.pdf}}
+	\only<1>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-1.pdf}}
+	\only<2>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-2.pdf}}
+	\only<3>{\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-3.pdf}}
 	\only<4>{
-		\centering \includegraphics[width=0.85\textwidth]{graphics/demo-app/symbol-app-architecture-4.pdf}	
+		\centering \includegraphics[width=0.80\textwidth]{graphics/demo-app/symbol-app-architecture-4.pdf}	
 	}
 	
 \end{frame}
 
 \begin{frame}
-	\frametitle{A simple symbol recognition application - Approach (II)}
-	Adapted from \citep{yang1994hidden}.
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Abordare (II)}
+	Adaptare după \citep{yang1994hidden}.
 	
-	\begin{block}{HMM Structure}
-		$N$(number of states) = 8\\
-		2 discrete observable variables per state - $coef_{FFT}(x)$, $coef_{FFT}(y)$\\
-		$M$(number of values for each observable variable) = 256\\
-		Transition model:\\
+	\begin{block}{Structura MMA}
+		$N$(număr de stări) = 8\\
+		2 variabile observabile de tip discrte per stare - $coef_{FFT}(x)$, $coef_{FFT}(y)$\\
+		$M$(număr de valori pentru fiecare variabilă observabilă) = 256\\
+		Modelul de tranziție:\\
 		\begin{itemize}
 			\item Bakis
 			\item Ergodic
 		\end{itemize}
 	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Abordare (III)}
+	
+	Procedură de recunoaștere:
+	\begin{enumerate}
+		\item Construim și antrenăm câte un MMA pentru fiecare simbol în parte
+		\vspace*{0.5em}
+		\pause
+		\item Folosim un set de date (simboluri) de validare pentru a stabili \emph{praguri} de recunoaștere, i.e. 
+				dacă probabilitatea secvenței observate este prea mică pentru fiecare MMA, marcăm simbolul drept 
+				\emph{necunoscut}
+		\vspace*{0.5em}
+		\pause
+		\item Recunoaștere:
+			\begin{itemize}
+				\item Calculăm $P(O \vert \lambda_i)$ pentru fiecare MMA construit pentru simbolurile 
+				$i=1,\cdots,nr\_simboluri$
+				\item Alegem $\max(P(O \vert \lambda_i))$ ca și simbol candidat. 
+				Daca $P(O \vert \lambda_i) > prag_i$, atunci am recunoscut \emph{simbolul i}, 
+				altfel marcăm \emph{necunoscut}
+			\end{itemize}
+	\end{enumerate}
 	
 \end{frame}
 
 \begin{frame}[t]
-	\frametitle{A simple symbol recognition application - Results}
+	\frametitle{O aplicație simplă de recunoaștere a simbolurilor - Rezultate}
 	\scriptsize
-	\begin{block}{Dataset size}
-		\textbf{5} symbols: \textbf{\emph{left arrow, right arrow, circle, square, infinity}}\\
-		\textbf{100} samples per symbol: \textbf{50} training, \textbf{10} validation, \textbf{40} testing
+	\begin{block}{Mărime set de date}
+		\textbf{5} simboluri: \textbf{\emph{săgeată stânga, săgeată dreapta, cerc, pătrat, infinit}}\\
+		\textbf{100} exemple per simbol: \textbf{50} antrenare, \textbf{10} validare, \textbf{40} testare
 	\end{block}
 	\normalsize
 	

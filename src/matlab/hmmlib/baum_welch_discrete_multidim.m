@@ -69,24 +69,11 @@ else
     if strcmp(model, 'bakis')
         Pi(1) = 1;
         A = zeros(N, N);
-        %{
-        for i = 1 : N - 2
-            A(i, i:(i+2)) = rand(1, 3);
-        end
-        A(N - 1, (N - 1):N) = rand(1, 2);
-        %}
-        
         for i = 1 : N - 2
             A(i, i:(i+2)) = 1;
         end
+        
         A(N - 1, (N - 1):N) = 1;
-        
-        %{
-        for i = 1 : N - 1
-            A(i, i:(i+1)) = rand(1, 2);
-        end
-        %}
-        
         A(N, N) = 1;
         A = A ./ repmat(sum(A,2),1,N);
     else
@@ -109,10 +96,8 @@ for l=1:L
 end
 
 %% EM Loop
-%while abs(Pold - prod(P)) >= 0.000001 && iter_ct < max_iter
 while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     
-    %Pold = prod(P);
     LogP_old = sum(LogP) / L;
     
     % display some progress
@@ -187,7 +172,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     
     % reestimate emission probabilities for each dimension of the
     % observed variables
-    % also use laplacian smoothing with a factor of 1.0e-2
+    % also use laplacian smoothing with a factor of 1.0e-4
     for r = 1 : R
         O_r = shiftdim(permute(O(:, r, :), [1 3 2]));
         B(:,:,r) = (shiftdim(sum(sum( ...
