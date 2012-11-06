@@ -44,11 +44,11 @@
 \begin{frame}[fragile, t]
 	\frametitle{Algoritmul Baum-Welch (I)}
 	Procedura în descriere conceptuală:	
-	\vspace*{0.5em}
+	\vspace*{0.25em}
 	\footnotesize{
 	\begin{enumerate}
 		\item Avem MMA $\lambda = (A, B, \Pi)$ și o secvență observată $O$%
-		\vspace*{0.5em}
+		\vspace*{0.25em}
 		\pause
 		
 		\item Calculăm folosindu-ne de parametrii $\alpha_t(i)$ și $\beta_t(i)$			
@@ -65,7 +65,7 @@
 										\mbox{\scriptsize{ observând simbolul }} v_k
 										\mbox{\scriptsize{, pentru fiecare }} 1 \le j \le N, 1 \le k \le M$%
 			\end{itemize}
-		\vspace*{0.5em}		
+		\vspace*{0.25em}		
 		\pause
 		
 		\item Daca modelul este corect ne așteptăm ca
@@ -81,12 +81,12 @@
 											\mbox{\scriptsize{ observând simbolul }} v_k}
 											{\mbox{\scriptsize{nr. estimat de vizite în }} S_j} = \bar{b_{j,k}}$%
 			\end{enumerate}
-		\vspace*{0.5em}		
+		\vspace*{0.25em}		
 		\pause
 		
 		\item Vedem că raporturile calculate din presupunerea noastră explică mai bine observația decât parametrii
 				anteriori, i.e. $P(O \vert \bar{\lambda}) > P(O \vert \lambda) $%
-		\vspace*{0.5em}
+		\vspace*{0.25em}
 		\pause
 		\item Atunci repetăm procesul până ce suntem mulțumiți (convergență: 
 				$P(O \vert \bar{\lambda}) - P(O \vert \lambda) \le \epsilon$)
@@ -210,6 +210,7 @@
 
 \begin{frame}[fragile, t]
 	\frametitle{Algoritmul Baum-Welch (VI)}	
+	\vspace*{-1em}
 	\begin{algorithm}[H]
 		\scriptsize
       	\caption{Algoritm Baum-Welch}
@@ -264,7 +265,7 @@
       		\STATE \emph{Function update\_A\_procedure}($O$, $\hat{\alpha}$, $\hat{\beta}$, $Scale$)
 				\FOR{$i=1$ to $N$}
 					\FOR{$j=1$ to $N$}
-					\STATE $a_{i,j} = \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{i,j} \cdot b_j(o_{t+1}) 
+					\STATE $a_{i,j} = \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{ij} \cdot b_j(o_{t+1}) 
 												\cdot \hat{\beta}_{t+1,j}}}
 										{\sum_{t=1}^{T-1}\sum_{j=1}^{N}{\hat{\alpha}_{t,i}\cdot a_{i,j} 
 										\cdot b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}$
