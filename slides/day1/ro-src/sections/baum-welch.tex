@@ -2,13 +2,16 @@
 	\frametitle{Învătarea din observații - Amintire}
 	
 	\begin{block}{Problema Estimării (Antrenării) Modelului}
-		Dându-se un set de secvențe observate \visible<2->{\alert{$\mathcal{O} = [O_1 O_2 \cdots O_L]$}}, 
-		cum ajustam \alert{parameterii} \visible<3->{\alert{$\lambda=(A,B,\Pi)$}} 
+		\justifying		
+		Dându-se un set de secvențe observate \alert{$\mathcal{O} = [O_1 O_2 \cdots O_L]$}, 
+		cum ajustam \alert{parameterii} \alert{$\lambda=(A,B,\Pi)$} 
 		ai unui MMA care incearcă să explice cel mai bine acele observații?
   	\end{block}	
   	\pause
+	\vspace*{1em}
   	
   	\begin{block}{}
+  		\justifying
 		Secvențele de observații folosite pentru ajustarea parametrilor modelului se numesc secvențe 
 		\alert{de antrenare}.\\
 		Problema antrenării este esențiala - ea permite crearea celor mai bune modele pentru fenomene reale.
@@ -16,17 +19,20 @@
 \end{frame}
 
 
-\begin{frame}[t]
+\begin{frame}
 	\frametitle{Învătarea din observații - Abordare}
 	\pause
 		
 	\begin{block}{\alert{Problemă}}
+		\justifying		
 		Nu se cunoaște o metodă analitică de cautare a parametrilor modelului care \emph{maximizeaza} probabilitatea
 		secvențelor observate.
   	\end{block}
+	\vspace*{1em}
   	\pause
   	
   	\begin{block}{Soluție}
+		\justifying
   		Putem totuși găsi $\lambda = (A, B, \Pi)$, astfel încât $\max_{\lambda} P(O \vert \lambda)$ corespunde
   		unui \alert{maxim local}, utilizând o \alert{procedură iterativă} precum \emph{algoritmul Baum-Welch}.\\
   		Această metodă este o instanță a \emph{algoritmului EM (Expectation Maximization) \citep{dempster1977maximum}} 
@@ -38,39 +44,49 @@
 \begin{frame}[fragile, t]
 	\frametitle{Algoritmul Baum-Welch (I)}
 	Procedura în descriere conceptuală:	
-	\vspace*{0.5em}
+	\vspace*{0.25em}
 	\footnotesize{
 	\begin{enumerate}
-		\item Avem MMA $\lambda = (A, B, \Pi)$ și o secvență observată $O$
+		\item Avem MMA $\lambda = (A, B, \Pi)$ și o secvență observată $O$%
+		\vspace*{0.25em}
 		\pause
 		
-		\item Calculăm folosindu-ne de parametrii $\alpha_t(i)$ și $\beta_t(i)$
+		\item Calculăm folosindu-ne de parametrii $\alpha_t(i)$ și $\beta_t(i)$			
 			\begin{itemize}
-				\item	$\mbox{nr. estimat de tranziții din } S_i \mbox{, pentru fiecare } 1 \le i \le N$
+				\item	$\scriptstyle 	\mbox{\scriptsize{nr. estimat de tranziții din }} S_i 
+										\mbox{\scriptsize{, pentru fiecare} } 
+				1 \le i \le N$%
 				\vspace*{0.5em}
-				\item	$\mbox{nr. estimat de tranziții din } S_i \mbox{ la } S_j 
-						\mbox{, pentru fiecare } 1 \le i \le N, 1 \le j \le N$
+				\item	$\scriptstyle 	\mbox{\scriptsize{nr. estimat de tranziții din }} S_i 
+										\mbox{ \scriptsize{la }} S_j 
+										\mbox{\scriptsize{, pentru fiecare }} 1 \le i \le N, 1 \le j \le N$%
 				\vspace*{0.5em}
-				\item 	$\mbox{nr. estimat de vizite în } S_j \mbox{ observând simbolul } v_k
-						\mbox{, pentru fiecare } 1 \le j \le N, 1 \le k \le M$
+				\item 	$\scriptstyle	\mbox{\scriptsize{nr. estimat de vizite în }} S_j 
+										\mbox{\scriptsize{ observând simbolul }} v_k
+										\mbox{\scriptsize{, pentru fiecare }} 1 \le j \le N, 1 \le k \le M$%
 			\end{itemize}
+		\vspace*{0.25em}		
 		\pause
 		
 		\item Daca modelul este corect ne așteptăm ca
 			\begin{enumerate}
-				\item[(a)] $\Pi_i = \mbox{ nr. estimat de vizite în starea } 
-													S_i \mbox{ la momentul } (t=1) = \bar{\Pi_i} $
+				\item[(a)] $\scriptstyle \Pi_i = \mbox{{\scriptsize nr. estimat de vizite în starea }} 
+													S_i \mbox{\small{ la momentul }} (t=1) = \bar{\Pi_i} $%
 				\vspace*{0.5em}
-				\item[(b)] $a_{i,j} = \frac{\mbox{nr. estimat de tranziții din } S_i \mbox{ la } S_j}
-											{\mbox{nr. estimat de tranziții din } S_i} = \bar{a_{i,j}} $
+				\item[(b)] $\scriptstyle a_{i,j} = \frac{\mbox{\scriptsize{nr. estimat de tranziții din }} S_i 
+											\mbox{\scriptsize{ la }} S_j}
+											{\mbox{\scriptsize{nr. estimat de tranziții din }} S_i} = \bar{a_{i,j}}$%
 				\vspace*{0.5em}
-				\item[(c)] $b_{j,k} = \frac{\mbox{nr. estimat de vizite în } S_j \mbox{ observând simbolul } v_k}
-											{\mbox{nr. estimat de vizite în } S_j} = \bar{b_{j,k}} $
+				\item[(c)] $\scriptstyle b_{j,k} = \frac{\mbox{\scriptsize{nr. estimat de vizite în }} S_j 
+											\mbox{\scriptsize{ observând simbolul }} v_k}
+											{\mbox{\scriptsize{nr. estimat de vizite în }} S_j} = \bar{b_{j,k}}$%
 			\end{enumerate}
+		\vspace*{0.25em}		
 		\pause
 		
 		\item Vedem că raporturile calculate din presupunerea noastră explică mai bine observația decât parametrii
-				anteriori, i.e. $P(O \vert \bar{\lambda}) > P(O \vert \lambda) $
+				anteriori, i.e. $P(O \vert \bar{\lambda}) > P(O \vert \lambda) $%
+		\vspace*{0.25em}
 		\pause
 		\item Atunci repetăm procesul până ce suntem mulțumiți (convergență: 
 				$P(O \vert \bar{\lambda}) - P(O \vert \lambda) \le \epsilon$)
@@ -194,6 +210,7 @@
 
 \begin{frame}[fragile, t]
 	\frametitle{Algoritmul Baum-Welch (VI)}	
+	\vspace*{-1em}
 	\begin{algorithm}[H]
 		\scriptsize
       	\caption{Algoritm Baum-Welch}
@@ -217,7 +234,7 @@
 				\STATE $[log(P(O \vert \bar{\lambda})), \hat{\alpha}, \hat{\beta}, Scale] 
 				= forward\_backward(O, \Pi, A, B)$
 				
-				\STATE \LCOMMENT{M STEP - recalculeaza update-uri pentru $\Pi$, $A$ și $B$}
+				\STATE \LCOMMENT{M STEP - recalculeaza $\Pi$, $A$ și $B$}
 				\STATE $\Pi = update\_pi\_procedure(\hat{\alpha}, \hat{\beta}, Scale)$
 				\STATE $A = update\_A\_procedure(O, \hat{\alpha}, \hat{\beta}, Scale)$
 				\STATE $B = update\_B\_procedure(O, \hat{\alpha}, \hat{\beta}, Scale)$
@@ -238,8 +255,8 @@
       	\begin{algorithmic}[1]
       		\STATE \emph{Function update\_pi\_procedure}($\hat{\alpha}$, $\hat{\beta}$, $Scale$)
 				\FOR{$i=1$ to $N$}
-					\STATE $\Pi_i = \frac{\alpha_1(i) \cdot \beta_1(i) / Scale(1)}
-										{\sum_{j=1}^{N}{\alpha_1(j) \cdot \beta_1(j) / Scale(1)}}$
+					\STATE $\Pi_i = \frac{\hat{\alpha}_1(i) \cdot \hat{\beta}_1(i) / Scale(1)}
+										{\sum_{j=1}^{N}{\hat{\alpha}_1(j) \cdot \hat{\beta}_1(j) / Scale(1)}}$
 				\ENDFOR
 				\RETURN $\Pi$
       		\STATE \emph{EndFunction}
@@ -248,7 +265,7 @@
       		\STATE \emph{Function update\_A\_procedure}($O$, $\hat{\alpha}$, $\hat{\beta}$, $Scale$)
 				\FOR{$i=1$ to $N$}
 					\FOR{$j=1$ to $N$}
-					\STATE $a_{i,j} = \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{i,j} \cdot b_j(o_{t+1}) 
+					\STATE $a_{i,j} = \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{ij} \cdot b_j(o_{t+1}) 
 												\cdot \hat{\beta}_{t+1,j}}}
 										{\sum_{t=1}^{T-1}\sum_{j=1}^{N}{\hat{\alpha}_{t,i}\cdot a_{i,j} 
 										\cdot b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}$

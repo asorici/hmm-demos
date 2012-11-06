@@ -1,18 +1,49 @@
-function symbol_do_training(model)
+function symbol_do_training(model, symbols)
 %% perform symbol recognition training for the hmm model type
+%
+%   Inputs:
+%       model - a string giving the HMM transition model to be used
+%               one of {'ergodic', 'bakis'}
+%       symbols - a vector of strings naming the symbols for which
+%                 a HMM model should be trained
 
-symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
+%symbols = {'left_arrow' 'right_arrow' 'circle' 'square' 'infinity'};
 symbol_strings = char(symbols);
 
-% load FFT feature extraction parameters from file
-feature_param_file = 'feature_extraction_parameters.mat';
-load(feature_param_file, 'resample_interval', ...
-                         'hamming_window_size', ...
-                         'hamming_window_step');
-                     
+% check existance of required files
+symbol_config_filename = 'symbol_config.mat';
+symbol_codebook_filename = 'symbol_feature_codebook.mat';
+
+if (~exist(symbol_config_filename, 'file'))
+    error('symbol_do_training:config', ... 
+          'The file symbol_config.mat is not on the MATLAB path.');
+end
+
+if (~exist(symbol_codebook_filename, 'file'))
+    error('symbol_do_training:config', ... 
+          'The file symbol_feature_codebook.mat is not on the MATLAB path.');
+end
+
+
+% load variable meta-data from symbol_config.mat
+vars = whos('-file', 'symbol_config.mat');
+
+% check the existence of feature_extraction_parameters
+% structure in symbol_config.mat
+if (~ismember('feature_extraction_parameters', {vars.name}))
+    error('symbol_compute_codebook:feature_extraction_parameters', ... 
+        'No "feature_extraction_parameters" variable found in symbol_config.mat. Nothing to compute.');
+end
+
+
+% load FFT feature extraction parameters from config file
+load(symbol_config_filename, 'feature_extraction_parameters');
+resample_interval = feature_extraction_parameters.resample_interval;
+hamming_window_size = feature_extraction_parameters.hamming_window_size;
+hamming_window_step = feature_extraction_parameters.hamming_window_step;
+                         
 % load symbol codebook from file
-codebook_filename = 'symbol_feature_codebook.mat';
-load(codebook_filename, 'x_codebook', 'y_codebook');
+load(symbol_codebook_filename, 'x_codebook', 'y_codebook');
 
 %% ---------------------------- training ---------------------------
 disp '--------- Training HMM models ---------'
@@ -59,14 +90,6 @@ for s=1:size(symbol_strings, 1)
                 hamming_window_size, hamming_window_step);
         
         [Prob, Alpha, Beta, Scale] = forward_backward(O, Pi, A, B);
-        
-        %{
-        lik = 0;
-        for i = 1 : N
-            lik = lik + alfa(end, i);
-        end
-        %}
-        %lik = log(Prob);
         
         lik = Prob;
         if lik < minlik

@@ -31,7 +31,9 @@ P2. Theory of HMMs
                         - personalized signature recognition
                         - video sign language recognition
                     - speech recognition
-                        - Siri
+                        - voice user interfaces: e.g. Siri
+                        - speech-to-text processing
+                        - Direct Voice Input - in comercial and fighter aircraft
                     - recognizing office activities (behavioral modeling)
                         - e.g. speaking on the phone, speaking face to face, working at desk etc
                     - Bioinformatics

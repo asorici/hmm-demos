@@ -48,7 +48,17 @@ global nr_points
 nr_points = 64;
 
 global resample_interval
+global hamming_window_size
+global hamming_window_step
+global nr_clusters
 resample_interval = 0.02;
+hamming_window_size = 0.16;
+hamming_window_step = 0.08;
+nr_clusters = 256;
+
+global symbol_config_filename
+symbol_config_filename = 'symbol_config.mat';
+
 
 % --- Executes just before symbol_recording is made visible.
 function symbol_recording_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -181,6 +191,53 @@ function symbol_select_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+% get symbols defined by user
+symbol_selection_names = get(hObject, 'String');
+if ~iscell(symbol_selection_names)
+    symbol_selection_names = cellstr(symbol_selection_names);
+end
+
+nr_lines = size(symbol_selection_names, 1);
+nr_cols = size(symbol_selection_names, 2);
+
+% make it a row cell array
+if nr_lines > nr_cols
+    symbol_selection_names = reshape(symbol_selection_names, ...
+                                [nr_cols nr_lines]);
+end
+
+% check for existence of symbol_config.mat file
+global symbol_config_filename
+global resample_interval
+global hamming_window_size
+global hamming_window_step
+global nr_clusters
+
+if (~exist(symbol_config_filename, 'file'))
+    symbols = symbol_selection_names;
+    feature_extraction_parameters.resample_interval = resample_interval;
+    feature_extraction_parameters.hamming_window_size = hamming_window_size;
+    feature_extraction_parameters.hamming_window_step = hamming_window_step;
+    feature_extraction_parameters.nr_clusters = nr_clusters;
+    
+    save(symbol_config_filename, 'symbols');
+    save(symbol_config_filename, 'feature_extraction_parameters');
+else
+    % read the variables stored in the mat file
+    vars = whos('-file', symbol_config_filename);
+    
+    symbols = symbol_selection_names;
+    
+    % if symbols already stored in config file, then update
+    if (ismember('symbols', {vars.name}))
+        load(symbol_config_filename, 'symbols');
+        diff_idx = ~ismember(symbol_selection_names, symbols);
+        symbols = [symbols symbol_selection_names(diff_idx)];
+    end
+    
+    save(symbol_config_filename, 'symbols');
 end
 
 
