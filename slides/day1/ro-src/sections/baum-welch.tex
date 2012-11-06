@@ -255,8 +255,8 @@
       	\begin{algorithmic}[1]
       		\STATE \emph{Function update\_pi\_procedure}($\hat{\alpha}$, $\hat{\beta}$, $Scale$)
 				\FOR{$i=1$ to $N$}
-					\STATE $\Pi_i = \frac{\alpha_1(i) \cdot \beta_1(i) / Scale(1)}
-										{\sum_{j=1}^{N}{\alpha_1(j) \cdot \beta_1(j) / Scale(1)}}$
+					\STATE $\Pi_i = \frac{\hat{\alpha}_1(i) \cdot \hat{\beta}_1(i) / Scale(1)}
+										{\sum_{j=1}^{N}{\hat{\alpha}_1(j) \cdot \hat{\beta}_1(j) / Scale(1)}}$
 				\ENDFOR
 				\RETURN $\Pi$
       		\STATE \emph{EndFunction}
