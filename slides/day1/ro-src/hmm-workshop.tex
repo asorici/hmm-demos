@@ -1,34 +1,44 @@
+%% Autori: Alexandru Sorici, Tudor Berariu
+%% Data: Noiembrie 2012
+
 \documentclass{beamer}
 
+%%%% Aspect
+%% tema folosită
 \usetheme{CambridgeUS}
+%% ajustări
+\input{setup/adjust-theme.tex}
 
+%%%% Pachete
+%% pentru limba română
 \usepackage[utf8x]{inputenc}
-\usepackage{tabularx}
 \usepackage[romanian]{babel}
+%% pentru bibliografie
 \usepackage{natbib}
 \usepackage{bibentry}
+%% pentru un tabular cu lățimi "deștepte" ale coloanelor
+\usepackage{tabularx}
+%% pentru simboluri matematice de tot felul
 \usepackage{amsmath}
 \usepackage{mathtools}
+%% pentru algoritmi
 \usepackage{algorithm}
 \usepackage{algorithmic}
+%% pentru figuri
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+%% pentru cod matlab
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
-%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
-
-
-
-\title[ARIA]{Modele Markov Ascunse}
-
+\title[Modele Markov Ascunse]{Modele Markov Ascunse}
 \subtitle{De la Teorie la Aplicații}
-
 \author[A. Sorici, T. Berariu]{Alexandru Sorici, Tudor Berariu}
+\institute[AI-MAS]{Asociația Română pentru Inteligență Artificială \\ 
+  {\tiny în colaborare cu} \\ 
+    Laboratorul AI-MAS}
 
-\institute[AI-MAS]{Asociația Română pentru Inteligență Artificială}
-
-%% TODO de pus frumos titlurile secțiunilor
-
+%% comenzi pentru documentul curent
 \input{setup/commands.tex}
 
 
@@ -36,13 +46,11 @@
 \maketitle
 
 \begin{frame}
-  \tableofcontents[onlyparts]
-\end{frame}
-
-\begin{frame}
   \frametitle{Outline}
   \tableofcontents[pausesections]
 \end{frame}
+
+\renewcommand\Switch{1}
 
 \section{Aplicații în Învățarea Automată pentru MMA}
 \label{sec:intro-to-hmm}
@@ -65,7 +73,7 @@
 \subsection{Cele Trei Probleme ale MMA}
 \label{sec:three-problmes}
 
-%% alejandro
+% %% alejandro
 \input{sections/problems.tex}
 
 \subsection{Fundamente Matematice}
@@ -92,7 +100,7 @@
 \subsection{Problema Interpretării: Algoritmul Viterbi}
 \label{sec:viterbi}
 
-%% tudor
+% %% tudor
 \input{sections/viterbi.tex}
 
 \subsection{Problema Estimării: Algoritmul Baum-Welch}
@@ -111,8 +119,8 @@
 \section{Tipuri de MMA}
 \label{sec:hmm-types}
 
-%% tudor
-\input{sections/hmm-types.tex}
+% %% tudor
+\input{sections/types-of-hmms.tex}
 
 \section{Discuții și Concluzii}
 \label{sec:closing}
@@ -121,4 +129,3 @@
 \input{sections/closing.tex}
 
 \end{document}
-
