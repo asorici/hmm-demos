@@ -1,0 +1,147 @@
+%% Autori: Alexandru Sorici, Tudor Berariu
+%% Data: Noiembrie 2012
+
+\mode<presentation>
+
+\setbeamercolor*{author in head/foot}{parent=palette tertiary}
+\setbeamercolor*{title in head/foot}{parent=palette secondary}
+\setbeamercolor*{date in head/foot}{parent=palette primary}
+
+\setbeamercolor*{section in head/foot}{parent=palette tertiary}
+\setbeamercolor*{subsection in head/foot}{parent=palette primary}
+% colors for the external link field
+\setbeamercolor*{external link}{parent=palette secondary}
+
+\defbeamertemplate*{footline}{withlink theme}
+{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\expandafter\beamer@ifempty\expandafter{\beamer@shortinstitute}{}{~~(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{external link}%
+    \usebeamerfont{author in head/foot}
+        ARIA Workshop
+      \end{beamercolorbox}}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber 
+  \end{beamercolorbox}%
+  % this is a new field with an external link
+  \vskip0pt%
+}
+
+\newcommand\Switch{0}
+\newcommand\SecInHead{%
+  \ifthenelse{\equal{\Switch}{1}}
+    {\thesection.}{}}
+\newcommand\SubSecInHead{%
+  \ifthenelse{\equal{\Switch}{1}}
+    {\thesubsection. }{}}
+\newcommand\RealSubSecInHead{%
+  \ifthenelse{\equal{\thesubsection}{0}}
+    {}{\SecInHead\SubSecInHead}}
+
+
+\defbeamertemplate*{headline}{withlink theme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{section in head/foot}%
+    \usebeamerfont{section in head/foot}\SecInHead\insertsection\hspace*{2ex}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{subsection in head/foot}%
+    \usebeamerfont{subsection in head/foot}\hspace*{2ex}\RealSubSecInHead\insertsubsectionhead
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\setbeamersize{text margin left=1em,text margin right=1em}
+
+
+% \defbeamertemplate*{frametitle}{aria}[1][left]
+% {
+%   \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}
+%   \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+%   \@tempdima=\textwidth%
+%   \advance\@tempdima by\beamer@leftmargin%
+%   \advance\@tempdima by\beamer@rightmargin%
+  
+%   \hbox{%
+%     \begin{beamercolorbox}[sep=0.3cm,wd=.5\@tempdima,#1,ht=2.25ex,dp=1ex,right]{section in head/foot}%
+%       \vskip-1ex
+%       \usebeamerfont{section in head/foot}\insertsectionhead\hspace*{2ex}
+%     \end{beamercolorbox}%
+%     \begin{beamercolorbox}[sep=0.3cm,wd=.5\@tempdima,ht=2.25ex,dp=1ex,left]{subsection in head/foot}%
+%       \usebeamerfont{subsection in head/foot}\hspace*{2ex}\insertsubsectionhead
+%     \end{beamercolorbox}
+%   }%
+%   \vskip0pt%
+  
+%   % \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+%   % \@tempdima=\textwidth%
+%   % \advance\@tempdima by\beamer@leftmargin%
+%   % \advance\@tempdima by\beamer@rightmargin%
+%   % \leavevmode%
+%   % \hbox{%
+%   %   \begin{beamercolorbox}[wd=.5\@tempdima,ht=2.25ex,dp=1ex,right]{section in head/foot}%
+%   %     \usebeamerfont{section in head/foot}\insertsectionhead\hspace*{2ex}
+%   %   \end{beamercolorbox}%
+%   %   \begin{beamercolorbox}[wd=.5\@tempdima,ht=2.25ex,dp=1ex,left]{subsection in head/foot}%
+%   %     \usebeamerfont{subsection in head/foot}\hspace*{2ex}\insertsubsectionhead
+%   %   \end{beamercolorbox}}%
+%   % \vskip0pt%
+  
+
+%   %   \leavevmode%
+%   % \hbox{%
+%   %   \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,left]{frametitle}%
+%   %     \begin{beamercolorbox}[sep=0.3cm,#1,wd=.9\paperwidth]{frametitle}
+%   %       \usebeamerfont{frametitle}%
+%   %       \vbox{}\vskip-1ex%
+%   %       \strut\insertframetitle\strut
+%   %       \hfill{}
+%   %       % \par%
+%   %       \par
+%   %       \vskip-1ex%
+%   %       % \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+%   %     \end{beamercolorbox}
+%   %   \end{beamercolorbox}
+%   %     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,left]{background canvas}%
+%   %       \includegraphics[height=\baselineskip]{graphics/branding/aria-logo-small-white.png}
+%   %     \end{beamercolorbox}
+%   %   }%
+%   %   \vskip0pt
+%   }
+
+% Frame title: default
+
+% \defbeamertemplate*{frametitle}{aria}[1][left]
+% {
+%   \nointerlineskip
+%   \leavevmode
+%   \hbox{\leavevmode\begin{beamercolorbox}[ht=0.076\paperwidth,wd=\paperwidth]{author in head/foot}\begin{beamercolorbox}[ht=0.076\paperheight,left,wd=.1\paperwidth,dp=1ex]{frametitle}\includegraphics[height=0.076\paperwidth]{graphics/branding/aria-logo-small-white.png}\vskip-1ex\end{beamercolorbox}\begin{beamercolorbox}[height=0.076\paperwidth,sep=0.3cm,#1,wd=0.8\paperwidth]{frametitle}\usebeamerfont{frametitle}\vskip-1ex\strut\insertframetitle\strut\vskip-1ex\end{beamercolorbox}\begin{beamercolorbox}[ht=0.076\paperwidth,wd=.1\paperwidth,dp=1ex]{frametitle}\includegraphics[height=0.076\paperwidth]{graphics/branding/aria-logo-small-white.png}\vskip-1ex\end{beamercolorbox}\end{beamercolorbox}%
+%     %\vskip0pt%
+%   }%
+%   %\nointerlineskip
+% }
+
+
+\defbeamertemplate*{frametitle}{aria}[1][left]
+{
+  \nointerlineskip%
+  \@tempdima=\textwidth\advance\@tempdima by\beamer@leftmargin%
+  \advance\@tempdima by\beamer@rightmargin%
+  \begin{beamercolorbox}[wd=\@tempdima]{frametitle}%
+    \hbox{\leavevmode\begin{beamercolorbox}[sep=0.3cm,#1,wd=0.87\@tempdima]{frametitle}\usebeamerfont{frametitle}\vskip-1ex\strut\insertframetitle\strut\vskip-1ex\end{beamercolorbox}\includegraphics[width=0.13\@tempdima]{graphics/branding/fade-to-green-logo.png}}\end{beamercolorbox}
+}
+
+\def\beamer@fteright{\vskip0.35cm\advance\leftskip by 1.7cm\advance\rightskip by1.7cm}
+
+
+
+\mode
+<all>
