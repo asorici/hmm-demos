@@ -15,7 +15,7 @@
    id="svg5239"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="time_series_problems_2.svg">
+   sodipodi:docname="time_series_problems_2_2.svg">
   <defs
      id="defs5241">
     <marker
@@ -124,9 +124,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="416.26171"
-     inkscape:cy="146.00699"
+     inkscape:zoom="2.8"
+     inkscape:cx="644.70844"
+     inkscape:cy="107.36185"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -147,7 +147,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -255,20 +255,7 @@
            width="132.33"
            id="rect4482-8-6" /></flowRegion><flowPara
          id="flowPara4486-0-5">Econometrie</flowPara><flowPara
-         id="flowPara5471" /></flowRoot>    <flowRoot
-       transform="translate(447.01709,161.24186)"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
-       id="flowRoot4478-8-8-4"
-       xml:space="preserve"><flowRegion
-         id="flowRegion4480-5-1-9"><rect
-           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
-           y="93.727417"
-           x="132.32999"
-           height="18.182747"
-           width="333.35034"
-           id="rect4482-8-6-2" /></flowRegion><flowPara
-         id="flowPara4486-0-5-7">- estimate a country's econmic indicators across time -</flowPara><flowPara
-         id="flowPara5471-6" /></flowRoot>    <image
+         id="flowPara5471" /></flowRoot>    <image
        y="93.964531"
        x="419.30676"
        id="image6406"
@@ -280,5 +267,18 @@
        d="M 660.42917,161.25944 568.6769,134.54516"
        id="path6409"
        inkscape:connector-curvature="0" />
-  </g>
+    <flowRoot
+       transform="translate(436.8833,158.66798)"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       id="flowRoot4478-8-8-4"
+       xml:space="preserve"><flowRegion
+         id="flowRegion4480-5-1-9"><rect
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+           y="93.727417"
+           x="132.32999"
+           height="16.667519"
+           width="343.45184"
+           id="rect4482-8-6-2" /></flowRegion><flowPara
+         id="flowPara4486-0-5-7">- estimarea în timp a indicatorilor economici ai unei țari - -</flowPara><flowPara
+         id="flowPara5471-6" /></flowRoot>  </g>
 </svg>
