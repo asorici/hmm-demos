@@ -25,9 +25,6 @@ low_t = 0;
 high_t = hamming_window_size;
 end_t = resampled_track_data(end, 3);
 
-%x_vectors = [];
-%y_vectors = [];
-
 data_lines = 1 + floor( (end_t - high_t) / hamming_window_step );
 x_fft_vectors = zeros(data_lines, NFFT);
 y_fft_vectors = zeros(data_lines, NFFT);

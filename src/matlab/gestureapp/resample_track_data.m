@@ -17,11 +17,6 @@ if fixed_length > 0
             gap = fixed_length - size(t_vec, 2);
             start_t = t_vec(1, end);
             
-            %gap_t_vec = zeros(1, gap);
-            %for i = 1:gap
-            %    gap_t_vec(i) = start_t + i * interval;
-            %end
-            
             gap_t_vec = start_t + (1:gap) * interval;
             gap_point_vec = repmat(resampled_track_data(end, 1:2), gap, 1);
             resampled_track_data = [resampled_track_data; gap_point_vec gap_t_vec'];

@@ -1,11 +1,11 @@
 function [x_vectors, y_vectors] = symbol_vq_vectors(symbol, resample_interval, ...
                          hamming_window_size, hamming_window_step)
 %%  gets the training feature vectors that are to be quantized
-%   for a given gesture type, in order to be added to the 
+%   for a given symbol type, in order to be added to the 
 %   feature codebook
 %
 %   Inputs:
-%     symbol:              a string naming the gesture
+%     symbol:              a string naming the symbol
 %     resample_interval:   this argument defines the resampling 
 %                          time interval to be used on the 
 %                          raw track sequences
@@ -19,26 +19,27 @@ function [x_vectors, y_vectors] = symbol_vq_vectors(symbol, resample_interval, .
 %
 %
 %   This function assumes the existance of the file with the name
-%   <symbol>.mat containing several instances of gesture sequences 
-%   of the type <symbol>
+%   <symbol>_train.mat containing several instances of symbol sequences 
+%   of the type <symbol>. If not found, this function will fail silently.
 
 
 %%  Initialization
 x_vectors = [];
 y_vectors = [];
 
-% read the training set
 filename = strcat(symbol, '_train.mat');
-load(filename, 'raw_track_values');
+% return empty vectors if no training file exists
+if (~exist(filename, 'file'))
+    return;
+end
 
+% read the training set
+load(filename, 'raw_track_values');
 training_track_values = raw_track_values;
 len_td = size(training_track_values, 2);
 
 %% Processing
 for i=1:len_td
-    %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 0);
-    %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 2 * size(training_track_values{i}, 1));
-    %resampled_training_values = resample_track_data(training_track_values{i}, resample_interval, 128);
     [x_fft_vectors, y_fft_vectors] = ...
         symbol_preprocess_fft(training_track_values{i}, ...
                               resample_interval, hamming_window_size, ...
