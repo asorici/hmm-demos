@@ -1,1 +1,32 @@
-\dummyframe
+\begin{frame}
+  \frametitle{Mediul de lucru}
+Pentru început
+  \begin{enumerate}
+  \item Deschideți \texttt{Matlab} / \texttt{Octave}
+  \item Schimbați directorul de lucru cu \texttt{aria-hmm}
+  \item Adăugați toate subdirectoarele în path:\\
+    \mcode{addpath(genpath('.'))}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Platforma de lucru - fișierele stub}
+  Fișierele \texttt{.stub}
+  \begin{itemize}
+  \item le veți folosi ca schelet de cod pentru sesiunile de implementare
+  \item au sectiuni delimitate de \texttt{<label>-start} și \texttt{<label>-end}
+    între care veți adăuga liniile de cod
+  \item înlăturați sufixul \texttt{.stub} când rezolvați task-urile.
+  \end{itemize}\vspace*{-1em}%
+  \lstinputlisting{m-files/forward-backward.m}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Platforma de lucru - tester}
+  \begin{itemize}
+    \item Testerul se rulează folosind comanda \mcode{hmm_test}
+      \lstinputlisting{m-files/output.m}
+    \item Cu \mcode{list} afișați toate testele disponibile
+    \item Pentru un anumit task numele testului coincide cu eticheta care delimitează secțiunea de completat.
+  \end{itemize}
+\end{frame}

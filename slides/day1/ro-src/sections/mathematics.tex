@@ -279,13 +279,13 @@
   \frametitle{Reformularea problemelor fundamentale ale MMA}
   \begin{block}{Problema interpretării unei secvențe de observații}
     Date fiind un model \visible<2->{\alert{$\lambda=(A,B,\Pi)$}} și o
-    secvență de observații \visible<3->{\alert{$O = [ o_1 o_2 \cdots
+    secvență de observații \visible<2->{\alert{$O = [ o_1 o_2 \cdots
         o_T ]$}}, cum alegem o secvență corespunzătoare de stări
-    \visible<4->{\alert{$Q = [ q_1 q_2 \cdots q_T ]$}} care \emph{să
+    \visible<2->{\alert{$Q = [ q_1 q_2 \cdots q_T ]$}} care \emph{să
       dea un înțeles} observațiilor? Cum \emph{descoperim} partea
     ascunsă a modelului?
   \end{block}
-  \visible<5->{%
+  \visible<3->{%
     \begin{itemize}
     \item Există mai multe criterii pentru \emph{cea mai bună} sevență
       \begin{itemize}
@@ -295,7 +295,7 @@
           Q_{\text{best}} = [\hat{q}_1\; \hat{q}_2\; \ldots \hat{q}_T], 
           \quad \hat{q}_t = \underset{s_i}{argmax}\; P(q_t = s_i \vert O, \lambda)
         \end{equation}%
-        \visible<6->{\item Cea mai bună $cale$ (de dimensiune $T$)
+        \visible<4->{\item Cea mai bună $cale$ (de dimensiune $T$)
           \begin{equation}
             Q_{\text{best}} = \underset{Q}{\operatorname{argmax}}\;
             P(Q \vert O, \lambda)
@@ -316,10 +316,10 @@
     Date fiind niște secvențe de observații
     \visible<2->{\alert{$\mathcal{O} = [O_1 O_2 \cdots O_L]$}}, cum
     \emph{ajustăm} \alert{parametrii}
-    \visible<3->{\alert{$\lambda=(A,B,\Pi)$}} ai unui MMA astfel încât
+    \visible<2->{\alert{$\lambda=(A,B,\Pi)$}} ai unui MMA astfel încât
     să explice cel mai bine observațiile?
   \end{block}
-  \visible<4->{
+  \visible<3->{
     \begin{itemize}
     \item Întrebarea se poate reformula matematic:
       \begin{equation}

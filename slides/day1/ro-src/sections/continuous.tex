@@ -1,0 +1,32 @@
+\begin{frame}
+  \frametitle{Emisii continue}
+  \begin{itemize}
+  \item Probabilitatea emisiilor este modelată cu o lege de distribuție continuă (e.g. normală).
+    \begin{equation}
+      \label{eq:contin1}
+      b_j(o) = \mathcal{N}(o,\mu_j,\sigma_{j}^{2})
+    \end{equation}
+  \item Parametrii modelului: $\mu_j,\sigma_{j}^{2}\quad 1 \le j \le N$
+  \end{itemize}
+  \vspace*{1em}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{graphics/other-hmm/continuous.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixturi Gaussiene}
+  \begin{itemize}
+  \item Probabilitatea emisiilor este modelată printr-o mixtură de distribuții normale.
+    \begin{equation}
+      \label{eq:contin2}
+      b_j(o) = \displaystyle\sum_{k=1}^{M} c_{j,k}\mathcal{N}(o,\mu_{j,k},\sigma_{j,k}^2)
+    \end{equation}
+  \item Parametrii modelului: $c_{j,k},\mu_{j,k},\sigma_{j,k}^{2}\quad 1 \le j \le N, 1 \le k \le M$
+  \end{itemize}
+  \vspace*{1em}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{graphics/other-hmm/mixture.pdf}
+  \end{center}
+\end{frame}
+
