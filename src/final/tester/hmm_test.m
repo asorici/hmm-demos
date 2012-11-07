@@ -18,7 +18,7 @@ function hmm_test(label, code_file)
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
 
 %% Load tests information
-load('hmm/.tests/test_scripts.mat','tests');
+load('tester/test_scripts.mat','tests');
 
 %% Check label
 if nargin() < 1
@@ -35,9 +35,9 @@ while ~isfield(tests, label)
         labels = fieldnames(tests);
 	labels_count = size(labels,1);
         for i = 1:labels_count
-	    crt_label = labels{i};
-	    fprintf('%s  -  %s\n',crt_label,tests.(crt_label).description);
-	end
+            crt_label = labels{i};
+            fprintf('%s  -  %s\n',crt_label,tests.(crt_label).description);
+        end
     else
         fprintf('ERROR: Test \"%s\" not found!\n', label);
         fprintf('Please choose a test to run!\n');
@@ -45,7 +45,13 @@ while ~isfield(tests, label)
         fprintf('Type \"quit\" to exit this tester.\n');
     end
     label = input('Test: ','s');
-    label = tolower(label);
+    if uimatlab
+        label = lower(label);
+    elseif uioctave
+        label = tolower(label);
+    else
+        error('What is this?');
+    end
 end
 
 %% Check if test file exists

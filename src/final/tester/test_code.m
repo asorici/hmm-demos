@@ -24,7 +24,7 @@ function [correct] = test_code(user_file_name, test_file_name, label)
 
 %% Check arguments
 if nargin() < 3
-    u = 'usage :[correct] = test_code(user_file_name, test_file_name, label)\n';
+    u = 'usage: [correct] = test_code(user_file_name, test_file_name, label)\n';
     error(u);
 end
 

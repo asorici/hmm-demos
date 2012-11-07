@@ -61,7 +61,7 @@ for i=1:10
         [Phi_(t,:), Psi_(t,:)] = max(repmat(Phi_(t-1,:)',1,N) + logA);
         Phi_(t,:) = Phi_(t,:) + logB(:,O(t))';
     end
-
+    
     %% Check results
     if Psi_Correct == 1
 	[Psi_Correct, Psi_Message] = ...
