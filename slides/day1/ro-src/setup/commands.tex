@@ -28,6 +28,15 @@
   \end{frame}
 }
 
+%% afișează cuprinsul înainte de fiecare subsecțiune
+\AtBeginSection[] {
+  %\renewcommand\Switch{0}
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection,hideallsections]
+  \end{frame}
+  %\renewcommand\Switch{1}
+}
+
 
 %% afișează cuprinsul înainte de fiecare subsecțiune
 \AtBeginSubsection[] {

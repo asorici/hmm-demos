@@ -1,0 +1,14 @@
+\begin{frame}
+  \frametitle{A venit vremea să scriem cod}
+  \begin{enumerate}
+  \item Faceți o copie a fișierului \texttt{baum\_welch\_disc.m.stub} 
+    și denumiți-o \texttt{baum\_welch\_disc.m} (eliminați sufixul \texttt{.stub}).
+    \\Veți implementa funcția:\\
+    \mcode{function [Pi, A, B] = baum_welch_disc(O, T, N, M, model, max_iter)}
+    \pause
+  \item Completați secțiunea \texttt{maximization} în care reestimați $A$, $B$, $Pi$.%
+    \vspace*{-1em}
+    \lstinputlisting{m-files/baum-welch.m}
+\item Folosiți \mcode{hmm_test} pentru a vă testa codul.
+\end{enumerate}
+\end{frame}
