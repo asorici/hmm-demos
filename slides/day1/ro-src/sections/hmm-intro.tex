@@ -6,27 +6,22 @@
 %% Markov models, Dynamic Bayesian Networks
 \begin{frame}
   \frametitle{Probleme cu Secvențe Temporale (I)}
-  \only<1>{\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1.pdf}}
+  \only<1>{\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1.pdf}}%
   \only<2>{
   	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_2.pdf}
-  	%\footnote{Sursa imaginii: Navstar}
-  }
+  }%
   \only<3>{
   	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_3.pdf}
-  	%\footnote{Sursa imaginii: http://www.hapblog.com/2012/01/iran-navy-tests-surface-to-air-missile.html}
-  }
+  }%
   \only<4>{
   	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_4.pdf}
-  	%\footnote{Sursa imaginii: http://www.redmondpie.com/}
-  }
+  }%
   \only<5>{
   	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_5.pdf}
-  	%\footnote{Sursa imaginii: http://desura.com}
-  }
+  }%
   \only<6>{
   	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_6.pdf}
-  	%\footnote{Sursa imaginii:  http://www.softpro.de}
-  }
+  }%
   
 \end{frame}
 
@@ -80,7 +75,7 @@
 	\vspace*{0.5em}
 	\pause	
 	
-	Ce \alert{presupuneri} (la o adică) facem?
+	Ce \alert{presupuneri} facem?
 	\pause	
 	
 	\begin{block}{Proces staționar}
@@ -108,25 +103,30 @@
 	\pause	
 	
 	\begin{block}{Filtrare (monitorizare)}
+		\justifying
 		Sarcina de a calcula \alert{starea de fapt} - distribuția posterioară de probabilitate a 
 		\alert{stării curente}, date fiind toate observațiile de până acum.
 	\end{block}
 	\pause
 	
 	\begin{block}{Evaluare}
+		\justifying		
 		Sarcina de a calcula \alert{probabilitatea (likelihood)} a observațiilor făcute până în prezent.
 	\end{block}  
 \end{frame}
 
 \begin{frame}
   \frametitle{Raționament Probabilistic Temporal - Inferență}
+	Care sunt principalele inferențe ce se doresc făcute?	
 	\begin{block}{Predicție}
+		\justifying		
 		Sarcina de a calcula distribuția posterioară de probabilitate peste o \alert{stare viitoare}, 
 		date fiind toate observațiile de până acum.
 	\end{block}
 	\pause
 	
 	\begin{block}{Netezire (hindsight)}
+		\justifying		
 		Sarcina de a calcula distribuția posterioară de probabilitate peste o \alert{stare anterioară}, 
 		date fiind toate observațiile de până acum.\\
 		Furnizează o estimare mai buna asupra stării respective, decât a fost posibil la momentul respectiv.
@@ -135,13 +135,16 @@
 
 \begin{frame}
   \frametitle{Raționament Probabilistic Temporal - Inferență}
+	Care sunt principalele inferențe ce se doresc făcute?	
 	\begin{block}{Cea mai probabilă explicație}
+		\justifying		
 		Dându-se o \emph{secvență de observații}, se cere găsirea \alert{celei mai probabile secvenței de stări}
 		care a generat acele observații.
 	\end{block}
 	\pause
 	
 	\begin{block}{Învățare}
+		\justifying		
 		Dându-se \emph{un set de secvențe de observații}, găsește o metodă de a învăța \alert{modelele} de
 		\alert{tranziție} și \alert{senzoriale / de măsurare} pe baza acelor observații.
 	\end{block}
@@ -149,7 +152,6 @@
 
 \begin{frame}[t]
     \frametitle{Raționament Probabilistic Temporal - Metode}
-    
   	\begin{block}{Rețele Bayesiene Dinamice (RBD)}
   		O RBD este o rețea Bayesiană ce reprezintă un model temporal de probabilitate.
   	\end{block}
@@ -159,13 +161,13 @@
 		\begin{subfigure}[b]{0.15\textwidth}
 			\centering
   			\includegraphics[width=\textwidth]{graphics/hmm-intro/dbn-vehicle/zero.pdf}
-  			\caption{\tiny{Rețeaua Bayesiană în două snapshot-uri}}
+  			\caption{\tiny{Rețeaua la momentul 0}}
   			\label{fig:2TBN}
   		\end{subfigure}
   		\begin{subfigure}[b]{0.30\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{graphics/hmm-intro/dbn-vehicle/transition.pdf}
-  			\caption{\tiny{Rețeaua la momentul 0}}
+  			\caption{\tiny{Rețeaua Bayesiană în două snapshot-uri}}
   			\label{fig:zeroDBN}
   		\end{subfigure}
   		\begin{subfigure}[b]{0.35\textwidth}
