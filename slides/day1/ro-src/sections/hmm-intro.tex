@@ -6,31 +6,31 @@
 %% Markov models, Dynamic Bayesian Networks
 \begin{frame}
   \frametitle{Probleme cu Secvențe Temporale (I)}
-  \only<1>{\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1.pdf}}%
+  \only<1>{\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_1x.pdf}}%
   \only<2>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_2.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_2x.pdf}
   }%
   \only<3>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_3.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_3x.pdf}
   }%
   \only<4>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_4.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_4x.pdf}
   }%
   \only<5>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_5.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_5x.pdf}
   }%
   \only<6>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_6.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_1_6x.pdf}
   }%
 \end{frame}
 
 \begin{frame}
   \frametitle{Probleme cu Secvențe Temporale (II)}
   \only<1>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2_1x.pdf}
   }
   \only<2>{
-  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2_2.pdf}
+  	\includegraphics[width=\textwidth]{graphics/hmm-intro/time_series_problems_2_2x.pdf}
   	%\footnote{Sursa imaginii:  http://www.econ.ucsb.edu/~doug/}
   }
 \end{frame}
@@ -51,7 +51,7 @@
 	
 	\textbf{Stări și Observații}
 	\begin{itemize}
-		\item Procesul de schimbare este văzut ca o serie de \alert{snapshot-uri}
+		\item Procesul de schimbare este văzut ca o serie de \alert{snapshoturi}
 		\item Fiecare snapshot conține un set de variabile aleatoare
     	\begin{itemize}
 			\item $\mathbf{O}_t$ - setul tuturor variabilelor de măsurare (\alert{\emph{observabile}}) la momentul \emph{t}
@@ -78,14 +78,14 @@
 	\pause	
 	
 	\begin{block}{Proces staționar}
-		Procesul de schimbare este guvernat de legi care \alert{nu se schimba in timp}.\\
+		Procesul de schimbare este guvernat de legi care \alert{nu se schimbă in timp}.\\
 		\alert{Urmare:} trebuie sa specificăm relațiile între variabile doar pentru un snapshot \emph{reprezentativ}.	
 	\end{block}
 	\pause	
 	
 	\begin{block}{Presupunerea Markov}
 		Starea curentă a unui proces de schimbare depinde doar de o \alert{istorie finită} de stări anterioare.\\
-		\alert{Urmare:} avem un număr \alert{limitat} de ``parinți'' pentru variabilele din fiecare snapshot.
+		\alert{Urmare:} avem un număr \alert{limitat} de ``părinți'' pentru variabilele din fiecare snapshot.
 	\end{block}
   
 \end{frame}
@@ -128,7 +128,7 @@
 		\justifying		
 		Sarcina de a calcula distribuția posterioară de probabilitate peste o \alert{stare anterioară}, 
 		date fiind toate observațiile de până acum.\\
-		Furnizează o estimare mai buna asupra stării respective, decât a fost posibil la momentul respectiv.
+		Furnizează o estimare mai bună asupra stării respective, decât a fost posibil la momentul respectiv.
 	\end{block}
 \end{frame}
 
@@ -137,7 +137,7 @@
 	Care sunt principalele inferențe ce se doresc făcute?	
 	\begin{block}{Cea mai probabilă explicație}
 		\justifying		
-		Dându-se o \emph{secvență de observații}, se cere găsirea \alert{celei mai probabile secvenței de stări}
+		Dându-se o \emph{secvență de observații}, se cere găsirea \alert{celei mai probabile secvențe de stări}
 		care a generat acele observații.
 	\end{block}
 	\pause
@@ -177,8 +177,8 @@
   		\end{subfigure}
   		\caption{\tiny{RBD simplificată pentru monitorizarea unui vehicul \citep{KollerFriedman09}}}
   		\label{fig:DBN}
-  	\end{figure}
-  	
+  	\end{figure}%
+        \vspace{-.5em}%
   	\small{Aplicată în probleme precum: urmărirea obiectelor, recunoașterea activității umane, secvențierea proteinelor, etc.}
 \end{frame}
 
@@ -223,10 +223,10 @@
   
   Utilizat cu succes in aplicații precum:
   \begin{itemize}
-  	\item Recunoasțerea Scrisului
-  	\item Recunoasțerea Gesturilor
-  	\item Recunoasțerea Vorbirii
-  	\item Determinarea Parților de Vorbire (Part-of-Speech Tagging)
+  	\item Recunoașterea Scrisului
+  	\item Recunoașterea Gesturilor
+  	\item Recunoașterea Vorbirii
+  	\item Determinarea Părților de Vorbire (Part-of-Speech Tagging)
   	\item Secvențiere ADN
   \end{itemize}
 \end{frame}

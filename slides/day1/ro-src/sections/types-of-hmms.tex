@@ -34,3 +34,31 @@
     \includegraphics[width=0.8\textwidth]{graphics/other-hmm/left-to-right.pdf}
   \end{center}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Alte tipuri de MMA}
+  \begin{itemize}
+  \item modele Markov cu memorie mixă \citep{Saul:1999:MMM:326214.325611}
+    \begin{itemize}
+    \item scalează mai bine cu secvențe de lungime mare
+    \item utile în: modelarea vizitării paginilor web
+    \end{itemize}
+    \vspace*{.5em}
+  \item modele Markov ascunse de durată variabilă \citep{rabiner1989tutorial}
+    \begin{itemize}
+    \item utile în: recunoașterea cuvintelor scrise cursiv de mână \citep{chen1995variable}
+    \end{itemize}
+    \vspace*{.5em}
+  \item modele Markov ascunse factoriale \citep{Ghahramani97factorialhidden}
+    \begin{itemize}
+    \item mai multe variabile de stare
+    \item putere de modelare mai mare
+    \item algoritmi exacți intractabili
+    \end{itemize}
+    \vspace*{.5em}
+  \item modele Markov ascunse ierarhice \citep{fine1998hierarchical}
+    \begin{itemize}
+    \item utile în: recunoașterea scrisului de mână cursiv
+    \end{itemize}
+  \end{itemize}
+\end{frame}

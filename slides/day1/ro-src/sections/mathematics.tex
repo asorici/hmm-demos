@@ -139,7 +139,7 @@
       $\mathbf{M}=3$\\\vspace*{.5em}
       valori observabile:
       \begin{itemize}
-      \item $\mathbf{v_1}$: zâmbmet / rânjet
+      \item $\mathbf{v_1}$: zâmbet / rânjet
       \item $\mathbf{v_2}$: nimic
       \item $\mathbf{v_3}$: încruntare
       \end{itemize}%
@@ -287,22 +287,23 @@
   \end{block}
   \visible<3->{%
     \begin{itemize}
-    \item Există mai multe criterii pentru \emph{cea mai bună} sevență
-      \begin{itemize}
-      \item Secvența celor mai probabile stări (luate individual):
-        \begin{equation}
-          \label{eq:inidi}
-          Q_{\text{best}} = [\hat{q}_1\; \hat{q}_2\; \ldots \hat{q}_T], 
-          \quad \hat{q}_t = \underset{s_i}{argmax}\; P(q_t = s_i \vert O, \lambda)
-        \end{equation}%
-        \visible<4->{\item Cea mai bună $cale$ (de dimensiune $T$)
+    \item Cum alegem criteriul pentru \emph{cea mai bună} secvență?%
+      \visible<4->{%
+        \begin{itemize}
+        \item Secvența celor mai probabile stări (luate individual):
           \begin{equation}
-            Q_{\text{best}} = \underset{Q}{\operatorname{argmax}}\;
-            P(Q \vert O, \lambda)
-            = \underset{Q}{\operatorname{argmax}}\; P(Q, O \vert \lambda)
-            \label{eq:best-explanation}
-          \end{equation}}
-      \end{itemize}
+            \label{eq:inidi}
+            Q_{\text{best}} = [q_{1_{\text{best}}}\;q_{2_{\text{best}}}\; \ldots \;q_{T_{\text{best}}}], 
+            \quad q_{t_{\text{best}}} = \underset{s_i}{argmax}\; P(q_t = s_i \vert O, \lambda)
+          \end{equation}%
+          \visible<5->{\item Cea mai bună $cale$ (de dimensiune $T$)
+            \begin{equation}
+              Q_{\text{best}} = \underset{Q}{\operatorname{argmax}}\;
+              P(Q \vert O, \lambda)
+              = \underset{Q}{\operatorname{argmax}}\; P(Q, O \vert \lambda)
+              \label{eq:best-explanation}
+            \end{equation}}
+        \end{itemize}}%
     \end{itemize}
   }%
 \end{frame}

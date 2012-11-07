@@ -2,8 +2,8 @@
   \frametitle{Ce este Învățarea Automată?}
   \begin{block}{Învățarea automată}
     Un program se spune că învață dintr-o mulțime de experiențe $E$
-    relativ la o clasă de task-uri $T$ și o măsură a performaneței $P$
-    dacă performața acestuia la execuția task-urilor $T$, măsurată de $P$,
+    relativ la o clasă de task-uri $T$ și o măsură a performanței $P$
+    dacă performanța acestuia la execuția task-urilor $T$, măsurată de $P$,
     se îmbunătățește în urma experiențelor $E$.
     \citep{Mitchell:1997:ML:541177}
   \end{block}
@@ -21,10 +21,16 @@
     \end{itemize}
   \end{itemize}
   \begin{center}%
-    \only<1>{\includegraphics[width=0.5\textwidth]{graphics/ml-intro/google-car}}%
+    \only<1>{%
+      \includegraphics[width=0.45\textwidth]{graphics/ml-intro/google-car-2}%
+      \hspace*{2em}%
+      \includegraphics[width=0.45\textwidth]{graphics/ml-intro/google-car}%
+      \newline%
+      {\scriptsize imagini de pe \url{www.nytimes.com}}
+    }%
     \only<2>{\includegraphics[width=0.9\textwidth]{graphics/ml-intro/translate}}%
     \only<3>{\includegraphics[width=0.65\textwidth]{graphics/ml-intro/recommender}}%
-    \only<4>{\includegraphics[width=0.65\textwidth]{graphics/ml-intro/advertizing}}%
+    \only<4>{\includegraphics[width=0.65\textwidth]{graphics/ml-intro/gripa}}%
   \end{center}
 \end{frame}
 
@@ -39,9 +45,7 @@
       \only<3->{
       \item Clasificare
         \begin{itemize}
-        \item clasificarea obiectelor dintr-o imagine\\
-          (imagine de la  Albert-Ludwigs-Universität, 
-          Lehrstuhl für Mustererkennung und Bildverarbeitung)
+        \item clasificarea obiectelor dintr-o imagine
         \end{itemize}
       }%
       \only<5->{%
@@ -57,6 +61,8 @@
     \only<2>{\includegraphics[width=.6\textwidth]{graphics/ml-intro/ml-2}}%
     \only<3>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-2}}%
     \only<4>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-1}}%
+    \only<3-4>{\\{\scriptsize imagine de la Albert-Ludwigs-Universität,\\ 
+        Lehrstuhl für Mustererkennung und Bildverarbeitung}}
     \only<5>{\includegraphics[width=.28\textwidth]{graphics/ml-intro/backgammon}}%
   \end{center}
 \end{frame}
