@@ -144,7 +144,7 @@ while abs(Pold - sum(log(P))) >= err
 
     C = reshape(sum(sum(GammaComponent,1),2),[N M]) ./ ...
         repmat(reshape(sum(sum(sum(GammaComponent,1),2),4), [N 1]), [1 M]);
-    MU =  
+    MU
     SIGMA
     
     % Recompute P and forward & backward variables

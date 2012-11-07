@@ -1,0 +1,178 @@
+function [Pi, A, B] = baum_welch_disc_multidim(O, T, N, M, model, max_iter)
+% computes the parameters of the HMM given the observations (Baum-Welch) 
+% Each observation consists of multiple discrete variables. 
+% An additional constraint is considered, namely that the values 
+% of the observed variables of a given hidden state are independent 
+% from one another.
+% 
+% Input args:
+% O :       an L x R x TMax matrix with the observed sequences
+% T :       an 1 x L matrix with the length of each sequence in O
+% N :       the number of states in the HMM
+% R :       the number of observed variables in each state
+% M :       the number of discrete values for each observation variable
+% model:    the model of the transition structure for the HMM
+%           choices are from {ergodic, bakis}
+% max_iter: the maximum number of iterations for the Baum-Welch
+%           algorithm
+%
+% Output args:
+% Pi : an 1 x N matrix containing the initial state distribution
+%      Pi(j) = P(q[1]=Sj) for 1 =< j =< N
+% A :  an N x N matrix for the state transition probability distribution
+%      A(i,j) = P(q[t+1]=Sj | q[t] = Si)
+% B :  an N x M x R matrix for the probability distribution of the 
+%      observation variables in each state
+%      B(j,k,r) = P(O[r,t]=v[r,k] | q[t] = Sj)
+
+%% Other variables
+
+% Number of iterations
+iter_ct = 1;
+
+% Observed sequences
+L = size(O, 1);     % Number of observed sequences
+R = size(O, 2);     % Number of dimensions for a variable in a sequence
+TMax = size(O, 3);  % Length of each sequence
+
+% Forward and Backward variables
+Alpha = zeros(L, TMax, N); % L x TMax x N matrix
+Beta = zeros(L, TMax, N); % L x TMax x N matrix
+
+ll_threshold = 0.00001;
+
+%%  Initial random values for the HMM parameters
+Pi = zeros(1, N);
+A = rand(N, N);
+B = ones(N, M, R) / M;  % uniform initial output probabilities
+
+%   Switch after model type
+if strcmp(model, 'ergodic')
+    Pi = rand(1, N);
+    Pi = Pi ./ sum(Pi);
+    A = A ./ repmat(sum(A,2),1,N);
+else
+    if strcmp(model, 'bakis')
+        Pi(1) = 1;
+        A = zeros(N, N);
+        
+        for i = 1 : N - 2
+            A(i, i:(i+2)) = rand(1, 3);
+        end
+        
+        A(N - 1, (N - 1):N) = rand(1, 2);
+        A(N, N) = 1;
+        A = A ./ repmat(sum(A,2),1,N);
+    else
+        error('baum_welch_discrete_multidim:modelCheck', ...
+            'No transition model named' + model);
+    end 
+end
+
+%% initial computation
+LogP_old = 0;
+
+LogP = zeros(1,L);
+Scale = ones(L, TMax);
+
+% Compute initial P (and forward and backward variables)
+for l=1:L
+    [LogP(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
+        forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
+end
+
+%% EM Loop
+while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
+    
+    LogP_old = sum(LogP) / L;
+    
+    %% Precompute B_prod like in the forward_backward case
+    B_prod = zeros(L, N, TMax);
+    for l = 1 : L
+        B_prod(l, :, 1:T(l)) = ones(N, T(l));
+        for t = 1 : T(l)
+            obs_symbol_idx = O(l, :, t)';
+            for r = 1 : R
+                b_idx = sub2ind(size(B), 1:N, ...
+                    repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
+                B_prod_line = B(b_idx);
+                B_prod(l, :, t) = B_prod(l, :, t) .* B_prod_line;
+            end
+        end
+    end
+    
+    %% Expectation
+    
+    % you already have logP, Alpha, Beta, Scale
+    
+    %% Maximization (Reestimation)
+    
+    % Auxiliary variables
+    A_3D = zeros(L,TMax,N,N);
+    B_3D = zeros(L,TMax,N,N);
+    Alpha_3D = zeros(L,TMax,N,N);
+    Beta_3D = zeros(L,TMax,N,N);
+    V = 1:M;
+    
+    % Computing the expected probabilities
+    for l=1:L
+        % Add dimension to multiply element by element
+        Alpha_3D(l,1:(T(l)-1),:,:) = ...
+            repmat(Alpha(l,1:(T(l)-1),:),[1 1 1 N]);
+
+        A_3D(l,1:(T(l)-1),:,:) = ...
+            permute(repmat(A,[1 1 1 (T(l)-1)]), [3 4 1 2]);
+
+        B_3D(l,1:(T(l)-1),:,:) = ...
+            permute(repmat(shiftdim(B_prod(l, :, 2:T(l))),[1 1 1 N]), [3 2 4 1]);
+            
+        Beta_3D(l,1:(T(l)-1),:,:) = ...
+            permute(repmat(Beta(l,2:T(l),:), [1 1 1 N]), [1 2 4 3]);
+    end
+    
+    A_aux = shiftdim(sum(sum( ...
+        Alpha_3D .* A_3D .* B_3D .* Beta_3D ... 
+        , 1),2),2); 
+    % A_aux is now N x N
+    A = A_aux ./ repmat(sum(A_aux, 2), [1 N]);
+    
+    % reestimate emission probabilities for each dimension of the
+    % observed variables
+    % also use laplacian smoothing with a factor of 1.0e-4
+    for r = 1 : R
+        O_r = shiftdim(permute(O(:, r, :), [1 3 2]));
+        B(:,:,r) = (shiftdim(sum(sum( ...
+            (permute(repmat(repmat(O_r,[1 1 M]) == ...
+            permute(repmat(V,[L 1 TMax]), [1 3 2]),[1 1 1 N]), [1 2 4 3])) .* ...
+            repmat(Alpha .* Beta ./ repmat(Scale,[1 1 N]),[1 1 1 M]) ...
+            ,1),2),2) + ones(N, M) * 1.0e-4) ./ ...    
+            (shiftdim(sum(sum( ...
+            repmat(Alpha .* Beta ./ repmat(Scale,[1 1 N]),[1 1 1 M]) ...
+            ,1),2),2) + ones(N, M) * 1.0e-4 * M);
+    end
+    
+    if strcmp(model, 'ergodic')
+        % we have to reestimate the 
+        % initial state probabilities as well
+        Pi = zeros(1, N);
+        for l = 1:L
+            AlphaL = shiftdim(Alpha(l, :, :));
+            BetaL = shiftdim(Beta(l, :, :));
+            Pi = Pi + AlphaL(1, :) .* BetaL(1, :) ./ Scale(l, 1) ./ ... 
+                sum(AlphaL(1, :) .* BetaL(1, :) ./ Scale(l, 1));
+        end
+
+        Pi = Pi ./ L;
+    end
+    
+    %% Expectation
+    
+    % Recompute P and forward & backward variables
+    for l=1:L
+        [LogP(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
+            forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
+    end
+    
+    % increase iteration count
+    iter_ct = iter_ct + 1;
+end

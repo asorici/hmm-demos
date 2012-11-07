@@ -50,6 +50,8 @@ Alpha_3D = zeros(L,TMax,N,N);
 Beta_3D = zeros(L,TMax,N,N);
 V = 1 : M;
 
+ll_threshold = 0.00001;
+
 %% Initial random values for the HMM parameters
 Pi = zeros(1, N);
 A = rand(N, N);
@@ -68,6 +70,7 @@ else
         for i = 1 : N - 2
             A(i, i:(i+2)) = rand(1, 3);
         end
+        
         A(N - 1, (N - 1):N) = rand(1, 2);
         A(N, N) = 1;
         A = A ./ repmat(sum(A,2),1,N);
@@ -81,7 +84,6 @@ end
 LogP_old = 0;
 
 LogP = zeros(1,L);
-%Scale = zeros(L, TMax);
 Scale = ones(L, TMax);
 
 % Compute initial P (and forward and backward variables)
@@ -91,11 +93,13 @@ for l=1:L
 end
 
 %% EM Loop
-%while abs(Pold - prod(P)) >= 0.000001
-while abs(LogP_old - sum(LogP) / L) >= 0.000001 && iter_ct < max_iter
+while abs(LogP_old - sum(LogP) / L) >= ll_threshold && iter_ct < max_iter
     
-    %Pold = prod(P);
     LogP_old = sum(LogP) / L;
+    
+    % display some progress
+    fprintf('Iteration: %d, Log Likelihood: %0.5f\n', ...
+                iter_ct, LogP_old);
     
     %% Expectation
       
@@ -114,12 +118,8 @@ while abs(LogP_old - sum(LogP) / L) >= 0.000001 && iter_ct < max_iter
         Beta_3D(l,1:(T(l)-1),:,:) = ...
             permute(repmat(Beta(l,2:T(l),:), [1 1 1 N]), [1 2 4 3]);
     end
-
-    % Compute Gamma and Xi
-    % Xi = Alpha_3D .* A_3D .* B_3D .* Beta_3D / P(l); % not correct
-    % Gamma = Alpha .* Beta / P(l); % not correct in this form
-
-
+    
+    
     %% Maximization (Reestimation)
 
     mask = zeros(L, TMax);
