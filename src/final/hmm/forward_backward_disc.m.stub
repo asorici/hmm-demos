@@ -1,7 +1,7 @@
-function [P, Alpha, Beta, Scale] = forward_backward_disc(O, Pi, A, B)
+function [logP, Alpha, Beta, Scale] = forward_backward_disc(O, Pi, A, B)
 % computes forward and backward variables for a discrete observation sequence
 %
-% usage: [P, Alpha, Beta, Scale] = forward_backward_disc(O, Pi, A, B)
+% usage: [logP, Alpha, Beta, Scale] = forward_backward_disc(O, Pi, A, B)
 %
 % FORWARD_BACKWARD_DISC computes the forward and backward variables for a
 % discrete observation sequence and a given HMM (PI, A, B). The values of
@@ -18,7 +18,8 @@ function [P, Alpha, Beta, Scale] = forward_backward_disc(O, Pi, A, B)
 %       B(j,k) = P(O(t)=V(k) | Q(t) = Sj)
 %
 % Output args:
-% P :       the probability of the observation sequence, given the HMM
+% logP :    the logarithm of the probability of the observation sequence,
+%           given the HMM
 % Alpha :   a T x N matrix containing the forward variables
 %           Alpha(t,i) = P(O(1),O(2),...,O(t),Q(t)=Si | Lambda)
 % Beta :    a T x N matrix containing the backward variables
@@ -39,21 +40,37 @@ Alpha = zeros (T, N); % Alpha is a T x N matrix (see above)
 Beta = ones (T, N); % Beta is a T x N matrix (see above)
 
 %% Forward variables
+% Compute Alpha and Scale
 % alpha_disc-start - Write code below
 
+Alpha(1,:) = Pi .* B(:, O(1))';
+Scale(1) = 1 / sum(Alpha(1, :));
+Alpha(1,:) = Alpha(1, :) * Scale(1);
+
+for t = 2:T
+    Alpha(t,:) = (Alpha(t-1,:) * A) .* B(:, O(t))';
+    Scale(t) = 1 / sum(Alpha(t, :));
+    Alpha(t, :) = Alpha(t, :) * Scale(t);
+end
 
 % alpha_disc-end - Write code above
 
 %% Backward variables
+% Compute Beta
 % beta_disc-start - Write code below
 
+Beta(T, :) = Beta(T, :) * Scale(T);
+for t = (T-1):-1:1
+    Beta(t,:) = A * (B(:,O(t+1)) .* Beta(t+1,:)');
+    Beta(t, :) = Beta(t, :) * Scale(t);
+end
 
 % beta_disc-end - Write code above
 
 %% The probability of the observed sequence
+% Compute logP
 % prob_disc-start - Write code below
 
-
-
+logP = -sum(log(Scale));
 
 % prob_disc-end - Write code above

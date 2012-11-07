@@ -1,5 +1,5 @@
-% test for the computation of the Gamma values given
-% A,B,Pi,Alpha,Beta,Scale and Xi
+% test for the computation of reestimated A, B, Pi values given
+% [old] A, [old] B, Alpha, Beta, Scale, logP
 % ! not to be executed directly
 %
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
@@ -24,50 +24,28 @@ for no=1:10
     B = B .* repmat((1.0 ./ sum(A,2)), [1 M]);
 
     %% Create random observed sequence
-    T = randi(30,1,1);
-    O = randi(M,L,T);
+    TMax = randi(30,1,1) + 5; % Maximum length for the observed sequences
+    T = ones(1,L) * TMax;
+    O = randi(M,L,TMax);
+    
 
     %% Initialize Alpha, Beta, Scale, LogP
-    Alpha = zeros (L, T, N); % Alpha is a T x N matrix
-    Beta = ones (L, T, N); % Beta is a T x N matrix
+    Alpha = zeros (L, TMax, N); % Alpha is a T x N matrix
+    Beta = ones (L, TMax, N); % Beta is a T x N matrix
     LogP = zeros(1,L);
     Scale = ones(L, TMax);
     
     for l=1:L
-        [LogP(l), Alpha(l, 1:T, :), Beta(l, 1:T, :), Scale(l, 1:T)] = ...
-            forward_backward_multi_disc(O(l,1:T(l)), Pi, A, B);
+        [LogP(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
+            forward_backward_disc(O(l,1:T(l)), Pi, A, B);
     end
 
-    %% Compute Xi
-
-    Xi = zeros(L,T-1,N,N);
-
-    for l = 1:L
-        for t = 1:(T-1)
-            s_ = 0;
-            for i = 1:N
-                for j = 1:N
-                    Xi(l,t,i,j) = Alpha(l,t,i)*A(i,j)*B(j,O(l,t+1))*Beta(l,t+1,j);
-                    s_ = s_ + Xi(l,t,i,j);
-                end
-            end
-            Xi(l,t,:,:) = Xi(l,t,:,:) ./ s_;
-        end
-    end
-    
-    Gamma = zeros(L,T,N);
-    Gamma_ = Gamma;
-    
-    for l = 1:L
-        for t = 1:(T-1)
-            for i = 1:N
-                Gamma_(l,t,i) = Alpha(l,t,i)*Beta(l,t,i);
-            end
-            Gamma(l,t,:) = Gamma_(l,t,:) ./ exp(logP(l));
-        end
-    end
-    
-    try
+    Aold = A;
+    Bold = B;
+    A_ = A;
+    B_ = B;
+    TMax = size(O,2); % Maximum length for the observed sequences
+    try        
 %%%--REPLACE-THIS--%%%
     catch
         fprintf('%s\n',lasterror.message);
@@ -91,10 +69,10 @@ for no=1:10
             repmat(Alpha(l,1:(T(l)-1),:),[1 1 1 N]);
 
         A_3D(l,1:(T(l)-1),:,:) = ...
-            permute(repmat(A,[1 1 1 (T(l)-1)]), [3 4 1 2]);
+            permute(repmat(A_,[1 1 1 (T(l)-1)]), [3 4 1 2]);
 
         B_3D(l,1:(T(l)-1),:,:) = ...
-            permute(repmat(B(:,O(l,2:T(l))),[1 1 1 N]), [3 2 4 1]);
+            permute(repmat(B_(:,O(l,2:T(l))),[1 1 1 N]), [3 2 4 1]);
 
         Beta_3D(l,1:(T(l)-1),:,:) = ...
             permute(repmat(Beta(l,2:T(l),:), [1 1 1 N]), [1 2 4 3]);
