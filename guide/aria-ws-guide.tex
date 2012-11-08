@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
 \usepackage[utf8x]{inputenc}
 \usepackage[romanian]{babel}
@@ -6,6 +6,8 @@
 \usepackage{algorithmic}
 \usepackage{mytitlepage}
 \usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 \title{Modele Markov Ascunse}
 \titlesndline{De la Teorie la Aplicații}
@@ -15,9 +17,24 @@
 \collaborator{Laboratorul AI-MAS}
 \logosrc{graphics/aria-logo-small-white.png}
 
+%% Numele algoritmului
+\floatname{algorithm}{Algoritmul}
+
+
+%% one line comment unnumbered
+\newcounter{ALC@tempcntr}% Temporary counter for storage
+\newcommand{\LCOMMENT}[1]{%
+    \setcounter{ALC@tempcntr}{\arabic{ALC@rem}}% Store old counter
+    \setcounter{ALC@rem}{1}% To avoid printing line number
+    \item \{#1\}% Display comment + does not increment list item counter
+    \setcounter{ALC@rem}{\arabic{ALC@tempcntr}}% Restore old counter
+}%
+
+
 \begin{document}
 
 \mytitlepage
+\tableofcontents
 
 \section{Mediul de lucru}
 \label{sec:framework}
@@ -25,15 +42,243 @@
 \subsection{Inițializarea mediului de lucru}
 \label{sec:init}
 
+\begin{enumerate}
+\item Deschideți \texttt{Matlab} / \texttt{Octave}
+\item Schimbați directorul de lucru cu \texttt{aria-hmm}:\\
+  \mcode{cd("aria-hmm")}
+\item Adăugați toate subdirectoarele în path:\\
+  \mcode{addpath(genpath('.'))}
+\end{enumerate}
+
 \subsection{Fișierele \texttt{.stub}}
 \label{sec:stubs}
+
+\begin{itemize}
+\item le veți folosi ca schelet de cod pentru sesiunile de implementare
+\item au secțiuni delimitate de \texttt{<label>-start} și \texttt{<label>-end}
+  între care veți adăuga liniile de cod
+\item înlăturați sufixul \texttt{.stub} când rezolvați task-urile.
+\end{itemize}
+\lstinputlisting{m-files/forward-backward.m}
 
 \subsection{Testerul}
 \label{sec:tester}
 
+\begin{itemize}
+\item Testerul se rulează folosind comanda \mcode{hmm_test}.
+  \lstinputlisting{m-files/output.m}
+\item Cu \mcode{list} afișați toate testele disponibile.
+\item Pentru un anumit task numele testului coincide cu eticheta care delimitează secțiunea de completat.
+\end{itemize}
 
 \section{Notații și Denumirile Variabilelor}
 \label{sec:notations}
+
+\subsection{Notații folosite în slide-uri și pseudocod}
+\label{sec:notation}
+
+\subsubsection{Notații generale}
+\label{sec:general}
+
+\begin{description}
+\item[$N$] - numărul de stări ascunse
+\item[$S$] - mulțimea stărilor ascunse
+  \begin{itemize}
+  \item $S=\lbrace s_1, s_2, \ldots\ s_N \rbrace$
+  \end{itemize}
+
+\item[$A$] - matricea distribuțiilor de probabilitate ale tranzițiilor
+  între stări
+  \begin{itemize}
+  \item $A=\lbrace a_{i,j} \rbrace, \quad 1 \le i \le N, 1 \le j \le
+    N$
+  \item $a_{i,j} = P(q_{t+1}=s_j \vert q_{t}=s_i)$
+  \item fiecare linie este o distribuție de probabilitate:\\
+    $\displaystyle\sum_{j=1}^{N}a_{i,j} = 1,\quad 1 \le i \le N$
+  \end{itemize}
+\item[$\mathbf{\Pi}$] - distribuția stării inițiale
+  \begin{itemize}
+  \item $\mathbf{\Pi} = \lbrace \pi_i \rbrace,\quad 1 \le i \le N$
+  \item $\pi_i = P(q_1 = s_i)$
+  \item $\displaystyle\sum_{i=1}^{N}\pi_i = 1$
+  \end{itemize}
+\item[$M$] - numărul de valori observabile distincte (pentru cazul
+  discret)
+\item[$V$] - mulțimea valorilor observabile
+\item[$B$] - matricea distribuțiilor de probabilitate ale valorilor
+  observabile
+  \begin{itemize}
+  \item $B=\lbrace b_{j,k} \rbrace, \quad 1 \le j \le N, 1 \le k \le
+    M$
+  \item $\displaystyle\sum_{k=1}^{M}b_{j,k} = 1,\quad 1 \le j \le N$
+  \end{itemize}
+\item[$\mathbf{\lambda}$] - parametrii Modelului Markov Ascuns
+  \begin{itemize}
+  \item $\mathbf{\lambda} = (A, B, \Pi)$
+  \end{itemize}
+\item[$Q$] - o secvență de stări
+\item[$O$] - o secvență de observații
+\item[$T$] - lungimea unei secvențe de stări / valori observate
+\end{description}
+
+\subsubsection{Algoritmul Forward-Backward}
+\label{sec:fb-not}
+
+\begin{description}
+\item[$\alpha$] - variabilele $\alpha$ (înainte)
+  \begin{itemize}
+  \item $\alpha_{t,i}=P(o_1,o_2,\ldots,o_t, q_t = s_i \vert \lambda), \quad  \scriptstyle{1 \le t \le T, 1 \le i \le N}$
+  \item $P(O \vert \lambda) = \displaystyle\sum_{i=1}^{N}\alpha_{T,i}$
+  \item Calcul:
+    \begin{description}
+    \item[$\mathbf{t=1}$:] $\alpha_{1,i}=\pi_ib_i(o_1), \quad \scriptstyle{1 \le i \le N}$
+    \item[$\mathbf{t>1}$:] $\alpha_{t+1,j}=\Big[
+        \displaystyle\sum_{i=1}^{N}\alpha_{t,j}a_{i,j}\Big]
+        b_{j}(o_{t+1}), \quad \substack{1 \le t \le T-1\\1\le j \le N}$ 
+    \end{description}
+  \end{itemize}
+\item[$\beta$] - variabilele $\beta$ (înapoi)
+  \begin{itemize}
+  \item $\beta_{t,i}=P(o_{t+1} o_{t+2} \cdots o_{T} \vert q_t = s_i,
+      \lambda)$
+    \item $P(O \vert \lambda) = \displaystyle\sum_{i=1}^{N}\beta_{1,i}$
+    \item Calcul:
+      \begin{description}
+      \item[$\mathbf{t=T}$:] $\beta_{T,i}=1,\scriptstyle{\quad 1 \le i \le N}$
+      \item[$\mathbf{t<T}$] $\beta_{t,i}=\displaystyle\sum_{j=1}^{N}a_{i,j}b_j(o_{t+1})\beta_{t+1,j},
+    \quad \scriptstyle{t = T-1, T-2, \ldots , 1, 1 \le i \le N}$
+      \end{description}
+  \end{itemize}
+\item[$\hat{\alpha}$] - variabilele $\alpha$ scalate
+\item[$\hat{\beta}$] - variabilele $\beta$ scalate
+\item[$c_t$] - coeficientul de scalare pentru momentul de timp $t$
+  \begin{itemize}
+  \item Notație: $C_t = c_1 \cdot c_2 \cdot \ldots \cdot c_t$
+  \item $\hat{\alpha}_{t,i} = C_t\alpha_{t,i}$
+  \end{itemize}
+\end{description}  
+
+
+\subsubsection{Algoritmul Viterbi}
+\label{sec:viterbi}
+
+\begin{description}
+\item[$\delta$] - variabilele $\delta$
+  \begin{itemize}
+  \item $\delta_{t,i}$ - cea mai mare probabilitate a unei secvențe de
+    stări de lungime $t$ care ajunge în $s_i$ și explică primele $t$
+    valori observate
+  \item
+    $\delta_{t,i}=\underset{q_1,\ldots,q_{t-1}}{\operatorname{max}}
+    P([q_1 q_2 \ldots q_{t-1} s_i], [o_1, o_2, \ldots o_t] \vert
+    \lambda)$
+  \item Calcul:
+    \begin{description}
+    \item[$\mathbf{t=1}$:] $\delta_{1,i} = \pi_{i}b_i(o_1),
+      \scriptstyle{\quad 1 \le i \le N}$
+    \item[$\mathbf{t>1}$:] $\delta_{t,j} = [\underset{i
+      }{\operatorname{max}}\; \delta_{t-1,i} \cdot a_{i,j}] \cdot
+      b_{j}(o_{t}) \quad \scriptstyle{2 \le t \le T, 1 \le j \le N}$
+    \end{description}
+  \end{itemize}
+\item[$\psi$] - variabilele $\psi$
+  \begin{itemize}
+  \item $\psi_{t,i}$ - starea de la $t-1$ care a dus la valoarea
+    maximă $\delta_{t-1,i}\cdot a_{i,j}$
+  \item Calcul:
+    \begin{description}
+    \item[$\mathbf{t=1}$:] $\psi_{1,i} = 0, \quad\scriptstyle{1 \le i
+        \le N}$
+    \item[$\mathbf{t>1}$:] $\psi_{t,i} =
+      \underset{i}{\operatorname{argmax}}\; \delta_{t-1,i}\cdot
+      a_{i,j} \quad \scriptstyle{2 \le t \le T, 1 \le j \le N}$
+    \end{description}
+  \end{itemize}
+\item[$\phi$] - variabilele $\phi$ ($\delta$ logaritmate)
+  \begin{itemize}
+  \item $\phi_{t,i}=\underset{q_1,\ldots,q_{t-1}}{\operatorname{max}}
+    \log(P(q_1,\ldots,q_{t-1},q_t=s_i,o_1,\ldots,o_t\vert
+    \lambda))=\log(\delta_{t,i})$
+  \item Calcul:
+    \begin{description}
+    \item[$t=1$:] $\phi_{1,i} = \log(\pi_{i}) + \log(b_i(o_1)),
+      \quad\scriptstyle{1 \le i \le N}$
+    \item[$t>1$:] $\phi_{t,j} = [\underset{i}{\operatorname{max}}\; \phi_{t-1,i} +
+        log(a_{i,j})] + \log(b_{j}(o_{t}))
+        \quad \scriptstyle{2 \le t \le T, 1 \le j \le N}$
+    \end{description}
+  \end{itemize}
+\end{description}
+
+\subsubsection{Algoritmul Baum-Welch}
+\label{sec:baum-welch-not}
+
+\begin{description}
+\item[$\xi$] - variabilele $\xi$
+  \begin{itemize}
+  \item $\xi_{t,i,j} = \xi_t(i,j) = P(q_t=s_i,q_{t+1}=s_j \vert O,
+    \lambda)$
+  \item $\xi_{t,i,j} = \frac{\alpha_{t,i}\cdot a_{i,j} \cdot b_j(o_{t+1}) \cdot
+		        \beta_{t+1,j}}{
+		        \displaystyle\sum_{k=1}^{N}\displaystyle\sum_{l=1}^{N}
+		        \alpha_{t,k}\cdot a_{k,l} \cdot b_l(o_{t+1}) \cdot
+		        \beta_{t+1,l}}$
+  \end{itemize}
+\item[$\gamma$] - variabilele $\gamma$
+  \begin{itemize}
+  \item $\gamma_{t,i} = \gamma_t(i) = P(q_t = s_i \vert O, \lambda)$
+  \item $\gamma_t(i) = \displaystyle\sum_{j=1}^{N}\xi_t(i,j)$
+  \end{itemize}
+\end{description}
+
+\subsection{Variabile în fișierele \texttt{.m}}
+\label{sec:m-variables}
+
+\begin{itemize}
+\item General:
+  \begin{itemize}
+  \item \mcode{N} - scalar
+  \item \mcode{M} - scalar
+  \item \mcode{T} - scalar
+  \item \mcode{A} - matrice de dimensiune $N \times N$
+  \item \mcode{B} - matrice de dimensiune $N \times M$
+  \item \mcode{Pi} - matrice de dimensiune $1 \times N$
+  \item \mcode{O} - matrice de dimensiune $1 \times T$
+  \end{itemize}
+\item Forward-Backward:
+  \begin{itemize}
+  \item \mcode{Alpha} - matrice de dimensiune $T \times N$
+    \begin{itemize}
+    \item va reprezenta, de fapt, variabilele $\hat{\alpha}$
+    \end{itemize}
+  \item \mcode{Beta} - matrice de dimensiune $T \times N$
+    \begin{itemize}
+    \item va reprezenta, de fapt, variabilele $\hat{\beta}$
+    \end{itemize}
+  \item \mcode{Scale} - matrice de dimesniune $1 \times T$
+    \begin{itemize}
+    \item va reprezenta coeficienții de scalare $c_i$
+    \end{itemize}
+  \item \mcode{logP} - scalar
+  \end{itemize}
+\item Viterbi:
+  \begin{itemize}
+  \item \mcode{Phi} - matrice de dimensiune $T \times N$
+  \item \mcode{Psi} - matrice de dimensiune $T \times N$
+  \item \mcode{Q} - matrice de dimensiune $1 \times T$
+  \end{itemize}
+\item Baum-Welch (avem mai multe observații)
+  \begin{itemize}
+  \item \mcode{L} - scalar, numărul de observații
+  \item \mcode{TMax} - scalar, lungimea maximă a observațiilor
+  \item \mcode{T} - matrice de dimensiune $1 \times L$, lungimea
+    observației $l$
+  \item \mcode{Alpha} - matrice de dimensiune $L \times TMax \times N$
+  \item \mcode{Beta} - matrice de dimensiune $L \times TMax \times N$
+  \item \mcode{logP} - matrice de dimensiune $1 \times L$
+  \end{itemize}
+\end{itemize}
+
 
 \section{Task-uri de implementare}
 \label{sec:tasks}
@@ -41,15 +286,172 @@
 \subsection{Algoritmul Forward-Backward}
 \label{sec:fb}
 
+\begin{algorithm}[H]
+  \caption{Calculul variabilelor $\alpha$}
+  \label{alg1:alpha}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \FOR{$i=1$ to $N$} \STATE $\ddot{\alpha}_{1,i} \leftarrow
+    \pi_i \cdot b_i(o_1)$
+    \ENDFOR
+    \STATE $c_1 \leftarrow (\displaystyle\sum_{i=1}^{N}
+    \ddot{\alpha}_{1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
+    $\hat{\alpha}_{1,i} \leftarrow c_1 \cdot \ddot{\alpha}_{1,i}$
+    \ENDFOR
+    \FOR{$t=1$ to $T-1$} \FOR{$i=1$ to $N$} \STATE
+    $\ddot{\alpha}_{t+1,i} \leftarrow \Big[
+    \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
+    b_{j}(o_{t+1})$
+    \ENDFOR
+    \STATE $c_{t+1} \leftarrow (\displaystyle\sum_{i=1}^{N}
+    \ddot{\alpha}_{t+1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
+    $\hat{\alpha}_{t+1,i} \leftarrow c_{t+1} \cdot
+    \ddot{\alpha}_{t+1,i}$
+    \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \caption{Calculul $P(O \vert \lambda)$}
+  \label{alg2:logP}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}c_t$
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \caption{Calculul variabilelor $\beta$}
+  \label{alg3:beta}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \FOR{$i=1$ to $N$} \STATE $\hat{\beta}_{T,i} \leftarrow \cdot
+    c_T$
+    \ENDFOR
+    \FOR{$t=(T-1)$ to $1$} \FOR{$i=1$ to $N$} \STATE
+    $\hat{\beta}_{t,i} \leftarrow \displaystyle\sum_{j=1}^{N}
+    a_{i,j} b_{j}(o_{t+1}) \hat{\beta}_{t+1,j} \cdot c_t$
+    \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
+
+
 \subsection{Algoritmul Viterbi}
 \label{sec:viterbi}
 
+\begin{algorithm}[H]
+  \caption{Viterbi: Calculul celei mai probabile secvențe $Q_{\text{best}}$}
+  \label{alg:viterbi}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \FOR{$i=1$ to $N$}
+    \STATE $\phi_{1,i}$ $\leftarrow$ $\log(\pi_{i}) + \log(b_i(o_1))$
+    \STATE $\psi_{1,i}$ $\leftarrow$ $0$
+    \ENDFOR
+    \FOR{$t=2$ to $T$}
+    \FOR{$i=1$ to $N$}
+    \STATE $\phi_{t,j}$ $\leftarrow$ $[\underset{i}{\operatorname{max}}\; \phi_{t-1,i} +
+    log(a_{i,j})] + \log(b_{j}(o_{t}))$
+    \STATE $\psi_{t,i}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; \phi_{t-1,i} +
+    \log(a_{i,j})$
+    \ENDFOR
+    \ENDFOR
+    \STATE $\log(P(Q_{\text{best}} \vert O, \lambda))$ $\leftarrow$ $\underset{i}{\operatorname{max}}\; \phi_{T,i}$
+    \STATE $q_{T_{\text{best}}}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; \phi_{T,i}$
+    \FOR{$t=T-1$ to $1$}
+    \STATE $q_{t_{\text{best}}}$ $\leftarrow$ $\psi_{t+1}(q_{t+1_{\text{best}}})$
+    \ENDFOR
+  \end{algorithmic} 
+\end{algorithm}
+ 
+  
 \subsection{Algoritmul Baum-Welch}
 \label{sec:baum-welch}
 
+\begin{algorithm}[H]
+  \caption{Baum-Welch}
+  \label{alg-baum-welch-1}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[1]
+    \STATE intrări: $O \leftarrow$ secvența de observații, $\epsilon
+    \leftarrow$ prag de convergență
+    
+    \STATE \LCOMMENT{\emph{Initializare}} \STATE init. uniformă $\Pi$
+    ($\Pi_i = 1/N, 1 \le i \le N$) \STATE init. aleatoare $a_{i,j}$,
+    a. î. $\sum_{j=1}^{N}a_{i,j} = 1, \forall{i} = \bar{1, N}$ \STATE
+    init. uniformă $b_{j,k}$ ($b_{j,k} = 1/M, 1 \le j \le N, 1 \le k
+    \le M$) \STATE init $log(P(O \vert \bar{\lambda})) = 0$
+    \vspace*{0.5em}
+    
+    \REPEAT \STATE $log(P(O \vert \lambda)) = log(P(O \vert
+    \bar{\lambda}))$
+    
+    \STATE \LCOMMENT{\emph{E STEP - calculeaza variantele scalate
+        pentru $\alpha$ și $\beta$ și probabilitatea curentă (log
+        likelihood - $log(P(O \vert \bar{\lambda}))$) a secvenței
+        observate}} \STATE $[log(P(O \vert \bar{\lambda})),
+    \hat{\alpha}, \hat{\beta}, Scale] = forward\_backward(O, \Pi, A,
+    B)$
+    
+    \STATE \LCOMMENT{M STEP - recalculeaza $\Pi$, $A$ și $B$} \STATE
+    $\Pi = update\_pi\_procedure(\hat{\alpha}, \hat{\beta}, Scale)$
+    \STATE $A = update\_A\_procedure(O, \hat{\alpha}, \hat{\beta},
+    Scale)$ \STATE $B = update\_B\_procedure(O, \hat{\alpha},
+    \hat{\beta}, Scale)$
+				
+    \UNTIL{$log(P(O \vert \bar{\lambda})) - log(P(O \vert \lambda)) <
+      \epsilon$}
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \caption{Baum-Welch}
+  \label{alg-baum-welch-2}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[1]
+    \STATE \emph{Function update\_pi\_procedure}($\hat{\alpha}$,
+    $\hat{\beta}$, $Scale$) \FOR{$i=1$ to $N$} \STATE $\Pi_i =
+    \frac{\hat{\alpha}_1(i) \cdot \hat{\beta}_1(i) / Scale(1)}
+    {\sum_{j=1}^{N}{\hat{\alpha}_1(j) \cdot \hat{\beta}_1(j) /
+        Scale(1)}}$
+    \ENDFOR
+    \RETURN $\Pi$ \STATE \emph{EndFunction}
+			
+    \vspace*{0.5em} \STATE \emph{Function update\_A\_procedure}($O$,
+    $\hat{\alpha}$, $\hat{\beta}$, $Scale$) \FOR{$i=1$ to $N$}
+    \FOR{$j=1$ to $N$} \STATE $a_{i,j} =
+    \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{ij} \cdot
+        b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}
+    {\sum_{t=1}^{T-1}\sum_{j=1}^{N}{\hat{\alpha}_{t,i}\cdot a_{i,j}
+        \cdot b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}$
+    \ENDFOR
+    \ENDFOR
+    \RETURN $a$ \STATE \emph{EndFunction}
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \caption{Baum-Welch}
+  \label{alg-baum-welch-3}
+  \algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
+  \begin{algorithmic}[1]
+    \STATE \emph{Function update\_B\_procedure}($O$, $\hat{\alpha}$,
+    $\hat{\beta}$, $Scale$) \FOR{$j=1$ to $N$} \FOR{$k=1$ to $M$}
+    \STATE $b_{j,k} = \frac{\sum_{t=1,O(t)=v_k}^{T}
+      {\hat{\alpha}_t(j) \cdot \hat{\beta}_t(j) / Scale(t)}}
+    {\sum_{t=1}^{T} {\hat{\alpha}_t(j) \cdot \hat{\beta}_t(j) /
+        Scale(t)}}$
+    \ENDFOR
+    \ENDFOR
+    \RETURN $b$ \STATE \emph{EndFunction}
+  \end{algorithmic}
+\end{algorithm}
+
+
 \subsection{Recunoașterea Simbolurilor}
 \label{sec:symbol-recognition}
-
 
 \section{Soluții}
 \label{sec:solutions}
