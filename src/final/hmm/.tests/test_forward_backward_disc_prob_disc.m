@@ -51,7 +51,7 @@ for i=1:10
 
     try
 %%%--REPLACE-THIS--%%%
-    catch
+    catch lasterror
         fprintf('%s\n',lasterror.message);
         Correct = 0;
 	return;
