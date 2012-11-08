@@ -1,0 +1,40 @@
+%% author tudor berariu
+%% inspirată de la un șau: gonzalo medina
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mytitlepage}
+
+\def\titlesndline#1{\gdef\@titlesndline{#1}}
+\def\@titlesndline{\@latex@warning@no@line{No \noexpand\titlesndline given}}
+
+\def\titledoc#1{\gdef\@titledoc{#1}}
+\def\@titledoc{\@latex@warning@no@line{No \noexpand\titledoc given}}
+
+\def\institute#1{\gdef\@institute{#1}}
+\def\@institute{\@latex@warning@no@line{No \noexpand\institute given}}
+
+\def\collaborator#1{\gdef\@collaborator{#1}}
+\def\@collaborator{\@latex@warning@no@line{No \noexpand\collaborator given}}
+
+\def\logosrc#1{\gdef\@logosrc{#1}}
+\def\@logosrc{\@latex@warning@no@line{No \noexpand\logosrc given}}
+
+
+\newcommand\mytitlepage{%
+\clearpage
+\thispagestyle{empty}
+\vspace*{.15\textheight}
+{\noindent\center{\Huge\bfseries\@title\par}}
+{\noindent\center{\Huge\@titlesndline\par}}
+\vspace*{.15\textheight}
+{\center{\LARGE\itshape\@titledoc\par}}
+{\center{\Large\@author\par}}
+\vspace*{.15\textheight}
+{\center\includegraphics[width=0.4\textwidth]{\@logosrc}}\\
+{\raggedleft{\Large\@institute\par}
+  {\normalsize în colaborare cu\par}
+  {\large\@collaborator}\par}
+\clearpage
+}
+
+\endinput
