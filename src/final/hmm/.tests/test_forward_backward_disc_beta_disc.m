@@ -1,4 +1,4 @@
-% test for the backward variables computation
+% test for the beta variables computation
 % not to be executed directly
 %
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
@@ -45,7 +45,7 @@ for i=1:10
 
     try
 %%%--REPLACE-THIS--%%%
-    catch
+    catch lasterror
         fprintf('%s\n',lasterror.message);
         Correct = 0;
 	return;

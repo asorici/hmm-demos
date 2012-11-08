@@ -94,7 +94,11 @@ end
 
 %% Execute test
 fprintf('\nRunning test...\n');
-correct = test_code(code_file, test_file, label);
+if strcmpi(tests.(label).ttype,'lines')
+    correct = test_code(code_file, test_file, label);
+elseif strcmpi(tests.(label).ttype,'function')
+    correct = test_function(code_file, test_file, label);
+end
 if correct == 1
     fprintf('Test completed OK!\n');
 else

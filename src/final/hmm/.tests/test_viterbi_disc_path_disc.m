@@ -1,5 +1,5 @@
-% test for the computation of the logarithm of the probability of 
-% the observed sequences given the HMM
+% test for the computation best path in the backwards phase of the
+% Viterbi algorithm
 % ! not to be executed directly
 %
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
@@ -55,7 +55,7 @@ for i=1:10
 
     try
 %%%--REPLACE-THIS--%%%
-    catch
+    catch lasterror
         fprintf('%s\n',lasterror.message);
         Correct = 0;
 	return;

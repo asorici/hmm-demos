@@ -43,34 +43,16 @@ Beta = ones (T, N); % Beta is a T x N matrix (see above)
 % Compute Alpha and Scale
 % alpha_disc-start - Write code below
 
-Alpha(1,:) = Pi .* B(:, O(1))';
-Scale(1) = 1 / sum(Alpha(1, :));
-Alpha(1,:) = Alpha(1, :) * Scale(1);
-
-for t = 2:T
-    Alpha(t,:) = (Alpha(t-1,:) * A) .* B(:, O(t))';
-    Scale(t) = 1 / sum(Alpha(t, :));
-    Alpha(t, :) = Alpha(t, :) * Scale(t);
-end
-
 % alpha_disc-end - Write code above
 
 %% Backward variables
 % Compute Beta
 % beta_disc-start - Write code below
 
-Beta(T, :) = Beta(T, :) * Scale(T);
-for t = (T-1):-1:1
-    Beta(t,:) = A * (B(:,O(t+1)) .* Beta(t+1,:)');
-    Beta(t, :) = Beta(t, :) * Scale(t);
-end
-
 % beta_disc-end - Write code above
 
 %% The probability of the observed sequence
 % Compute logP
 % prob_disc-start - Write code below
-
-logP = -sum(log(Scale));
 
 % prob_disc-end - Write code above

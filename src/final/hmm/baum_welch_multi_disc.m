@@ -1,7 +1,11 @@
-function [Pi, A, B] = baum_welch_disc_multidim(O, T, N, M, model, max_iter)
-% computes the parameters of the HMM given the observations (Baum-Welch) 
-% Each observation consists of multiple discrete variables. 
-% An additional constraint is considered, namely that the values 
+function [Pi, A, B] = baum_welch_multi_disc(O, T, N, M, model, max_iter)
+% computes the parameters of the HMM given the obs (multidim) (Baum-Welch)
+%
+% usage: [Pi, A, B] = baum_welch_multi_disc(O, T, N, M, model, max_iter)
+%
+% BAUM_WELCH_MULTI_DISC computes the parameters of the HMM given the
+% observations (Baum-Welch). Each observation consists of multiple discrete
+% variables. An additional constraint is considered, namely that the values 
 % of the observed variables of a given hidden state are independent 
 % from one another.
 % 
@@ -24,7 +28,8 @@ function [Pi, A, B] = baum_welch_disc_multidim(O, T, N, M, model, max_iter)
 % B :  an N x M x R matrix for the probability distribution of the 
 %      observation variables in each state
 %      B(j,k,r) = P(O[r,t]=v[r,k] | q[t] = Sj)
-
+%
+% Author: Alexandru Sorici
 %% Other variables
 
 % Number of iterations
@@ -88,6 +93,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     
     %% Precompute B_prod like in the forward_backward case
     B_prod = zeros(L, N, TMax);
+% precomp_b_disc-start - Write code below
     for l = 1 : L
         B_prod(l, :, 1:T(l)) = ones(N, T(l));
         for t = 1 : T(l)
@@ -100,7 +106,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
             end
         end
     end
-    
+% precomp_b_disc-end - Write code above    
     %% Expectation
     
     % you already have logP, Alpha, Beta, Scale

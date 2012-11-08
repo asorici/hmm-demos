@@ -47,7 +47,7 @@ for no=1:10
     TMax = size(O,2); % Maximum length for the observed sequences
     try        
 %%%--REPLACE-THIS--%%%
-    catch
+    catch lasterror
         fprintf('%s\n',lasterror.message);
         Correct = 0;
 	return;

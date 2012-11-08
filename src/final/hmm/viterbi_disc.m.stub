@@ -42,10 +42,7 @@ Phi(1, :) = log(Pi) + logB(:, O(1))'; % Initialization for Phi (t = 1)
 %% Recursion
 % compute Phi and Psi for t=2:T
 % phi_psi_disc-start
-for t=2:T
-    [Phi(t,:), Psi(t,:)] = max(repmat(Phi(t-1,:)',1,N) + logA);
-    Phi(t,:) = Phi(t,:) + logB(:,O(t))';
-end
+
 % phi_psi_disc-end
 
 %% logP
@@ -54,7 +51,5 @@ end
 %% Backtracking to compute the path Q
 % compute Q
 % path_disc-start - Write code below
-for t=(T-1):-1:1
-    Q(t) = Psi(t+1,Q(t+1));
-end
+
 % path_disc-end - Write code below
