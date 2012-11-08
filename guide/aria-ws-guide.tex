@@ -35,7 +35,7 @@
 
 \mytitlepage
 \tableofcontents
-
+\clearpage
 \section{Mediul de lucru}
 \label{sec:framework}
 
@@ -45,7 +45,7 @@
 \begin{enumerate}
 \item Deschideți \texttt{Matlab} / \texttt{Octave}
 \item Schimbați directorul de lucru cu \texttt{aria-hmm}:\\
-  \mcode{cd("aria-hmm")}
+  \mcode{cd("[.../]aria-hmm")}
 \item Adăugați toate subdirectoarele în path:\\
   \mcode{addpath(genpath('.'))}
 \end{enumerate}
@@ -289,6 +289,37 @@
 \subsubsection{Descriere}
 \label{sec:descr-fb}
 
+Primul task de programare constă în calcularea valorilor matricelor
+\mcode{Alpha}, \mcode{Beta} și a valorii \mcode{logP}, date fiind o
+secvență de observații \mcode{O} și parametrii modelului: matricele
+\mcode{A}, \mcode{B} și \mcode{Pi}.
+
+Scheletul de cod de la care veți pleca se află în fișierul\\
+\texttt{hmm/forward\_backward\_disc.m.stub}. Eliminați sufixul
+\texttt{.stub} și salvați în fișierul
+\texttt{hmm/forward\_backward\_disc.m}.
+
+Funcția pe care o veți completa este \mcode{forward_backward_disc}:
+
+\lstinputlisting[firstline=1,
+lastline=1]{../src/final/hmm/forward_backward_disc.m.stub}
+
+Pentru rezolvare veți completa trei secțiuni.
+ Pentru calculul
+valorilor matricei \mcode{Alpha} veți completa în zona delimitată de
+etichetele \mcode{alpha_disc}.
+\lstinputlisting[firstline=42,
+lastline=46]{../src/final/hmm/forward_backward_disc.m.stub}
+ Pentru calculul
+valorilor matricei \mcode{Beta} veți completa în zona delimitată de
+etichetele \mcode{beta_disc}.
+\lstinputlisting[firstline=48,
+lastline=52]{../src/final/hmm/forward_backward_disc.m.stub}
+ Pentru calculul
+valorii \mcode{logP} veți completa în zona delimitată de
+etichetele \mcode{prob_disc}.
+\lstinputlisting[firstline=54,
+lastline=58]{../src/final/hmm/forward_backward_disc.m.stub}
 
 
 \subsubsection{Teste automate}
@@ -296,12 +327,15 @@
 
 Pentru a testa codul folosiți comanda:
 \begin{itemize}
-\item \mcode{hmm_test("alpha_disc");} pentru testarea valorilor matricei \mcode{Alpha}
-\item \mcode{hmm_test("beta_disc");} pentru testarea valorilor matricei \mcode{Beta}
-\item \mcode{hmm_test("prob_disc");} pentru testarea valorilor matricei \mcode{logP}
+\item \mcode{hmm_test("alpha_disc");} pentru testarea valorilor
+  matricelor \mcode{Alpha} și \mcode{Scale}
+\item \mcode{hmm_test("beta_disc");} pentru testarea valorilor
+  matricei \mcode{Beta}
+\item \mcode{hmm_test("prob_disc");} pentru testarea valorilor
+  matricei \mcode{logP}
 \end{itemize}
-Indicați apoi numele
-fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
+Indicați apoi numele fișierului (sau tastați simplu ENTER dacă ați
+folosit numele sugerat).
 
 \subsubsection{Pseudocod}
 \label{sec:pseudocod-fb}
@@ -310,7 +344,7 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \caption{Calculul variabilelor $\alpha$}
   \label{alg1:alpha}
   \algsetup{indent=3em}
-  \begin{algorithmic}[2]
+  \begin{algorithmic}[1]
     \FOR{$i=1$ to $N$} \STATE $\ddot{\alpha}_{1,i} \leftarrow
     \pi_i \cdot b_i(o_1)$
     \ENDFOR
@@ -336,7 +370,7 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \caption{Calculul $P(O \vert \lambda)$}
   \label{alg2:logP}
   \algsetup{indent=3em}
-  \begin{algorithmic}[2]
+  \begin{algorithmic}[1]
     \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}c_t$
   \end{algorithmic}
 \end{algorithm}
@@ -345,8 +379,8 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \caption{Calculul variabilelor $\beta$}
   \label{alg3:beta}
   \algsetup{indent=3em}
-  \begin{algorithmic}[2]
-    \FOR{$i=1$ to $N$} \STATE $\hat{\beta}_{T,i} \leftarrow \cdot
+  \begin{algorithmic}[1]
+    \FOR{$i=1$ to $N$} \STATE $\hat{\beta}_{T,i} \leftarrow
     c_T$
     \ENDFOR
     \FOR{$t=(T-1)$ to $1$} \FOR{$i=1$ to $N$} \STATE
@@ -360,6 +394,42 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 
 \subsection{Algoritmul Viterbi}
 \label{sec:viterbi}
+
+\subsubsection{Descriere}
+\label{sec:desc-viterbi}
+
+A doua sarcină de programare vă cere să implementați algoritmul
+Viterbi, mai precis să calculați valorile $\phi$ și $\psi$ și cea mai
+bună secvență $Q$.
+
+Calculați valorile matricelor \mcode{Phi} și \mcode{Psi} pentru
+$t>1$. Completați cu instrucțiunile necesare în secțiunea delimitată
+de \mcode{phi_psi_disc-start} și \mcode{phi_psi_disc-end}
+\lstinputlisting[firstline=40,lastline=46]{../src/final/hmm/viterbi_disc.m.stub}
+
+Refaceți cea mai bună cale în vectorul \mcode{Q}. Scrieți codul în
+liniile delimitate de \mcode{path-disc-start} și
+\mcode{path-disc-end}.
+
+\lstinputlisting[firstline=51,lastline=55]{../src/final/hmm/viterbi_disc.m.stub}
+
+
+\subsubsection{Testare}
+\label{sec:test-viterbi}
+
+Pentru a vă testa codul scris folosiți comanda:
+\begin{itemize}
+\item \mcode{hmm_test("phi_psi_disc");} pentru testarea valorilor
+  matricelor \mcode{Phi} și \mcode{Psi}
+\item \mcode{hmm_test("path_disc");} pentru testarea valorilor
+  vectorului \mcode{Q}
+\end{itemize}
+Indicați apoi numele fișierului (sau tastați simplu ENTER dacă ați
+folosit numele sugerat).
+
+
+\subsubsection{Pseudocod}
+\label{sec:pseudocod-viterbi}
 
 \begin{algorithm}[H]
   \caption{Viterbi: Calculul celei mai probabile secvențe $Q_{\text{best}}$}
@@ -444,36 +514,39 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 \begin{algorithm}[H]
   \caption{Baum-Welch}
   \label{alg-baum-welch-1}
-  \algsetup{indent=3em}
+  \algsetup{indent=2.25em}
   \begin{algorithmic}[1]
     \STATE intrări: $O \leftarrow$ secvența de observații, $\epsilon
     \leftarrow$ prag de convergență
     
     \STATE \LCOMMENT{\emph{Initializare}} \STATE init. uniformă $\Pi$
     ($\Pi_i = 1/N, 1 \le i \le N$) \STATE init. aleatoare $a_{i,j}$,
-    a. î. $\sum_{j=1}^{N}a_{i,j} = 1, \forall{i} = \bar{1, N}$ \STATE
-    init. uniformă $b_{j,k}$ ($b_{j,k} = 1/M, 1 \le j \le N, 1 \le k
-    \le M$) \STATE init $log(P(O \vert \bar{\lambda})) = 0$
-    \vspace*{0.5em}
-    
-    \REPEAT \STATE $log(P(O \vert \lambda)) = log(P(O \vert
-    \bar{\lambda}))$
+    a. î. $\sum_{j=1}^{N}a_{i,j} = 1,\quad 1 \le j \le N$ \STATE
+    init. uniformă $b_{j,k}$ ($b_{j,k} = 1/M,\quad 1 \le j \le N, 1
+    \le k \le M$) \STATE $oldP$ $\leftarrow$ 0 \STATE
+    \LCOMMENT{\emph{E STEP - în afara buclei}} \FOR{$l=1$ to $L$}
+    \STATE $[logP_l, \hat{\alpha}_l, \hat{\beta}_l, Scale_l] =
+    forward\_backward(O_l, \Pi, A, B)$
+    \ENDFOR
+    \STATE $logP$ $\leftarrow$ $\displaystyle\sum_{l=1}^{L}logP(l)$
+    \vspace*{0.5em} \WHILE{{$\vert logP - oldP \vert < \epsilon$}}
+    \STATE $oldP$ $\leftarrow$ $logP$ \STATE \LCOMMENT{M STEP -
+      recalculeaza $\Pi$, $A$ și $B$} \STATE $\Pi =
+    update\_pi\_procedure(\hat{\alpha}, \hat{\beta}, Scale)$ \STATE $A
+    = update\_A\_procedure(O, \hat{\alpha}, \hat{\beta}, Scale)$
+    \STATE $B = update\_B\_procedure(O, \hat{\alpha}, \hat{\beta},
+    Scale)$
     
     \STATE \LCOMMENT{\emph{E STEP - calculeaza variantele scalate
         pentru $\alpha$ și $\beta$ și probabilitatea curentă (log
         likelihood - $log(P(O \vert \bar{\lambda}))$) a secvenței
-        observate}} \STATE $[log(P(O \vert \bar{\lambda})),
-    \hat{\alpha}, \hat{\beta}, Scale] = forward\_backward(O, \Pi, A,
-    B)$
+        observate}} \FOR{$l=1$ to $L$} \STATE $[logP_l,
+    \hat{\alpha}_l, \hat{\beta}_l, Scale_l] = forward\_backward(O_l,
+    \Pi, A, B)$
+    \ENDFOR
+    \STATE $logP$ $\leftarrow$ $\displaystyle\sum_{l=1}^{L}logP(l)$
     
-    \STATE \LCOMMENT{M STEP - recalculeaza $\Pi$, $A$ și $B$} \STATE
-    $\Pi = update\_pi\_procedure(\hat{\alpha}, \hat{\beta}, Scale)$
-    \STATE $A = update\_A\_procedure(O, \hat{\alpha}, \hat{\beta},
-    Scale)$ \STATE $B = update\_B\_procedure(O, \hat{\alpha},
-    \hat{\beta}, Scale)$
-				
-    \UNTIL{$log(P(O \vert \bar{\lambda})) - log(P(O \vert \lambda)) <
-      \epsilon$}
+    \ENDWHILE
   \end{algorithmic}
 \end{algorithm}
 
@@ -484,41 +557,41 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \begin{algorithmic}[1]
     \STATE \emph{Function update\_pi\_procedure}($\hat{\alpha}$,
     $\hat{\beta}$, $Scale$) \FOR{$i=1$ to $N$} \STATE $\Pi_i =
-    \frac{\hat{\alpha}_1(i) \cdot \hat{\beta}_1(i) / Scale(1)}
-    {\sum_{j=1}^{N}{\hat{\alpha}_1(j) \cdot \hat{\beta}_1(j) /
-        Scale(1)}}$
+    \frac{\displaystyle\sum_{l=1}^{L}\hat{\alpha}_{l,1,i} \cdot
+      \hat{\beta}_{l,1}(i) / Scale_1}
+    {\displaystyle\sum_{l=1}^{L}\sum_{j=1}^{N}{\hat{\alpha}_{l,1}(j)
+        \cdot \hat{\beta}_{l,1}(j) / Scale_1}}$
     \ENDFOR
     \RETURN $\Pi$ \STATE \emph{EndFunction}
-			
+  \end{algorithmic}
+
+  \begin{algorithmic}[1]
     \vspace*{0.5em} \STATE \emph{Function update\_A\_procedure}($O$,
     $\hat{\alpha}$, $\hat{\beta}$, $Scale$) \FOR{$i=1$ to $N$}
     \FOR{$j=1$ to $N$} \STATE $a_{i,j} =
-    \frac{\sum_{t=1}^{T-1}{\hat{\alpha}_{t,i}\cdot a_{ij} \cdot
-        b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}
-    {\sum_{t=1}^{T-1}\sum_{j=1}^{N}{\hat{\alpha}_{t,i}\cdot a_{i,j}
-        \cdot b_j(o_{t+1}) \cdot \hat{\beta}_{t+1,j}}}$
+    \frac{\displaystyle\sum_{l=1}^{L}\sum_{t=1}^{T_l-1}{
+        \hat{\alpha}_{l,t,i}\cdot a_{ij} \cdot b_{l,j}(o_{l,t+1}) \cdot
+        \hat{\beta}_{l,t+1,j}}}
+    {\displaystyle\sum_{l=1}^{L}\sum_{t=1}^{T_l-1}\sum_{j=1}^{N}{\hat{\alpha}_{l,t,i}\cdot
+        a_{i,j} \cdot b_{l,j}(o_{l,t+1}) \cdot \hat{\beta}_{l,t+1,j}}}$
     \ENDFOR
     \ENDFOR
     \RETURN $a$ \STATE \emph{EndFunction}
   \end{algorithmic}
-\end{algorithm}
 
-\begin{algorithm}[H]
-  \caption{Baum-Welch}
-  \label{alg-baum-welch-3}
-  \algsetup{linenosize=\tiny} \algsetup{indent=2.25em}
   \begin{algorithmic}[1]
-    \STATE \emph{Function update\_B\_procedure}($O$, $\hat{\alpha}$,
+    \vspace*{0.5em} \STATE \emph{Function update\_B\_procedure}($O$, $\hat{\alpha}$,
     $\hat{\beta}$, $Scale$) \FOR{$j=1$ to $N$} \FOR{$k=1$ to $M$}
-    \STATE $b_{j,k} = \frac{\sum_{t=1,O(t)=v_k}^{T} {\hat{\alpha}_t(j)
-        \cdot \hat{\beta}_t(j) / Scale(t)}} {\sum_{t=1}^{T}
-      {\hat{\alpha}_t(j) \cdot \hat{\beta}_t(j) / Scale(t)}}$
+    \STATE $b_{j,k} =
+    \frac{\displaystyle\sum_{l=1}^{L}\sum_{t=1,O(t)=v_k}^{T(l)}
+      {\hat{\alpha}_{l,t,j} \cdot \hat{\beta}_{l,t,j} / Scale_{l,t}}}
+    {\displaystyle\sum_{l=1}^{L}\sum_{t=1}^{T(l)}
+      {\hat{\alpha}_{l,t,j} \cdot \hat{\beta}_{l,t,j} / Scale_{l,t}}}$
     \ENDFOR
     \ENDFOR
     \RETURN $b$ \STATE \emph{EndFunction}
   \end{algorithmic}
 \end{algorithm}
-
 
 \subsection{Recunoașterea Simbolurilor}
 \label{sec:symbol-recognition}
@@ -529,11 +602,26 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 \subsection{Algoritmul Forward-Backward}
 \label{sec:fb-sol}
 
+\lstinputlisting[firstline=42,
+lastline=76]{../src/final/hmm/forward_backward_disc.m.solution}
+
 \subsection{Algoritmul Viterbi}
 \label{sec:viterbi-sol}
 
+\lstinputlisting[firstline=40,
+lastline=60]{../src/final/hmm/viterbi_disc.m.solution}
+
 \subsection{Algoritmul Baum-Welch}
 \label{sec:baum-welch-sol}
+
+Din testele de performanță făcute, s-a dovedit mai eficient să fie
+aduse matricele \mcode{O}, \mcode{A}, \mcode{B}, \mcode{Alpha} și
+\mcode{Beta} în 4 dimensiuni (prin copiere cu operația \mcode{repmat}
+și interschimbare a dimensiunilor cu operațiile \mcode{permute} și
+\mcode{shiftdim}) pentru a fi înmulțite apoi element cu element.
+
+\lstinputlisting[firstline=96,
+lastline=137]{../src/final/hmm/baum_welch_disc.m.solution}
 
 \subsection{Recunoașterea Simbolurilor}
 \label{sec:symbol-recognition-sol}
