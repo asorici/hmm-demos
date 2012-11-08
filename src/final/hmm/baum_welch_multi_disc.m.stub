@@ -94,18 +94,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     %% Precompute B_prod like in the forward_backward case
     B_prod = zeros(L, N, TMax);
 % precomp_b_disc-start - Write code below
-    for l = 1 : L
-        B_prod(l, :, 1:T(l)) = ones(N, T(l));
-        for t = 1 : T(l)
-            obs_symbol_idx = O(l, :, t)';
-            for r = 1 : R
-                b_idx = sub2ind(size(B), 1:N, ...
-                    repmat(obs_symbol_idx(r), 1, N), repmat(r, 1, N));
-                B_prod_line = B(b_idx);
-                B_prod(l, :, t) = B_prod(l, :, t) .* B_prod_line;
-            end
-        end
-    end
+
 % precomp_b_disc-end - Write code above    
     %% Expectation
     

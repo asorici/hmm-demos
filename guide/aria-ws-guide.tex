@@ -593,8 +593,52 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \end{algorithmic}
 \end{algorithm}
 
+\subsection{Precalcularea Matricei B în cazul multidimensional}
+\label{sec:b-matrix-precom}
+
+
+\subsubsection{Descriere}
+
+todo tudor
+
+\subsubsection{Testare automată}
+
+Pentru a testa codul folosiți comanda
+\mcode{hmm_test("precomp_b_disc");}.  Indicați apoi numele
+fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
+
+\subsubsection{Pseudocod}
+
+\begin{algorithm}[H]
+  \caption{Precalcularea matricei B în cazul multidimensional}
+  \label{alg:alexinmultestematrici}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \FOR{$l=1$ to $L$}
+    \FOR{$t=1$ to $T(l)$}
+    \FOR{$i=1$ to $N$}
+    \STATE $Bprod(l,i,t)$ $\leftarrow$ $\displaystyle\prod_{r=1}^{R}B(i,O(l,r,t),r)$
+    \ENDFOR
+    \ENDFOR
+    \ENDFOR
+  \end{algorithmic} 
+\end{algorithm}
+
+
 \subsection{Recunoașterea Simbolurilor}
 \label{sec:symbol-recognition}
+
+
+\subsubsection{Descriere}
+
+
+\subsubsection{Testare automată}
+\label{sec:testare-ultima}
+
+Pentru a testa codul folosiți comanda \mcode{hmm_test("symbolrec");}.
+Indicați apoi numele fișierului (sau tastați simplu ENTER dacă ați
+folosit numele sugerat).
+
 
 \section{Soluții}
 \label{sec:solutions}
@@ -625,5 +669,19 @@ lastline=137]{../src/final/hmm/baum_welch_disc.m.solution}
 
 \subsection{Recunoașterea Simbolurilor}
 \label{sec:symbol-recognition-sol}
+
+
+\subsubsection{Precalcularea matricei $B$}
+\label{sec:precomp-b-sol}
+
+\lstinputlisting[firstline=96,
+lastline=109]{../src/final/hmm/baum_welch_multi_disc.m.solution}
+
+\subsubsection{Clasificarea (recunoașterea) unui simbol}
+\label{sec:classify-sol}
+
+\lstinputlisting[firstline=70,
+lastline=109]{../src/final/symbolapp/testing/symbol_recognize.m.solution}
+
 
 \end{document}

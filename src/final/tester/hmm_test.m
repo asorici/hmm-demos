@@ -18,7 +18,7 @@ function hmm_test(label, code_file)
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
 
 %% Load tests information
-load('tester/test_scripts.mat','tests');
+load(ospath('tester/test_scripts.mat'),'tests');
 
 %% Check label
 if nargin() < 1
@@ -59,7 +59,7 @@ default_file = strcat(tests.(label).path, tests.(label).file,'.m');
 test_file = strcat(tests.(label).path, '.tests/test_', tests.(label).file, ...
             '_', label, '.m');
 
-if ~exist(test_file,'file')
+if ~exist(ospath(test_file),'file')
     error('Could not find test file. Please check current directory.\n');
 end
 
@@ -73,7 +73,7 @@ end
 alt_code_file = strcat(tests.(label).path, code_file);
 
 while size(code_file,2) == 0 || ...
-        ~(exist(code_file,'file') || exist(alt_code_file, 'file'))
+        ~(exist(ospath(code_file),'file') || exist(ospath(alt_code_file), 'file'))
     if strcmpi(code_file, 'quit')
         return;
     elseif size(code_file,2) == 0
@@ -95,9 +95,9 @@ end
 %% Execute test
 fprintf('\nRunning test...\n');
 if strcmpi(tests.(label).ttype,'lines')
-    correct = test_code(code_file, test_file, label);
+    correct = test_code(ospath(code_file), ospath(test_file), label);
 elseif strcmpi(tests.(label).ttype,'function')
-    correct = test_function(code_file, test_file, label);
+    correct = test_function(ospath(test_file));
 end
 if correct == 1
     fprintf('Test completed OK!\n');

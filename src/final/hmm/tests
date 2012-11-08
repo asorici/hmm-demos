@@ -1,0 +1,77 @@
+
+symbols = {'left_arrow_zero', 'right_arrow_zero', ...
+	   'circle_zero', 'square_zero', 'infinity_zero'};
+symbol_codebook_filename = 'symbol_feature_codebook_zero.mat';
+
+model = 'ergodic';
+
+
+cate unul din circle_test.mat
+din circle_test.mat se incarca raw_track_values
+aleg random 2 exemple raw_track_values{rand_idx}
+
+'bakis'
+symbol_feature_codebook_test
+
+symbol_distort(symbols, model, 
+try 
+
+
+Alpha_Correct = 1;
+Scale_Correct = 1;
+max_error = 1e-10;
+
+for i=1:10
+    try
+%%%--REPLACE-THIS--%%%
+    catch lasterror
+        fprintf('%s\n',lasterror.message);
+        Correct = 0;
+	return;
+    end
+
+    %% Compute correct Alpha and Scale
+    Alpha_(1,:) = Pi .* B(:, O(1))';
+    Scale_(1) = 1 / sum(Alpha_(1, :));
+    Alpha_(1,:) = Alpha_(1, :) * Scale_(1);
+
+    for t = 2:T
+        Alpha_(t,:) = (Alpha_(t-1,:) * A) .* B(:, O(t))';
+        Scale_(t) = 1 / sum(Alpha_(t, :));
+        Alpha_(t, :) = Alpha_(t, :) * Scale_(t);
+    end
+
+    function [recognized_symbol, ll_vector] = ...
+    symbol_distort(symbols, track_data, hmm_transition_model, ...
+                        symbol_codebook_filename)
+
+
+    %% Check results
+    if Alpha_Correct == 1
+	[Alpha_Correct, Alpha_Message] = ...
+	    matrices_are_equal(Alpha_, Alpha, max_error);
+    end
+    if Scale_Correct == 1
+	[Scale_Correct, Scale_Message] = ...
+	    matrices_are_equal(Scale_, Scale, max_error);
+    end
+    if Alpha_Correct == 0 && Scale_Correct == 0
+        break;
+    end
+end
+
+if Alpha_Correct == 1
+    fprintf('Alpha correct\n');
+else
+    fprintf('Alpha incorrect: %s\n',Alpha_Message);
+end
+if Scale_Correct == 1
+    fprintf('Scale correct\n');
+else
+    fprintf('Scale incorrect: %s\n',Scale_Message);
+end
+
+Correct = Alpha_Correct * Scale_Correct;
+
+   
+  	      
