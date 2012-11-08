@@ -102,7 +102,6 @@ while abs(logP_old - sum(logP) / L) >= 0.000001 && iter_ct < max_iter
     Beta_3D = zeros(L,TMax,N,N);
     V = 1 : M;
 
-
     for l=1:L
         % Add dimension to multiply element by element
         Alpha_3D(l,1:(T(l)-1),:,:) = ...
