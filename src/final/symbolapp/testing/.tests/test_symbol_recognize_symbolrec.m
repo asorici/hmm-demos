@@ -33,7 +33,7 @@ for i=1:5
     
     %% Check results
     if RS_Correct == 1
-        RS_Correct = strcmpi(recognized_symbol, recoqnized_symbol_);
+        RS_Correct = strcmpi(recognized_symbol, recognized_symbol_);
         if RS_Correct == 0
             RS_Message = 'Wrong symbol';
         end
