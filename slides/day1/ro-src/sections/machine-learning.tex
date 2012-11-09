@@ -42,28 +42,20 @@
       \begin{itemize}
       \item predicția evoluției prețului unui bun
       \end{itemize}%
-      \only<3->{
       \item Clasificare
         \begin{itemize}
         \item clasificarea obiectelor dintr-o imagine
         \end{itemize}
-      }%
-      \only<5->{%
-      \item Învățare prin Recompensă
-        \begin{itemize}
-        \item jucător inteligent pentru backgammon
-        \end{itemize}
-      }%
     \end{itemize}
   \end{block}%
   \begin{center}
     \only<1>{\includegraphics[width=.6\textwidth]{graphics/ml-intro/ml-1}}%
     \only<2>{\includegraphics[width=.6\textwidth]{graphics/ml-intro/ml-2}}%
-    \only<3>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-2}}%
-    \only<4>{\includegraphics[width=.35\textwidth]{graphics/ml-intro/car-1}}%
+    \only<3>{\includegraphics[width=.45\textwidth]{graphics/ml-intro/car-2}}%
+    \only<4>{\includegraphics[width=.45\textwidth]{graphics/ml-intro/car-1}}%
     \only<3-4>{\\{\scriptsize imagine de la Albert-Ludwigs-Universität,\\ 
-        Lehrstuhl für Mustererkennung und Bildverarbeitung}}
-    \only<5>{\includegraphics[width=.28\textwidth]{graphics/ml-intro/backgammon}}%
+        Lehrstuhl für Mustererkennung und Bildverarbeitung}}%
+    %\only<5>{\includegraphics[width=.28\textwidth]{graphics/ml-intro/backgammon}}%
   \end{center}
 \end{frame}
 
@@ -72,8 +64,8 @@
   \begin{block}{Învățare Supervizată}
     \alert{Învățarea supervizată} se face pe baza unor date de antrenare etichetate.
     \begin{itemize}
-    \item construirea unui model climatic pe baza datelor din utimii 30 de ani (regresie)
-    \item construirea unui detector de mesaje spam (clasificare)
+    \item construirea unui model climatic pe baza datelor din utimii 30 de ani
+    \item construirea unui detector de mesaje spam
     \end{itemize}
   \end{block}\pause
   \begin{block}{Învățare Nesupervizată}
@@ -81,5 +73,12 @@
     \begin{itemize}
     \item detectarea profilurilor de comportament ale cumpărătorilor
     \end{itemize}
-  \end{block}
+  \end{block}\pause
+  \begin{block}{Învățare prin Recompensă}
+    În \alert{învățarea prin recompensă} un \emph{agent} caută să execute acele
+    acțiuni are îi aduc o recompensă mai mare din partea mediului.
+    \begin{itemize}
+    \item inteligența artificială pentru jocuri
+    \end{itemize}
+  \end{block}  
 \end{frame}
