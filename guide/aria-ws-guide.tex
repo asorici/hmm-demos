@@ -593,24 +593,48 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Precalcularea Matricei B în cazul multidimensional}
+\subsection{Precalcularea Matricei B în cazul mai multor variabile de observație}
 \label{sec:b-matrix-precom}
 
 
 \subsubsection{Descriere}
+În aplicația de recunoaștere a simbolurilor dezvoltată, în fiecare stare a unui MMA antrenat pentru
+un anumit simbol întâlnim două variabile de observație:
+\begin{itemize}
+	\setlength{\itemsep}{-0.25em}
+	\item coeficienții transformatei Fourier pentru semnalul (mișcarea mouse-ului) pe axa Ox
+	\item coeficienții transformatei Fourier pentru semnalul (mișcarea mouse-ului) pe axa Oy
+\end{itemize}
 
-Presupunem evenimente independente emisiile ... (nu știu)
+În framework-ul prezent aceasta se traduce prin faptul că matricea $B$ a probabilităților de emisie mai primeste
+o dimensiune, a.î. ea trece de la $N \times M$ în cazul normal la $N \times M \times R$ pe cazul multi-variabile. Practic, noua matrice $B$ reține $R \mbox{(numărul de variabile observate în fiecare stare)}$ matrici de dimensiune $N \times M$.\\%
+Pentru a simplifica puțin lucrurile, se face presupunerea că cele două variabilele sunt independente una de alta
+(i.e. în fiecare stare, presupunem ca mișcarea pe Ox este independentă de mișcarea pe Oy). Ținând cont de aceasta,
+în algoritmul Baum-Welch, variabila auxiliara $\xi_t(i,j)$ se rescrie astfel:
+\begin{equation*}
+	 \xi_t(i,j) = \frac{\alpha_{t,i}\cdot a_{i,j} \cdot \prod_{r=1}^{R}b_{j,r}(o_{t+1}(r)) \cdot \beta_{t+1,j}}
+	 					{P(O \vert \lambda)}
+\end{equation*}
+\\%
+\emph{Observați} în formula de mai sus produsul $\prod_{r=1}^{R}b_{j,r}(o_{t+1}(r))$ al probabilităților de a observa valorile $o_{t+1}(r)$ în starea $j$.\\
+Sarcina voastră în acest exercițiu de programare este de a face o precalculare a acestor produse pentru o secvență observată $O$. Astfel, pentru o secvență $O$ de dimensiune $R \times T$ și o matrice de emisie $B$ de dimensiune 
+$N \times M \times R$ veți obține o matrice $B_{prod}$ de dimensiune $N \times T$.
+\\
+Funcția pe care o veți completa este \mcode{baum_welch_multi_disc} și trebuie să scrieți codul în secțiunea următoare:
+
+\lstinputlisting[firstline=96,
+lastline=98]{../src/final/hmm/baum_welch_multi_disc.m.stub}
 
 \subsubsection{Testare automată}
 
 Pentru a testa codul folosiți comanda
-\mcode{hmm_test("precomp_b_disc");}.  Indicați apoi numele
+\mcode{hmm_test("precomp_b_disc");}. Indicați apoi numele
 fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 
 \subsubsection{Pseudocod}
 
 \begin{algorithm}[H]
-  \caption{Precalcularea matricei B în cazul multidimensional}
+  \caption{Precalcularea matricei B în cazul mai multor variabile de observație per stare}
   \label{alg:alexinmultestematrici}
   \algsetup{indent=3em}
   \begin{algorithmic}[2]
@@ -630,7 +654,8 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 
 
 \subsubsection{Descriere}
-
+În acest exercițiu veți implementa algoritmul de clasificare a unei secvențe de intrare (coordonate X si Y ale mișcării mouse-ului) intr-unul din simbolurile definite.
+Aduceți-vă aminte că discriminarea între un simbol sau altul se face pe baza maximului dintre probabilitățile de observare a secvenței de mișcare intoarse de modelul MMA antrenat pentru fiecare simbol.
 
 \subsubsection{Testare automată}
 \label{sec:testare-ultima}
