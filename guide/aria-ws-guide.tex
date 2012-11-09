@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{ragged2e}
 
 \title{Modele Markov Ascunse}
 \titlesndline{De la Teorie la Aplicații}
@@ -655,7 +656,60 @@ fișierului (sau tastați simplu ENTER dacă ați folosit numele sugerat).
 
 \subsubsection{Descriere}
 În acest exercițiu veți implementa algoritmul de clasificare a unei secvențe de intrare (coordonate X si Y ale mișcării mouse-ului) intr-unul din simbolurile definite.
-Aduceți-vă aminte că discriminarea între un simbol sau altul se face pe baza maximului dintre probabilitățile de observare a secvenței de mișcare intoarse de modelul MMA antrenat pentru fiecare simbol.
+Aduceți-vă aminte că discriminarea între un simbol sau altul se face pe baza maximului dintre probabilitățile de observare a unei secvenței $O$ date de modelul MMA antrenat pentru fiecare simbol.
+
+Înainte de a prezenta pseudo-codul algoritmului de clasificare vă atragem atenția asupra următoarelor funcții auxiliare:
+\\%
+\begin{itemize}
+	\item \mcode{load(filename, name\_of\_var1, name\_of\_var2, ...)} -- incarcă din fișierul de tip \mcode{.mat} cu
+	 numele \mcode{filename} variabilele denumite prin string-urile \mcode{name\_of\_var1, name\_of\_var2, ...}.
+	\item \mcode{symbol_get_feature_sequence(track_data, x_codebook, y_codebook, resample_interval, 
+	hamming_window_size, hamming_window_step)} -- întoarce matricea $O$ de observații pe baza prelucrării secvenței
+	de mișcare \mcode{track_data} în funcție de valoarea parametrilor de configurare \mcode{x_codebook, y_codebook, resample_interval, etc.}
+\end{itemize}
+
+Observații:
+\begin{itemize}
+	\justifying
+	\item parametrii unui model MMA ($\Pi, A, B$) cu tipul de tranziție \mcode{transition_model} (\emph{''bakis''} sau 	\emph{''ergodic''}) și pragul de recunoaștere a unui simbol\\%
+	(\mcode{symbol_rec_threshold}) sunt stocate într-un fișier 
+	de forma\\%
+	\mcode{<numesimbol>_hmm_<transition_model>.mat}%
+	%
+	\item numele simbolurilor sunt reținute în matricea \mcode{symbol_strings}, câte unul pe fiecare linie
+	\item toți parametrii de configurare și datele de intrare necesare acestui task de implementare au valorile gata 
+	instanțiate
+\end{itemize}
+Procedura de clasificare în pseudocod este următoarea:
+\begin{algorithm}[H]
+  \caption{Clasificarea unei secvențe de mișcare într-unul din simbolurile existente}
+  \label{alg:alexclasifica}
+  \algsetup{indent=3em}
+  \begin{algorithmic}[2]
+    \FOR{$s=1$ to $nr\_simboluri$}
+    	\STATE $nume\_simbol \leftarrow simboluri(s)$
+    	\STATE $hmm\_filename \leftarrow \mbox{fișier MMA pentru simbolul } nume\_simbol$
+    	\STATE $(\Pi, A, B) \leftarrow \mbox{parametrii din fișierul hmm\_filename}$
+		\STATE{}    	
+    	\STATE $O = symbol\_get\_feature\_sequence(track\_data, x\_codebook, y\_codebook,$\\$resample\_interval, hamming\_window\_size, hamming\_window\_step)$
+    	\STATE{}
+    	\STATE $[Prob, ~, ~, ~] \leftarrow forward\_backward\_multi\_disc(O, \Pi, A, B)$
+    	\STATE $ll\_vector(s) \leftarrow Prob$
+    	\IF{$ll\_vector(s) > max\_ll$}
+    		\STATE $max\_ll \leftarrow ll\_vector(s)$
+    		\STATE $simbol\_probabil \leftarrow simboluri(s)$
+    	\ENDIF
+    \ENDFOR
+    \STATE{} 
+    \STATE $symbol\_rec\_threshold \leftarrow \mbox{încarcă prag recunoaștere pentru } simbol\_probabil$
+    \IF{$max\_ll > symbol\_rec\_threshold$}
+    	\STATE $simbol\_recunoscut \leftarrow simbol\_probabil$
+    \ELSE
+    	\STATE $simbol\_recunoscut \leftarrow unknown$
+    \ENDIF
+    \RETURN $ll\_vector, simbol\_recunoscut$
+  \end{algorithmic} 
+\end{algorithm}
 
 \subsubsection{Testare automată}
 \label{sec:testare-ultima}
@@ -663,6 +717,58 @@ Aduceți-vă aminte că discriminarea între un simbol sau altul se face pe baza
 Pentru a testa codul folosiți comanda \mcode{hmm_test("symbolrec");}.
 Indicați apoi numele fișierului (sau tastați simplu ENTER dacă ați
 folosit numele sugerat).
+
+\subsection{Aplicația de Recunoaștere a Simbolurilor}
+\label{sec:symbol-recognition-app}
+
+\subsubsection{Descriere}
+Acest task își propune să vă arate modul de utilizare al aplicației demo de recunoaștere a simbolurilor.
+Veți crea un set de date de simboluri, veți antrena un MMA pentru fiecare, veți vedea performanța de 
+clasificare a modelelor antrenate și veți recunoaște apoi noi simboluri.\\%
+Pentru cele de mai sus urmăriți pașii:\\%
+\begin{enumerate}
+	\item Crearea unui set de simboluri
+		\begin{itemize}
+			\item în consola Matlab curentă tipăriți comanda \mcode{symbol_recording} -- aceasta lansează GUI-ul 
+			pentru crearea unui nou set de simboluri
+			\item definiți simbolurile \mcode{one}, \mcode{two}, \mcode{three} ce reprezintă cifrele de la 1 la 3
+				\begin{itemize}
+					\item în caseta \emph{Define New Symbol} scrieți numele noului simbol și dați \emph{Add}
+					\item din caseta \emph{Symbol Name} selectați noul simbol și din caseta \emph{Symbol Purpose} 
+					selectați \mcode{all}
+					\item în zona de desenare apasați mouse-stânga și prin \emph{drag} dați forma simbolului dorit, eliberând butonul mouse-stânga la finalul conturării
+					\item urmăriți caset \emph{Messages} pentru eventuale mesaje de eroare sau succes
+					\item Apăsați \emph{Save Symbol} pentru a salva noul simbol definit sau \emph{Clear Drawing} pentru a anula desenul curent
+					\item \textbf{repetați} pașii de mai sus până definiți 20 de instanțe din fiecare tip de simbol
+					 (1, 2 și 3)
+				\end{itemize}
+		\end{itemize}
+	\item Antrenarea modelelor MMA pentru simbolurile nou-definite
+		\begin{itemize}
+			\item în consola Matlab curentă tipăriți comanda \mcode{symbol_training} -- aceasta lansează GUI-ul 
+			pentru antrenarea unui MMA pentru un set de simboluri
+			\item selectați din lista de simboluri disponibile (\emph{All Symbols}) cele 3 pe care le-ati definit 
+			anterior (\mcode{one, two, three})
+			\item parametrii de pre-procesare sunt presetați cu valori recomandate
+			\item din selection box-ul \emph{Dataset Options} alegeți \mcode{Percentage}
+			\item setați valorile procentuale pentru împărțirea setului de date in bucăți folosite pentru antrenare, validare și testare. Valorile predefinite sunt recomandate, dar puteți opta pentru alte valori atât timp cât procentul de date de antrenare este mai mare ca 50
+			\item din caseta \emph{Transition Model Type} selectați \mcode{ergodic}
+			\item apasați butonul \emph{Compute Codebook} și așteptați finalizarea calculelor
+			\item apasați butonul \emph{Train} și așteptați finalizarea calculelor
+			\item urmăriți mesajele din \emph{Output Messages} precum și din \textbf{consola Matlab}
+		\end{itemize}
+	\item Recunoașterea unui nou simbol
+		\begin{itemize}
+			\item în consola Matlab curentă tipăriți comanda \mcode{symbol_recognition} -- aceasta lansează GUI-ul 
+			pentru recunoașterea unui nou simbol
+			\item selectați din lista de simboluri disponibile (\emph{All Symbols}) cele 3 pe care le-ati definit 
+			anterior (\mcode{one, two, three})
+			\item din caseta \emph{Transition Model Type} selectați \mcode{ergodic}
+			\item în spațiul de desenare urmați același procedeu ca la pasul 1
+			\item apăsați \emph{Test} pentru a testa noul simbol sau \emph{Clear} pentru a anula desenul curent
+			\item urmăriți mesajele din \emph{Log Likelihood Estimates} și \emph{Detected Symbols}
+		\end{itemize}
+\end{enumerate}
 
 
 \section{Soluții}
