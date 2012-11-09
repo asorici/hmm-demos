@@ -40,8 +40,10 @@ function d=disteusq(x,y,mode,w)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [nx,p]=size(x); ny=size(y,1);
-if nargin<3 | isempty(mode) mode='0'; end
-if any(mode=='d') | (mode~='x' & nx==ny)
+if nargin<3 || isempty(mode) 
+    mode='0'; 
+end
+if any(mode=='d') || (mode~='x' && nx==ny)
 
     % Do pairwise distance calculation
 
