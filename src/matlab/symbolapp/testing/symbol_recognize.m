@@ -1,6 +1,7 @@
 function [recognized_symbol, ll_vector] = ...
     symbol_recognize(symbols, track_data, hmm_transition_model, ...
-                        symbol_codebook_filename)
+                        symbol_codebook_filename, ...
+                        symbol_config_filename)
 %%SYMBOL_RECOGNIZE test the given input track for being one of the
 %   known symbols
 %   Input args:
@@ -16,6 +17,10 @@ function [recognized_symbol, ll_vector] = ...
 %       symbol_codebook_filename: 
 %           the name of the file containing the codebook vectors
 %           for the symbols contained in the `symbols' input
+%       symbol_config_filename
+%           the name of the configuration file containing 
+%           the FFT feature extraction parameters
+%
 %
 %   Output args:
 %       recognized_symbol:  
@@ -31,7 +36,6 @@ function [recognized_symbol, ll_vector] = ...
 
 % read in the symbols, FFT feature extraction parameters and
 % codebook vectors from the configuration files
-symbol_config_filename = 'symbol_config.mat';
 
 % check for the existance of symbol_config.mat
 if (~exist(symbol_config_filename, 'file'))
@@ -63,7 +67,7 @@ load(symbol_codebook_filename, 'x_codebook', 'y_codebook');
 ll_vector = zeros(1, size(symbol_strings, 1));
 most_likely_symbol_idx = 1;
 max_ll = -Inf;
-
+% Write below
 
 for s=1:size(symbol_strings, 1)
     symbol_name = symbol_strings(s, :);
@@ -101,6 +105,8 @@ if max_ll >= symbol_rec_threshold
 else
     recognized_symbol = 'unknown';
 end
+
+% Write above
 
 end
 

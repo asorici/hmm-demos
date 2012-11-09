@@ -71,7 +71,7 @@ for s = 1 : num_symbols
                 resample_interval, ...
                 hamming_window_size, hamming_window_step);
             
-            [Prob, ~, ~, ~] = forward_backward(O, Pi, A, B);
+            [Prob, ~, ~, ~] = forward_backward_multi_disc(O, Pi, A, B);
             ll(1, ts) = Prob;
         
             if ll(1, ts) > max_ll
