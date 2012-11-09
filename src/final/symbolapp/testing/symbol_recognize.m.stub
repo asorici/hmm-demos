@@ -69,43 +69,6 @@ most_likely_symbol_idx = 1;
 max_ll = -Inf;
 % Write below
 
-for s=1:size(symbol_strings, 1)
-    symbol_name = symbol_strings(s, :);
-
-    hmm_data_filename = strcat(symbol_name, '_hmm_', ...
-                                hmm_transition_model, '.mat');
-
-    % load the codebook vectors and the hmm parameters 
-    % for the alleged symbol
-    load(hmm_data_filename, 'Pi', 'A', 'B');
-
-    O = symbol_get_feature_sequence(track_data, ...
-            x_codebook, y_codebook, ...
-            resample_interval, ...
-            hamming_window_size, hamming_window_step);
-
-    [Prob, ~, ~, ~] = forward_backward(O, Pi, A, B);
-    ll_vector(1, s) = Prob;
-
-    if ll_vector(1, s) > max_ll
-        max_ll = ll_vector(1, s);
-        most_likely_symbol_idx = s;
-    end
-end
-
-% load recognition threshold for best symbol so far
-candidate_symbol_name = symbol_strings(most_likely_symbol_idx, :);
-hmm_data_filename = strcat(candidate_symbol_name, '_hmm_', ...
-                                hmm_transition_model, '.mat');
-load(hmm_data_filename, 'symbol_rec_threshold');
-
-
-if max_ll >= symbol_rec_threshold
-    recognized_symbol = strtrim(candidate_symbol_name);
-else
-    recognized_symbol = 'unknown';
-end
-
 % Write above
 
 end

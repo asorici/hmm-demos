@@ -83,7 +83,7 @@ Scale = ones(L, TMax);
 % Compute initial P (and forward and backward variables)
 for l=1:L
     [LogP(l), Alpha(l, 1:T(l), :), Beta(l, 1:T(l), :), Scale(l, 1:T(l))] = ...
-        forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
+        forward_backward_multi_disc( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
 end
 
 %% EM Loop
@@ -176,7 +176,7 @@ while abs(LogP_old - (sum(LogP) / L)) >= ll_threshold && iter_ct < max_iter
     % Recompute P and forward & backward variables
     for l=1:L
         [LogP(l), Alpha(l,1:T(l),:), Beta(l,1:T(l),:), Scale(l,1:T(l))] = ...
-            forward_backward( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
+            forward_backward_multi_disc( shiftdim(O(l, 1:R, 1:T(l))), Pi, A, B);
     end
     
     % increase iteration count
