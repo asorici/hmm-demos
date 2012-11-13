@@ -57,7 +57,7 @@ disp 'Computing codebook ...';
 [x_codebook, esq, J_x] = kmeanlbg(all_x_vectors, nr_clusters);
 [y_codebook, esq, J_y] = kmeanlbg(all_y_vectors, nr_clusters);
 
-%suffix = randi(10000, 1, 1);
+%suffix = randi2(10000, 1, 1);
 %filename = sprintf('symbol_feature_codebook_%i.mat', suffix);
 filename = 'symbol_feature_codebook.mat';
 

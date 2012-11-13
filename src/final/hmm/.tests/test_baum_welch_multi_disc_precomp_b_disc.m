@@ -6,13 +6,13 @@ Bprod_Correct = 1;
 max_error = 1e-10;
 
 for i=1:10
-    L = randi(10,1,1);
-    R = 2 + randi(3,1,1);
-    TMax = randi(30,1,1);
+    L = randi2(10,1,1);
+    R = 2 + randi2(3,1,1);
+    TMax = randi2(30,1,1);
     
     %% Build random HMM
-    N = randi(20,1,1); % Number of states
-    M = randi(10,1,1); % Size of symbol set
+    N = randi2(20,1,1); % Number of states
+    M = randi2(10,1,1); % Size of symbol set
     % Initial state probabilities
     Pi = rand(1, N);
     Pi = Pi / sum(Pi);
@@ -23,21 +23,16 @@ for i=1:10
     B = ones(N, M, R) / M;
     
     T = ones(1, L) * TMax;
-    O = randi(M, L, R, TMax);
+    O = randi2(M, L, R, TMax);
     
     %% Compute B_prod
 
     B_prod = zeros(L, N, TMax);
     B_prod_ = B_prod;
     
-    try
+    
 %%%--REPLACE-THIS--%%%
-    catch lasterror
-        fprintf('%s\n',lasterror.message);
-        Correct = 0;
-	return;
-    end
-
+    
     %% Compute correct Beta
     % Do not optimize, use definition. (Tudor)
 

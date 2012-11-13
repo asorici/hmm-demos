@@ -61,7 +61,7 @@ end
 
 Beta(T, :) = Beta(T, :) * Scale(T);
 for t = (T-1):-1:1
-    Beta(t,:) = A * (B(:,O(t+1)) .* Beta(t+1,:)');
+    Beta(t,:) = (A * (B(:,O(t+1)) .* Beta(t+1,:)'))';
     Beta(t, :) = Beta(t, :) * Scale(t);
 end
 

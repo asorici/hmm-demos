@@ -9,8 +9,8 @@ max_error = 1e-10;
 
 for i=1:10
     %% Build random HMM
-    N = randi(20,1,1); % Number of states
-    M = randi(10,1,1); % Size of symbol set
+    N = randi2(20,1,1); % Number of states
+    M = randi2(10,1,1); % Size of symbol set
     % Initial state probabilities
     Pi = rand(1, N);
     Pi = Pi / sum(Pi);
@@ -22,8 +22,8 @@ for i=1:10
     B = B .* repmat((1.0 ./ sum(A,2)), [1 M]);
 
     %% Create random observed sequence
-    T = randi(30,1,1);
-    O = randi(M,1,T);
+    T = randi2(30,1,1);
+    O = randi2(M,1,T);
 
     %% Initialize Alpha, Beta, Scale
     Scale = zeros (1, T); % Scale is an 1 x T matrix
@@ -35,13 +35,9 @@ for i=1:10
 
     %% Compute Alpha
 
-    try
+    
 %%%--REPLACE-THIS--%%%
-    catch lasterror
-        fprintf('%s\n',lasterror.message);
-        Correct = 0;
-	return;
-    end
+    
 
     %% Compute correct Alpha and Scale
     Alpha_(1,:) = Pi .* B(:, O(1))';

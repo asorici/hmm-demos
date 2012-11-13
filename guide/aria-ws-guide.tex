@@ -353,8 +353,8 @@ folosit numele sugerat).
     \ddot{\alpha}_{1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
     $\hat{\alpha}_{1,i} \leftarrow c_1 \cdot \ddot{\alpha}_{1,i}$
     \ENDFOR
-    \FOR{$t=1$ to $T-1$} \FOR{$i=1$ to $N$} \STATE
-    $\ddot{\alpha}_{t+1,i} \leftarrow \Big[
+    \FOR{$t=1$ to $T-1$} \FOR{$j=1$ to $N$} \STATE
+    $\ddot{\alpha}_{t+1,j} \leftarrow \Big[
     \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
     b_{j}(o_{t+1})$
     \ENDFOR
@@ -372,7 +372,7 @@ folosit numele sugerat).
   \label{alg2:logP}
   \algsetup{indent=3em}
   \begin{algorithmic}[1]
-    \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}c_t$
+    \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}\log{c_t}$
   \end{algorithmic}
 \end{algorithm}
 
@@ -442,11 +442,11 @@ folosit numele sugerat).
     \STATE $\psi_{1,i}$ $\leftarrow$ $0$
     \ENDFOR
     \FOR{$t=2$ to $T$}
-    \FOR{$i=1$ to $N$}
-    \STATE $\phi_{t,j}$ $\leftarrow$ $[\underset{i}{\operatorname{max}}\; \phi_{t-1,i} +
+    \FOR{$j=1$ to $N$}
+    \STATE $\phi_{t,j}$ $\leftarrow$ $\underset{i}{\operatorname{max}}\; [\phi_{t-1,i} +
     log(a_{i,j})] + \log(b_{j}(o_{t}))$
-    \STATE $\psi_{t,i}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; \phi_{t-1,i} +
-    \log(a_{i,j})$
+    \STATE $\psi_{t,j}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; [\phi_{t-1,i} +
+    \log(a_{i,j})]$
     \ENDFOR
     \ENDFOR
     \STATE $\log(P(Q_{\text{best}} \vert O, \lambda))$ $\leftarrow$ $\underset{i}{\operatorname{max}}\; \phi_{T,i}$

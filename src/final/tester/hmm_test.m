@@ -21,7 +21,7 @@ function hmm_test(label, code_file)
 load(ospath('tester/test_scripts.mat'),'tests');
 
 %% Check label
-if nargin() < 1
+if nargin < 1
     fprintf('Please choose a test to run!\n');
     fprintf('Type \"list\" to list all available tests.\n');
     fprintf('Type \"quit\" to exit this tester.\n');
@@ -64,7 +64,7 @@ if ~exist(ospath(test_file),'file')
 end
 
 %% Check code file
-if nargin() < 2
+if nargin < 2
     fprintf('Choose file to test code from!\n');
     fprintf('Press RET for %s\n', default_file);
     code_file = input('File: ', 's');

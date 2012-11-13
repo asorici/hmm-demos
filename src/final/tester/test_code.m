@@ -23,14 +23,14 @@ function [correct] = test_code(user_file_name, test_file_name, label)
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
 
 %% Check arguments
-if nargin() < 3
+if nargin < 3
     u = 'usage: [correct] = test_code(user_file_name, test_file_name, label)\n';
     error(u);
 end
 
 %% New function name
 
-function_name = sprintf('test%d',randi(10000,1,1));
+function_name = sprintf('test%d',randi2(10000,1,1));
 function_file_name = sprintf('%s.m',function_name);
 
 %% Labels to identify the lines of code in user's file
@@ -45,23 +45,23 @@ test_file = fopen(test_file_name,'r');
 if user_file < 0
     error('Could not open %s. \n',user_file_name);
 end
-C_user = onCleanup(@()fclose(user_file));
+%C_user = onCleanup(@()fclose(user_file));
 
 if test_file < 0
     error('Could not open %s. \n',test_file_name);
 end
-C_test = onCleanup(@()fclose(test_file));
+%C_test = onCleanup(@()fclose(test_file));
 
 function_file = fopen(function_file_name,'w');
 if function_file < 0
     error('Could not open %s. \n',function_file_name);
 end
-C_temp = onCleanup(@()delete(function_file_name));
+%C_temp = onCleanup(@()delete(function_file_name));
 
 
 %% Write new file
 
-fprintf(function_file,'function [Correct] = %s()\n\n',function_name);
+fprintf(function_file,'function [Correct] = %s(x)\n\n',function_name);
 
 to_replace = 1;
 labels_found = 0;
@@ -93,6 +93,8 @@ while ischar(test_line)
 end
 
 fclose(function_file);
+fclose(user_file);
+fclose(test_file);
 
 if to_replace == 1
     error('Test file has no REPLACE-THIS section.\n')
@@ -109,10 +111,11 @@ if ~exist(function_name,'file')
 end
 
 % The current folder should be already in path, but just in case...
-current_path = path();
-cleanup_path = onCleanup(@()path(current_path));
-addpath('.');
+%current_path = path();
+%cleanup_path = onCleanup(@()path(current_path));
+%addpath('.');
 
-correct = test_function();
+correct = test_function(1);
+%delete(function_file_name);
 
 end

@@ -17,14 +17,14 @@ function [correct] = test_function(test_file_name)
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
 
 %% Check arguments
-if nargin() < 1
+if nargin < 1
     u = 'usage: [correct] = test_function(test_file_name)\n';
     error(u);
 end
 
 %% New function name
 
-function_name = sprintf('test%d',randi(10000,1,1));
+function_name = sprintf('test%d',randi2(10000,1,1));
 function_file_name = sprintf('%s.m',function_name);
 
 %% Open files
@@ -34,18 +34,18 @@ test_file = fopen(test_file_name,'r');
 if test_file < 0
     error('Could not open %s. \n',test_file_name);
 end
-C_test = onCleanup(@()fclose(test_file));
+%C_test = onCleanup(@()fclose(test_file));
 
 function_file = fopen(function_file_name,'w');
 if function_file < 0
     error('Could not open %s. \n',function_file_name);
 end
-C_temp = onCleanup(@()delete(function_file_name));
+%C_temp = onCleanup(@()delete(function_file_name));
 
 
 %% Write new file
 
-fprintf(function_file,'function [Correct] = %s()\n\n',function_name);
+fprintf(function_file,'function [Correct] = %s(x)\n\n',function_name);
 
 test_line = fgets(test_file);
 while ischar(test_line)
@@ -54,6 +54,8 @@ while ischar(test_line)
 end
 
 fclose(function_file);
+fclose(test_file);
+
 
 %% Execute test function
 test_function = str2func(function_name);
@@ -62,10 +64,11 @@ if ~exist(function_name,'file')
 end
 
 % The current folder should be already in path, but just in case...
-current_path = path();
-cleanup_path = onCleanup(@()path(current_path));
-addpath('.');
+%current_path = path();
+%cleanup_path = onCleanup(@()path(current_path));
+%addpath('.');
 
-correct = test_function();
+correct = test_function(1);
+%delete(function_file_name);
 
 end

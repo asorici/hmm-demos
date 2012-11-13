@@ -8,13 +8,13 @@ function [answer, message] = matrices_are_equal(A, B, error)
 %
 % Authors: Alexandru Sorici, Tudor Berariu / August 2012
 
-if nargin() < 2
+if nargin < 2
     fprintf('usage: [answer, message] = matrices_are_equal(A, B)\n');
     fprintf('usage: [answer, message] = matrices_are_equal(A, B, error)\n');
     error('Incorrect number of arguments');
 end
 
-if nargin() < 3
+if nargin < 3
     error = 1e-10;
 end
 
@@ -28,8 +28,8 @@ elseif ~all(size(A) == size(B))
     message = 'different size';
 else
     D = abs(A - B) ./ A;
-    E = isnan(D) .* abs(A-B);
-    if ~all((D(:) < error) + (E(:) < error))
+    %E = isnan(D) .* abs(A-B);
+    if ~all((D(:) < error))
         % incorrect values
         answer = 0;
         message = 'incorrect values';

@@ -10,9 +10,9 @@ max_error = 1e-10;
 
 for no=1:10
     %% Build random HMM
-    N = randi(20,1,1); % Number of states
-    M = randi(10,1,1); % Size of symbol set
-    L = randi(10,1,1); % Number of observed sequences
+    N = randi2(20,1,1); % Number of states
+    M = randi2(10,1,1); % Size of symbol set
+    L = randi2(10,1,1); % Number of observed sequences
     % Initial state probabilities
     Pi = rand(1, N);
     Pi = Pi / sum(Pi);
@@ -24,9 +24,9 @@ for no=1:10
     B = B .* repmat((1.0 ./ sum(A,2)), [1 M]);
 
     %% Create random observed sequence
-    TMax = randi(30,1,1) + 5; % Maximum length for the observed sequences
+    TMax = randi2(30,1,1) + 5; % Maximum length for the observed sequences
     T = ones(1,L) * TMax;
-    O = randi(M,L,TMax);
+    O = randi2(M,L,TMax);
     
 
     %% Initialize Alpha, Beta, Scale, LogP
@@ -45,13 +45,9 @@ for no=1:10
     A_ = A;
     B_ = B;
     TMax = size(O,2); % Maximum length for the observed sequences
-    try        
+       
 %%%--REPLACE-THIS--%%%
-    catch lasterror
-        fprintf('%s\n',lasterror.message);
-        Correct = 0;
-	return;
-    end
+    
 
     %% Compute correct A, B
     % Do not optimize, use definition. (Tudor)
