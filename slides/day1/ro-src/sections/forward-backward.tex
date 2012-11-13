@@ -228,16 +228,16 @@
   \begin{columns}
     \column{0.3\textwidth}
     \begin{itemize}
-    \item Pas de inducție ($t > 1$)\\\vspace*{1em}$1 \le i \le N$
+    \item Pas de inducție ($t > 1$)\\\vspace*{1em}$1 \le j \le N$
     \end{itemize}%
     \column{0.7\textwidth}%
     \begin{align}%
-      \ddot{\alpha}_{t+1,i} = \Big[
+      \ddot{\alpha}_{t+1,j} = \Big[
       \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
       b_{j}(o_{t+1}) \\
-      c_{t+1} = \dfrac{1}{\displaystyle\sum_{i=1}^{N}
-        \ddot{\alpha}_{t+1,i}} \\
-      \hat{\alpha}_{t+1,i} = c_{t+1} \cdot \ddot{\alpha}_{t+1,i}
+      c_{t+1} = \dfrac{1}{\displaystyle\sum_{j=1}^{N}
+        \ddot{\alpha}_{t+1,j}} \\
+      \hat{\alpha}_{t+1,j} = c_{t+1} \cdot \ddot{\alpha}_{t+1,j}
     \end{align}%
   \end{columns}%
 \end{frame}
@@ -258,12 +258,12 @@
       \visible<3>{%
       \item ($t>1$): Presupunem adevărat: $\hat{\alpha}_{t,i} = C_{t}\alpha_{t,i}$%
         \begin{align*}%
-          \ddot{\alpha}_{t+1,i} & = \Big[
+          \ddot{\alpha}_{t+1,j} & = \Big[
           \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
           b_{j}(o_{t+1}) = \Big[
           \displaystyle\sum_{i=1}^{N}C_{t}\alpha_{t,i}a_{i,j}\Big]
-          b_{j}(o_{t+1}) = C_{t} \alpha_{t+1,i} \\
-          \hat{\alpha}_{t+1,i} & = c_{t+1} \cdot \ddot{\alpha}_{t+1,i} = c_{t+1} \cdot C_{t} \cdot\alpha_{t+1,i} = C_{t+1}\cdot\alpha_{t+1,i}
+          b_{j}(o_{t+1}) = C_{t} \alpha_{t+1,j} \\
+          \hat{\alpha}_{t+1,j} & = c_{t+1} \cdot \ddot{\alpha}_{t+1,j} = c_{t+1} \cdot C_{t} \cdot\alpha_{t+1,j} = C_{t+1}\cdot\alpha_{t+1,j}
         \end{align*}%
       }%
     \end{itemize}%
@@ -545,7 +545,7 @@
 
 
 \begin{frame}[fragile]
-  \frametitle{Algoritmul Forward-Backward} \vspace*{-1em}
+  \frametitle{Algoritmul Forward-Backward} \vspace*{-1.5em}
   \begin{columns}[T]
     \column{0.5\textwidth}
     \begin{algorithm}[H]
@@ -561,8 +561,8 @@
         \ddot{\alpha}_{1,i})^{-1}$ \FOR{$i=1$ to $N$} \STATE
         $\hat{\alpha}_{1,i} \leftarrow c_1 \cdot \ddot{\alpha}_{1,i}$
         \ENDFOR
-        \FOR{$t=1$ to $T-1$} \FOR{$i=1$ to $N$} \STATE
-        $\ddot{\alpha}_{t+1,i} \leftarrow \Big[
+        \FOR{$t=1$ to $T-1$} \FOR{$j=1$ to $N$} \STATE
+        $\ddot{\alpha}_{t+1,j} \leftarrow \Big[
         \displaystyle\sum_{i=1}^{N}\hat{\alpha}_{t,i}a_{i,j}\Big]
         b_{j}(o_{t+1})$
         \ENDFOR
@@ -581,7 +581,7 @@
       \label{alg2}
       \algsetup{linenosize=\tiny} \algsetup{indent=2em}
       \begin{algorithmic}[2]
-        \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}c_t$
+        \STATE $logP \leftarrow -\displaystyle\sum_{t=1}^{T}\log c_t$
       \end{algorithmic}
     \end{algorithm}
     \vspace*{1em}

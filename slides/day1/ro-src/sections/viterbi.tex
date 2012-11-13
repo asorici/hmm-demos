@@ -365,7 +365,7 @@
        \scriptstyle \visible<11->{-6.7254} & \scriptstyle \visible<13->{-5.1567} & \scriptstyle \visible<15->{-5.3391}\end{bmatrix}$ $\Psi=\begin{bmatrix}
        \scriptstyle \visible<2->{0} & \scriptstyle \visible<3->{0} & \scriptstyle \visible<4->{0} \\
        \scriptstyle \visible<6->{1} & \scriptstyle \visible<8->{3} & \scriptstyle \visible<10->{1} \\
-       \scriptstyle \visible<12->{1} & \scriptstyle \visible<14->{3} & \scriptstyle \visible<16->{1}\end{bmatrix}$ $Q_{best} = \begin{bmatrix}\visible<19->{1} & \visible<18->{1} & \visible<17->{2}\end{bmatrix}$
+       \scriptstyle \visible<12->{1} & \scriptstyle \visible<14->{1} & \scriptstyle \visible<16->{1}\end{bmatrix}$ $Q_{best} = \begin{bmatrix}\visible<19->{1} & \visible<18->{1} & \visible<17->{2}\end{bmatrix}$
      
 \end{frame}
 
@@ -382,10 +382,10 @@
       \STATE $\psi_{1,i}$ $\leftarrow$ $0$
       \ENDFOR
       \FOR{$t=2$ to $T$}
-      \FOR{$i=1$ to $N$}
+      \FOR{$j=1$ to $N$}
       \STATE $\phi_{t,j}$ $\leftarrow$ $[\underset{i}{\operatorname{max}}\; \phi_{t-1,i} +
       log(a_{i,j})] + \log(b_{j}(o_{t}))$
-      \STATE $\psi_{t,i}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; \phi_{t-1,i} +
+      \STATE $\psi_{t,j}$ $\leftarrow$ $\underset{i}{\operatorname{argmax}}\; \phi_{t-1,i} +
       \log(a_{i,j})$
       \ENDFOR
       \ENDFOR
