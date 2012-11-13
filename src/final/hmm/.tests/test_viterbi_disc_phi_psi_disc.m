@@ -8,7 +8,7 @@ Psi_Correct = 1;
 Phi_Correct = 1;
 max_error = 1e-10;
 
-for i=1:10
+for i=1:1
     %% Build random HMM
     N = randi2(20,1,1); % Number of states
     M = randi2(10,1,1); % Size of symbol set

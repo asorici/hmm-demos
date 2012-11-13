@@ -27,8 +27,7 @@ elseif ~all(size(A) == size(B))
     answer = 0;
     message = 'different size';
 else
-    D = abs(A - B) ./ A;
-    %E = isnan(D) .* abs(A-B);
+    D = abs(A - B) ./ abs(A + error);
     if ~all((D(:) < error))
         % incorrect values
         answer = 0;

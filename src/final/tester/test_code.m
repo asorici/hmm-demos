@@ -116,6 +116,6 @@ end
 %addpath('.');
 
 correct = test_function(1);
-%delete(function_file_name);
+delete(function_file_name);
 
 end
